@@ -1,0 +1,17 @@
+/* This is free and unencumbered software released into the public domain. */
+
+#ifndef POSIXXX_VERSION_H
+#define POSIXXX_VERSION_H
+
+#include <string> /* for std::string */
+
+namespace posix {
+  namespace version {
+    const std::string string = "@PACKAGE_VERSION@";
+    const short major = @PACKAGE_VERSION_MAJOR@;
+    const short minor = @PACKAGE_VERSION_MINOR@;
+    const short patch = @PACKAGE_VERSION_PATCH@;
+  };
+}
+
+#endif /* POSIXXX_VERSION_H */
