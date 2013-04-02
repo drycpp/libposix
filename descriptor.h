@@ -22,7 +22,7 @@ struct posix::descriptor {
     /**
      * Constructor.
      */
-    descriptor(int fd) {
+    descriptor(const int fd) {
       _fd = fd;
     }
 
@@ -48,6 +48,17 @@ struct posix::descriptor {
      */
     descriptor& operator=(descriptor other) {
       std::swap(_fd, other._fd);
+      return *this;
+    }
+
+    /**
+     * Move assignment operator.
+     */
+    descriptor& operator=(descriptor&& other) {
+      if (this != &other) {
+        close();
+        std::swap(_fd, other._fd);
+      }
       return *this;
     }
 
