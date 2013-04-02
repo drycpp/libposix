@@ -4,7 +4,7 @@
 #define POSIXXX_GROUP_H
 
 namespace posix {
-  typedef unsigned int group_id;
+  using group_id = unsigned int;
   class group;
 }
 

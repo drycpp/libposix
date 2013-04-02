@@ -4,7 +4,7 @@
 #define POSIXXX_USER_H
 
 namespace posix {
-  typedef unsigned int user_id;
+  using user_id = unsigned int;
   class user;
 }
 

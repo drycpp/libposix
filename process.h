@@ -4,7 +4,7 @@
 #define POSIXXX_PROCESS_H
 
 namespace posix {
-  typedef unsigned int process_id;
+  using process_id = unsigned int;
   class process;
 }
 
