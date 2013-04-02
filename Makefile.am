@@ -5,6 +5,7 @@ LDADD           = libposix++.la
 lib_LTLIBRARIES = libposix++.la
 
 libposix___la_SOURCES =   \
+  descriptor.cc           \
   directory.cc            \
   feature.cc              \
   module.cc               \
@@ -13,6 +14,7 @@ libposix___la_SOURCES =   \
 base_pkgincludedir = $(includedir)/posix++
 
 base_pkginclude_HEADERS = \
+  descriptor.h            \
   directory.h             \
   feature.h               \
   module.h                \
