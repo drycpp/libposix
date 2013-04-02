@@ -9,6 +9,7 @@ libposix___la_SOURCES =   \
   directory.cc            \
   feature.cc              \
   file.cc                 \
+  message_queue.cc        \
   module.cc               \
   version.cc
 
@@ -19,5 +20,6 @@ base_pkginclude_HEADERS = \
   directory.h             \
   feature.h               \
   file.h                  \
+  message_queue.h         \
   module.h                \
   version.h

@@ -16,7 +16,7 @@ class posix::file : public posix::descriptor {
     /**
      * Constructor.
      */
-    file(const int fd) : posix::descriptor(fd) {}
+    file(const int fd) : descriptor(fd) {}
 
     /**
      * ...
