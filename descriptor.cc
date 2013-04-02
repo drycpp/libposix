@@ -7,27 +7,36 @@
 #include "posix++/descriptor.h"
 
 #include <cassert>      /* for assert() */
+#include <cerrno>       /* for errno */
 #include <fcntl.h>      /* for F_*, fcntl() */
 #include <stdexcept>    /* for std::invalid_argument */
 #include <string>       /* for std::string */
 #include <system_error> /* for std::system_error */
-#include <unistd.h>     /* for close(), dup() */
+#include <unistd.h>     /* for close() */
 
 using namespace posix;
 
 static const std::string invalid_in_copy_constructor = "invalid descriptor passed to copy constructor";
 
-descriptor::descriptor(const descriptor& other)
-  : _fd(dup(other._fd)) {
-  // TODO: copy FD_CLOEXEC flag correctly using fcntl(2).
-  if (_fd == -1) {
-    switch (errno) {
-      case EBADF:  /* Bad file descriptor */
-        throw std::invalid_argument(invalid_in_copy_constructor);
-      case EMFILE: /* Too many open files */
-        throw std::system_error(errno, std::system_category()); // FIXME
-      default:
-        throw std::system_error(errno, std::system_category());
+descriptor::descriptor(const descriptor& other) {
+  if (other.valid()) {
+#ifdef F_DUPFD_CLOEXEC
+    const bool fd_cloexec = other.flags() & FD_CLOEXEC;
+    const int fcntl_cmd = fd_cloexec ? F_DUPFD_CLOEXEC : F_DUPFD;
+    _fd = fcntl(other._fd, fcntl_cmd, 0);
+#else
+    _fd = fcntl(other._fd, F_DUPFD, 0);
+#endif
+
+    if (_fd == -1) {
+      switch (errno) {
+        case EBADF:  /* Bad file descriptor */
+          throw std::invalid_argument(invalid_in_copy_constructor);
+        case EMFILE: /* Too many open files */
+          throw std::system_error(errno, std::system_category()); // FIXME
+        default:
+          throw std::system_error(errno, std::system_category());
+      }
     }
   }
 }
