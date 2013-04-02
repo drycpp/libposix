@@ -9,11 +9,13 @@ libposix___la_SOURCES =   \
   directory.cc            \
   feature.cc              \
   file.cc                 \
+  group.cc                \
   message_queue.cc        \
   module.cc               \
   pathname.cc             \
   process.cc              \
   process_group.cc        \
+  user.cc                 \
   version.cc
 
 base_pkgincludedir = $(includedir)/posix++
@@ -23,9 +25,11 @@ base_pkginclude_HEADERS = \
   directory.h             \
   feature.h               \
   file.h                  \
+  group.h                 \
   message_queue.h         \
   module.h                \
   pathname.h              \
   process.h               \
   process_group.h         \
+  user.h                  \
   version.h
