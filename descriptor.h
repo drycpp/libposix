@@ -11,6 +11,8 @@ namespace posix {
 
 /**
  * Represents a POSIX file descriptor.
+ *
+ * @see http://en.wikipedia.org/wiki/File_descriptor
  */
 struct posix::descriptor {
   public:
@@ -57,23 +59,44 @@ struct posix::descriptor {
     descriptor& operator=(descriptor&& other) {
       if (this != &other) {
         close();
-        std::swap(_fd, other._fd);
       }
+      std::swap(_fd, other._fd);
       return *this;
     }
 
+    /**
+     * Assigns a new value to this descriptor.
+     */
+    descriptor& assign(const int fd) {
+      close();
+      _fd = fd;
+      return *this;
+    }
+
+    /**
+     * ...
+     */
     bool operator==(const descriptor& other) const {
       return _fd == other._fd;
     }
 
+    /**
+     * ...
+     */
     bool operator!=(const descriptor& other) const {
       return !operator==(other);
     }
 
+    /**
+     * Returns the underlying native integer descriptor.
+     */
     int operator*() const {
       return _fd;
     }
 
+    /**
+     * ...
+     */
     explicit operator bool() const {
       return valid();
     }
@@ -92,8 +115,14 @@ struct posix::descriptor {
       return _fd >= 0;
     }
 
+    /**
+     * Checks whether this descriptor is readable.
+     */
     bool readable() const;
 
+    /**
+     * Checks whether this descriptor is writable.
+     */
     bool writable() const;
 
     /**
@@ -107,11 +136,16 @@ struct posix::descriptor {
     int status() const;
 
     /**
-     * Closes the descriptor.
+     * Closes this descriptor.
+     *
+     * @note this method is idempotent
      */
     void close();
 
   protected:
+    /**
+     * The underlying native integer descriptor.
+     */
     int _fd = -1;
 };
 
