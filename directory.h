@@ -8,6 +8,9 @@
 #include <string> /* for std::string */
 
 namespace posix {
+  /**
+   * @see http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap03.html#tag_03_128
+   */
   class directory {
     public:
       class iterator;

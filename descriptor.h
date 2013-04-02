@@ -12,6 +12,7 @@ namespace posix {
 /**
  * Represents a POSIX file descriptor.
  *
+ * @see http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap03.html#tag_03_165
  * @see http://en.wikipedia.org/wiki/File_descriptor
  */
 struct posix::descriptor {

@@ -9,6 +9,11 @@ namespace posix {
   class pathname;
 }
 
+/**
+ * Represents a POSIX pathname.
+ *
+ * @see http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap03.html#tag_03_266
+ */
 class posix::pathname {
   public:
     /**

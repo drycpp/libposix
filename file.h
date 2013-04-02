@@ -11,6 +11,11 @@ namespace posix {
   class file;
 }
 
+/**
+ * Represents a POSIX file.
+ *
+ * @see http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap03.html#tag_03_163
+ */
 class posix::file : public posix::descriptor {
   public:
     /**

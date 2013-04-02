@@ -11,6 +11,11 @@ namespace posix {
   class message_queue;
 }
 
+/**
+ * Represents a POSIX message queue.
+ *
+ * @see http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap03.html#tag_03_224
+ */
 class posix::message_queue : public posix::descriptor {
   public:
     /**
