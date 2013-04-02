@@ -8,6 +8,7 @@ libposix___la_SOURCES =   \
   descriptor.cc           \
   directory.cc            \
   feature.cc              \
+  file.cc                 \
   module.cc               \
   version.cc
 
@@ -17,5 +18,6 @@ base_pkginclude_HEADERS = \
   descriptor.h            \
   directory.h             \
   feature.h               \
+  file.h                  \
   module.h                \
   version.h

@@ -3,6 +3,8 @@
 #ifndef POSIXXX_DIRECTORY_H
 #define POSIXXX_DIRECTORY_H
 
+#include "descriptor.h"
+
 #include <string> /* for std::string */
 
 namespace posix {
