@@ -3,7 +3,7 @@
 #ifndef POSIXXX_DESCRIPTOR_H
 #define POSIXXX_DESCRIPTOR_H
 
-#include <algorithm> /* for std::swap() */
+#include <utility> /* for std::swap() */
 
 namespace posix {
   struct descriptor;
@@ -80,6 +80,20 @@ struct posix::descriptor {
     inline bool valid() const {
       return _fd >= 0;
     }
+
+    bool readable() const;
+
+    bool writable() const;
+
+    /**
+     * Returns the file descriptor flags.
+     */
+    int flags() const;
+
+    /**
+     * Returns the file status flags.
+     */
+    int status() const;
 
     /**
      * Closes the descriptor.

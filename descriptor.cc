@@ -7,10 +7,11 @@
 #include "posix++/descriptor.h"
 
 #include <cassert>      /* for assert() */
-#include <unistd.h>     /* for close(), dup() */
+#include <fcntl.h>      /* for F_*, fcntl() */
 #include <stdexcept>    /* for std::invalid_argument */
 #include <string>       /* for std::string */
 #include <system_error> /* for std::system_error */
+#include <unistd.h>     /* for close(), dup() */
 
 using namespace posix;
 
@@ -33,6 +34,42 @@ descriptor::descriptor(const descriptor& other)
 
 descriptor::~descriptor() {
   close();
+}
+
+bool
+descriptor::readable() const {
+  const int status_ = status();
+  return status_ & O_RDONLY || status_ & O_RDWR;
+}
+
+bool
+descriptor::writable() const {
+  const int status_ = status();
+  return status_ & O_WRONLY || status_ & O_RDWR;
+}
+
+int
+descriptor::flags() const {
+  const int flags = fcntl(_fd, F_GETFD);
+  if (flags == -1) {
+    switch (errno) {
+      default:
+        throw std::system_error(errno, std::system_category());
+    }
+  }
+  return flags;
+}
+
+int
+descriptor::status() const {
+  const int status = fcntl(_fd, F_GETFL);
+  if (status == -1) {
+    switch (errno) {
+      default:
+        throw std::system_error(errno, std::system_category());
+    }
+  }
+  return status;
 }
 
 void
