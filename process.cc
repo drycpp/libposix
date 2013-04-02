@@ -4,7 +4,7 @@
 #include <config.h>
 #endif
 
-#include "posix++/process.h"
+#include "process.h"
 
 #include <cassert>      /* for assert() */
 #include <cerrno>       /* for errno */

@@ -7,65 +7,65 @@
 
 #include <string> /* for std::string */
 
-namespace posix {
-  /**
-   * @see http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap03.html#tag_03_128
-   */
-  class directory {
-    public:
-      class iterator;
+namespace posix { class directory; }
 
-      directory(const std::string& pathname);
+/**
+ * @see http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap03.html#tag_03_128
+ */
+class posix::directory {
+  public:
+    class iterator;
 
-      directory(const std::string& pathname, int dirfd);
+    directory(const std::string& pathname);
 
-      ~directory();
+    directory(const std::string& pathname, int dirfd);
 
-      void close();
+    ~directory();
 
-      iterator begin() const;
+    void close();
 
-      iterator end() const;
+    iterator begin() const;
 
-      const iterator cbegin() const;
+    iterator end() const;
 
-      const iterator cend() const;
+    const iterator cbegin() const;
 
-      bool exists() const {
-        return true;
-      }
+    const iterator cend() const;
 
-      int fd() const {
-        return _fd;
-      }
+    bool exists() const {
+      return true;
+    }
 
-    protected:
-      int _fd = -1;
+    int fd() const {
+      return _fd;
+    }
 
-      void open(int dirfd, const std::string& pathname);
-  };
+  protected:
+    int _fd = -1;
 
-  class directory::iterator {
-    public:
-      iterator() {}
+    void open(int dirfd, const std::string& pathname);
+};
 
-      iterator(const directory& dir);
+class posix::directory::iterator {
+  public:
+    iterator() {}
 
-      ~iterator();
+    iterator(const directory& dir);
 
-      bool operator==(const iterator& other) {
-        return !operator!=(other);
-      }
+    ~iterator();
 
-      bool operator!=(const iterator& other);
+    bool operator==(const iterator& other) {
+      return !operator!=(other);
+    }
 
-      iterator& operator++();
+    bool operator!=(const iterator& other);
 
-      std::string operator*();
+    iterator& operator++();
 
-    protected:
-      void* _dirp = nullptr;
-  };
-}
+    std::string operator*();
+
+  protected:
+    void* _dirp = nullptr;
+};
 
 #endif /* POSIXXX_DIRECTORY_H */

@@ -7,9 +7,7 @@
 
 #include <cstddef> /* for std::size_t */
 
-namespace posix {
-  class file;
-}
+namespace posix { class file; }
 
 /**
  * Represents a POSIX file.

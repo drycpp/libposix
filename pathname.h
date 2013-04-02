@@ -5,9 +5,7 @@
 
 #include <string> /* for std::string */
 
-namespace posix {
-  class pathname;
-}
+namespace posix { class pathname; }
 
 /**
  * Represents a POSIX pathname.

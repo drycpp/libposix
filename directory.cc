@@ -4,7 +4,7 @@
 #include <config.h>
 #endif
 
-#include "posix++/directory.h"
+#include "directory.h"
 
 #include <cassert>      /* for assert() */
 #include <dirent.h>     /* for fdopendir() */

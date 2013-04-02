@@ -7,9 +7,7 @@
 
 #include <cstddef> /* for std::size_t */
 
-namespace posix {
-  class message_queue;
-}
+namespace posix { class message_queue; }
 
 /**
  * Represents a POSIX message queue.

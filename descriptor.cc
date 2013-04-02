@@ -4,7 +4,7 @@
 #include <config.h>
 #endif
 
-#include "posix++/descriptor.h"
+#include "descriptor.h"
 
 #include <cassert>      /* for assert() */
 #include <cerrno>       /* for errno */

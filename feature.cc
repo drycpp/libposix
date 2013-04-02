@@ -4,6 +4,6 @@
 #include <config.h>
 #endif
 
-#include "posix++/feature.h"
+#include "feature.h"
 
 using namespace posix;

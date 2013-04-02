@@ -4,6 +4,6 @@
 #include <config.h>
 #endif
 
-#include "posix++/module.h"
+#include "module.h"
 
 using namespace posix;

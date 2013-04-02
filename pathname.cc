@@ -4,7 +4,7 @@
 #include <config.h>
 #endif
 
-#include "posix++/pathname.h"
+#include "pathname.h"
 
 #include <cassert>      /* for assert() */
 #include <cerrno>       /* for errno */

@@ -4,7 +4,7 @@
 #include <config.h>
 #endif
 
-#include "posix++/message_queue.h"
+#include "message_queue.h"
 
 #include <cassert>      /* for assert() */
 #include <cerrno>       /* for errno */

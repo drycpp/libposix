@@ -5,9 +5,7 @@
 
 #include <utility> /* for std::swap() */
 
-namespace posix {
-  struct descriptor;
-}
+namespace posix { struct descriptor; }
 
 /**
  * Represents a POSIX file descriptor.
