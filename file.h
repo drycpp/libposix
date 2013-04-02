@@ -5,6 +5,8 @@
 
 #include "descriptor.h"
 
+#include <cstddef> /* for std::size_t */
+
 namespace posix {
   class file;
 }
@@ -15,6 +17,11 @@ class posix::file : public posix::descriptor {
      * Constructor.
      */
     file(const int fd) : posix::descriptor(fd) {}
+
+    /**
+     * ...
+     */
+    std::size_t size() const;
 };
 
 #endif /* POSIXXX_FILE_H */
