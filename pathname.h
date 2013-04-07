@@ -24,13 +24,29 @@ class posix::pathname {
      */
     pathname(const char* const path) : _string(path) {}
 
+    /**
+     * ...
+     */
     const std::string& string() const noexcept {
       return _string;
     }
 
+    /**
+     * ...
+     */
     const char* c_str() const noexcept {
       return _string.c_str();
     }
+
+    /**
+     * ...
+     */
+    posix::pathname dirname() const;
+
+    /**
+     * ...
+     */
+    posix::pathname basename() const;
 
   protected:
     std::string _string;
