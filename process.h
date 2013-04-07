@@ -41,6 +41,11 @@ class posix::process {
     bool alive();
 
     /**
+     * Waits for this process to terminate.
+     */
+    int wait();
+
+    /**
      * Waits for this process to change state.
      *
      * @retval true if the process has changed state

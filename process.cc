@@ -21,6 +21,18 @@ process::alive() {
   return _id ? !wait(status, WNOHANG) : false;
 }
 
+int
+process::wait() {
+  assert(_id > 0);
+
+  int status = 0;
+  pid_t rc;
+  do {
+    rc = waitpid(_id, &status, 0);
+  } while (!rc || (rc == -1 && errno == EINTR));
+  return status;
+}
+
 bool
 process::wait(int& status, const int options) {
   assert(_id > 0);
