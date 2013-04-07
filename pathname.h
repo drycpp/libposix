@@ -17,15 +17,23 @@ class posix::pathname {
     /**
      * Constructor.
      */
-    pathname(const std::string& path) : _path(path) {}
+    pathname(const std::string& path) : _string(path) {}
 
     /**
      * Constructor.
      */
-    pathname(const char* path) : _path(path) {}
+    pathname(const char* const path) : _string(path) {}
+
+    const std::string& string() const noexcept {
+      return _string;
+    }
+
+    const char* c_str() const noexcept {
+      return _string.c_str();
+    }
 
   protected:
-    std::string _path;
+    std::string _string;
 };
 
 #endif /* POSIXXX_PATHNAME_H */
