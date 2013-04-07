@@ -7,7 +7,13 @@
 
 #include <cstddef> /* for std::size_t */
 
-namespace posix { class file; }
+namespace posix {
+  class directory;
+  class pathname;
+
+  using file_mode = unsigned int;
+  class file;
+}
 
 /**
  * Represents a POSIX file.
@@ -16,6 +22,14 @@ namespace posix { class file; }
  */
 class posix::file : public posix::descriptor {
   public:
+    static file create(const pathname& pathname, file_mode mode);
+
+    static file create(const directory& directory, const pathname& pathname, file_mode mode);
+
+    static file open(const pathname& pathname, int flags);
+
+    static file open(const directory& directory, const pathname& pathname, int flags);
+
     /**
      * Constructor.
      */
@@ -25,6 +39,9 @@ class posix::file : public posix::descriptor {
      * ...
      */
     std::size_t size() const;
+
+  protected:
+    static file open(int dirfd, const pathname& pathname, int flags, file_mode mode = 0);
 };
 
 #endif /* POSIXXX_FILE_H */
