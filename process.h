@@ -21,6 +21,14 @@ class posix::process {
     process(const process_id id) : _id(id) {}
 
     /**
+     * Assigns a new identifier value to this process.
+     */
+    process& assign(const process_id id) {
+      _id = id;
+      return *this;
+    }
+
+    /**
      * Returns the integer identifier for this process.
      */
     inline process_id id() const {
