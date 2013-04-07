@@ -8,7 +8,7 @@
 
 #include <cassert>      /* for assert() */
 #include <cerrno>       /* for errno */
-#include <csignal>      /* for std::kill() */
+#include <csignal>      /* for SIG*, kill() */
 #include <sys/types.h>  /* for pid_t */
 #include <sys/wait.h>   /* for waitpid() */
 #include <system_error> /* for std::system_error */
@@ -22,8 +22,8 @@ process::alive() {
 }
 
 bool
-process::wait(int& status, int options) {
-  assert(_id != 0);
+process::wait(int& status, const int options) {
+  assert(_id > 0);
 
   for (;;) {
     const pid_t rc = waitpid(_id, &status, options);
@@ -42,6 +42,19 @@ process::wait(int& status, int options) {
 
       default: /* the process has changed state */
         return true;
+    }
+  }
+}
+
+void
+process::signal(const int signum) {
+  assert(_id > 0);
+  assert(signum >= 0);
+
+  if (kill(_id, signum) == -1) {
+    switch (errno) {
+      default:
+        throw std::system_error(errno, std::system_category());
     }
   }
 }

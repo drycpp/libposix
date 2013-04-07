@@ -48,6 +48,11 @@ class posix::process {
      */
     bool wait(int& status, int options);
 
+    /**
+     * Sends a signal to this process.
+     */
+    void signal(int signum);
+
   protected:
     /**
      * The unique positive integer identifier representing a process during
