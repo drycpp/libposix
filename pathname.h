@@ -3,7 +3,8 @@
 #ifndef POSIXXX_PATHNAME_H
 #define POSIXXX_PATHNAME_H
 
-#include <string> /* for std::string */
+#include <stdexcept> /* for std::invalid_argument */
+#include <string>    /* for std::string */
 
 namespace posix { class pathname; }
 
@@ -22,7 +23,11 @@ class posix::pathname {
     /**
      * Constructor.
      */
-    pathname(const char* const path) : _string(path) {}
+    pathname(const char* const path) : _string(path) {
+      if (!path) {
+        throw std::invalid_argument("path cannot be nullptr");
+      }
+    }
 
     /**
      * ...
