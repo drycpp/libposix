@@ -35,6 +35,19 @@ class posix::process {
       return _id;
     }
 
+    /**
+     * Checks whether this process is still alive.
+     */
+    bool alive();
+
+    /**
+     * Waits for this process to change state.
+     *
+     * @retval true if the process has changed state
+     * @retval false if the process has not changed state
+     */
+    bool wait(int& status, int options);
+
   protected:
     /**
      * The unique positive integer identifier representing a process during
