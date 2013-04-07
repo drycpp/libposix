@@ -32,6 +32,13 @@ class posix::pathname {
     /**
      * ...
      */
+    bool empty() const noexcept {
+      return _string.empty();
+    }
+
+    /**
+     * ...
+     */
     const std::string& string() const noexcept {
       return _string;
     }
