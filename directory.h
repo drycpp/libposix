@@ -10,9 +10,11 @@
 namespace posix { class directory; }
 
 /**
+ * Represents a POSIX directory.
+ *
  * @see http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap03.html#tag_03_128
  */
-class posix::directory {
+class posix::directory : public posix::descriptor {
   public:
     class iterator;
 
@@ -20,9 +22,7 @@ class posix::directory {
 
     directory(const std::string& pathname, int dirfd);
 
-    ~directory();
-
-    void close();
+    ~directory() {}
 
     iterator begin() const;
 
@@ -32,18 +32,8 @@ class posix::directory {
 
     const iterator cend() const;
 
-    bool exists() const {
-      return true;
-    }
-
-    int fd() const {
-      return _fd;
-    }
-
   protected:
-    int _fd = -1;
-
-    void open(int dirfd, const std::string& pathname);
+    static int open(int dirfd, const std::string& pathname);
 };
 
 class posix::directory::iterator {

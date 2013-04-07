@@ -15,7 +15,7 @@
 
 using namespace posix;
 
-void
+int
 directory::open(const int dirfd, const std::string& pathname) {
   assert(dirfd > 0 || dirfd == AT_FDCWD);
   assert(!pathname.empty());
@@ -31,7 +31,8 @@ directory::open(const int dirfd, const std::string& pathname) {
   flags |= O_NOATIME;   /* Linux-specific */
 #endif
 
-  if ((_fd = openat(dirfd, pathname.c_str(), flags)) == -1) {
+  int fd;
+  if ((fd = openat(dirfd, pathname.c_str(), flags)) == -1) {
     switch (errno) {
       case EMFILE: /* Too many open files */
       case ENFILE: /* Too many open files in system */
@@ -41,27 +42,15 @@ directory::open(const int dirfd, const std::string& pathname) {
         throw std::system_error(errno, std::system_category());
     }
   }
+
+  return fd;
 }
 
-directory::directory(const std::string& pathname) {
-  open(AT_FDCWD, pathname);
-}
+directory::directory(const std::string& pathname)
+  : descriptor(open(AT_FDCWD, pathname)) {}
 
-directory::directory(const std::string& pathname, const int dirfd) {
-  open(dirfd, pathname);
-}
-
-directory::~directory() {
-  close();
-}
-
-void
-directory::close() {
-  if (_fd > 0) {
-    ::close(_fd);
-    _fd = -1;
-  }
-}
+directory::directory(const std::string& pathname, const int dirfd)
+  : descriptor(open(dirfd, pathname)) {}
 
 directory::iterator
 directory::begin() const {
