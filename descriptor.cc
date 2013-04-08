@@ -115,7 +115,7 @@ descriptor::chmod(const mode mode) {
 }
 
 void
-descriptor::close() {
+descriptor::close() noexcept {
   if (valid()) {
     if (::close(_fd) == -1) {
       /* Ignore any errors from close(). */

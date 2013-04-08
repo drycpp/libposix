@@ -155,7 +155,7 @@ struct posix::descriptor {
      *
      * @note this method is idempotent
      */
-    void close();
+    void close() noexcept;
 
   protected:
     /**
