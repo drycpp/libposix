@@ -4,6 +4,7 @@
 #define POSIXXX_MESSAGE_QUEUE_H
 
 #include "descriptor.h"
+#include "mode.h"
 
 #include <cstddef> /* for std::size_t */
 #include <string>  /* for std::string */
@@ -20,7 +21,7 @@ namespace posix { class message_queue; }
  */
 class posix::message_queue : public posix::descriptor {
   public:
-    static message_queue open(const std::string& name, int flags);
+    static message_queue open(const std::string& name, int flags, mode mode = 0);
 
     /**
      * Constructor.

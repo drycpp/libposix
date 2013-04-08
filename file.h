@@ -4,13 +4,13 @@
 #define POSIXXX_FILE_H
 
 #include "descriptor.h"
+#include "mode.h"
 
 #include <cstddef> /* for std::size_t */
 #include <utility> /* for std::move() */
 
 namespace posix {
   class directory;
-  using file_mode = unsigned int;
   class file;
   class pathname;
 }
@@ -22,9 +22,9 @@ namespace posix {
  */
 class posix::file : public posix::descriptor {
   public:
-    static file create(const pathname& pathname, file_mode mode);
+    static file create(const pathname& pathname, mode mode);
 
-    static file create(const directory& directory, const pathname& pathname, file_mode mode);
+    static file create(const directory& directory, const pathname& pathname, mode mode);
 
     static file open(const pathname& pathname, int flags);
 
@@ -56,7 +56,7 @@ class posix::file : public posix::descriptor {
     std::size_t size() const;
 
   protected:
-    static file open(int dirfd, const pathname& pathname, int flags, file_mode mode = 0);
+    static file open(int dirfd, const pathname& pathname, int flags, mode mode = 0);
 };
 
 #endif /* POSIXXX_FILE_H */

@@ -18,11 +18,11 @@ static_assert(sizeof(mqd_t) <= sizeof(int),
   "sizeof(mqd_t) > sizeof(int)");
 
 message_queue
-message_queue::open(const std::string& name, const int flags) {
+message_queue::open(const std::string& name, const int flags, const mode mode) {
   assert(!name.empty());
 
   mqd_t mqd;
-  if ((mqd = mq_open(name.c_str(), flags)) == -1) {
+  if ((mqd = mq_open(name.c_str(), flags, mode, nullptr)) == -1) {
     switch (errno) {
       case EMFILE: /* Too many open files */
       case ENFILE: /* Too many open files in system */

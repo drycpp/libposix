@@ -19,14 +19,11 @@
 
 using namespace posix;
 
-static_assert(sizeof(mode_t) <= sizeof(file_mode),
-  "sizeof(mode_t) > sizeof(file_mode)");
-
 file
 file::open(const int dirfd,
            const pathname& pathname,
            const int flags,
-           const file_mode mode) {
+           const mode mode) {
   assert(dirfd > 0 || dirfd == AT_FDCWD);
   assert(!pathname.empty());
 
@@ -47,7 +44,7 @@ file::open(const int dirfd,
 
 file
 file::create(const pathname& pathname,
-             const file_mode mode) {
+             const mode mode) {
   const int flags = O_CREAT | O_WRONLY | O_TRUNC;
   return open(AT_FDCWD, pathname, flags, mode);
 }
@@ -55,7 +52,7 @@ file::create(const pathname& pathname,
 file
 file::create(const directory& directory,
              const pathname& pathname,
-             const file_mode mode) {
+             const mode mode) {
   const int flags = O_CREAT | O_WRONLY | O_TRUNC;
   return open(directory.fd(), pathname, flags, mode);
 }

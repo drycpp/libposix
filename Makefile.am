@@ -11,6 +11,7 @@ libposix___la_SOURCES =   \
   file.cc                 \
   group.cc                \
   message_queue.cc        \
+  mode.cc                 \
   module.cc               \
   pathname.cc             \
   process.cc              \
@@ -27,6 +28,7 @@ base_pkginclude_HEADERS = \
   file.h                  \
   group.h                 \
   message_queue.h         \
+  mode.h                  \
   module.h                \
   pathname.h              \
   process.h               \
