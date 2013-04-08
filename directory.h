@@ -5,7 +5,8 @@
 
 #include "descriptor.h"
 
-#include <string> /* for std::string */
+#include <string>  /* for std::string */
+#include <utility> /* for std::move() */
 
 namespace posix {
   class directory;
@@ -29,6 +30,16 @@ class posix::directory : public posix::descriptor {
      * Constructor.
      */
     directory(const int fd) : descriptor(fd) {}
+
+    /**
+     * Copy constructor.
+     */
+    directory(const directory& other) : descriptor(other) {}
+
+    /**
+     * Move constructor.
+     */
+    directory(directory&& other) : descriptor(std::move(other)) {}
 
     /**
      * Destructor.
