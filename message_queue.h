@@ -58,7 +58,7 @@ class posix::message_queue : public posix::descriptor {
     /**
      * Destructor.
      */
-    ~message_queue();
+    ~message_queue() noexcept;
 
     /**
      * Closes this message queue.

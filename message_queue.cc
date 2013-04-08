@@ -66,7 +66,7 @@ message_queue::open(const char* const name,
   return message_queue(mqd);
 }
 
-message_queue::~message_queue() {
+message_queue::~message_queue() noexcept {
   close();
 }
 

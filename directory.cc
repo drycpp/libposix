@@ -113,7 +113,7 @@ directory::iterator::iterator(const directory& dir) {
   }
 }
 
-directory::iterator::~iterator() {
+directory::iterator::~iterator() noexcept {
   if (_dirp) {
     if (closedir(reinterpret_cast<DIR*>(_dirp)) == -1) {
       /* Ignore any errors from `closedir()`. */

@@ -48,7 +48,7 @@ struct posix::descriptor {
     /**
      * Destructor. Invokes `close()` if the descriptor is valid.
      */
-    ~descriptor();
+    ~descriptor() noexcept;
 
     /**
      * Copy assignment operator.

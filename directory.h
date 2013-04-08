@@ -44,7 +44,7 @@ class posix::directory : public posix::descriptor {
     /**
      * Destructor.
      */
-    ~directory() {}
+    ~directory() noexcept {}
 
     iterator begin() const;
 
@@ -64,7 +64,7 @@ class posix::directory::iterator {
 
     iterator(const directory& dir);
 
-    ~iterator();
+    ~iterator() noexcept;
 
     bool operator==(const iterator& other) {
       return !operator!=(other);

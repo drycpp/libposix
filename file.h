@@ -48,7 +48,7 @@ class posix::file : public posix::descriptor {
     /**
      * Destructor.
      */
-    ~file() {}
+    ~file() noexcept {}
 
     /**
      * ...

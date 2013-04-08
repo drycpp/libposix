@@ -46,7 +46,7 @@ descriptor::descriptor(const descriptor& other) {
   }
 }
 
-descriptor::~descriptor() {
+descriptor::~descriptor() noexcept {
   close();
 }
 
