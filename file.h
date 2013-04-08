@@ -10,10 +10,9 @@
 
 namespace posix {
   class directory;
-  class pathname;
-
   using file_mode = unsigned int;
   class file;
+  class pathname;
 }
 
 /**

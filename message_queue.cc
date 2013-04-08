@@ -14,3 +14,6 @@
 #include <unistd.h>     /* for lseek() */
 
 using namespace posix;
+
+static_assert(sizeof(mqd_t) <= sizeof(int),
+  "sizeof(mqd_t) > sizeof(int)");

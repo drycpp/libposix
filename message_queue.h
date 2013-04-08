@@ -6,13 +6,16 @@
 #include "descriptor.h"
 
 #include <cstddef> /* for std::size_t */
+#include <utility> /* for std::move() */
 
 namespace posix { class message_queue; }
 
 /**
  * Represents a POSIX message queue.
  *
- * @see http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap03.html#tag_03_224
+ * @note Assume that message queue descriptors are actually file descriptors.
+ *       This is the case on at least Linux and FreeBSD.
+ * @see  http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap03.html#tag_03_224
  */
 class posix::message_queue : public posix::descriptor {
   public:
@@ -20,6 +23,21 @@ class posix::message_queue : public posix::descriptor {
      * Constructor.
      */
     message_queue(const int fd) : descriptor(fd) {}
+
+    /**
+     * Copy constructor.
+     */
+    message_queue(const message_queue& other) : descriptor(other) {}
+
+    /**
+     * Move constructor.
+     */
+    message_queue(message_queue&& other) : descriptor(std::move(other)) {}
+
+    /**
+     * Destructor.
+     */
+    ~message_queue() {}
 };
 
 #endif /* POSIXXX_MESSAGE_QUEUE_H */
