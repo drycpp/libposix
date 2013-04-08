@@ -65,3 +65,17 @@ message_queue::open(const char* const name,
 
   return message_queue(mqd);
 }
+
+message_queue::~message_queue() {
+  close();
+}
+
+void
+message_queue::close() noexcept {
+  if (valid()) {
+    if (mq_close(static_cast<mqd_t>(_fd)) == -1) {
+      /* Ignore any errors from mq_close(). */
+    }
+    _fd = -1;
+  }
+}

@@ -58,7 +58,14 @@ class posix::message_queue : public posix::descriptor {
     /**
      * Destructor.
      */
-    ~message_queue() {}
+    ~message_queue();
+
+    /**
+     * Closes this message queue.
+     *
+     * @note this method is idempotent
+     */
+    void close() noexcept;
 
   protected:
     static message_queue open(const char* name,
