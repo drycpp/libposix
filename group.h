@@ -4,8 +4,8 @@
 #define POSIXXX_GROUP_H
 
 namespace posix {
-  using group_id = unsigned int;
   class group;
+  using group_id = unsigned int;
 }
 
 /**

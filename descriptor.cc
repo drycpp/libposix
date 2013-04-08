@@ -6,13 +6,18 @@
 
 #include "descriptor.h"
 
+#include "group.h"
+#include "mode.h"
+#include "user.h"
+
 #include <cassert>      /* for assert() */
 #include <cerrno>       /* for errno */
 #include <fcntl.h>      /* for F_*, fcntl() */
 #include <stdexcept>    /* for std::invalid_argument */
 #include <string>       /* for std::string */
+#include <sys/stat.h>   /* for fchmod() */
 #include <system_error> /* for std::system_error */
-#include <unistd.h>     /* for close() */
+#include <unistd.h>     /* for close(), fchown() */
 
 using namespace posix;
 
@@ -79,6 +84,34 @@ descriptor::status() const {
     }
   }
   return status;
+}
+
+void
+descriptor::chown(const user& user,
+                  const group& group) {
+  const uid_t uid = static_cast<uid_t>(user.id());
+  const gid_t gid = static_cast<gid_t>(group.id());
+
+  if (fchown(_fd, uid, gid) == -1) {
+    switch (errno) {
+      case ENOMEM: /* Cannot allocate memory in kernel */
+        throw std::system_error(errno, std::system_category()); // FIXME
+      default:
+        throw std::system_error(errno, std::system_category());
+    }
+  }
+}
+
+void
+descriptor::chmod(const mode mode) {
+  if (fchmod(_fd, static_cast<mode_t>(mode)) == -1) {
+    switch (errno) {
+      case ENOMEM: /* Cannot allocate memory in kernel */
+        throw std::system_error(errno, std::system_category()); // FIXME
+      default:
+        throw std::system_error(errno, std::system_category());
+    }
+  }
 }
 
 void

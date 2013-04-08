@@ -3,9 +3,15 @@
 #ifndef POSIXXX_DESCRIPTOR_H
 #define POSIXXX_DESCRIPTOR_H
 
+#include "mode.h"
+
 #include <utility> /* for std::swap() */
 
-namespace posix { struct descriptor; }
+namespace posix {
+  struct descriptor;
+  class group;
+  class user;
+}
 
 /**
  * Represents a POSIX file descriptor.
@@ -133,6 +139,16 @@ struct posix::descriptor {
      * Returns the file status flags.
      */
     int status() const;
+
+    /**
+     * ...
+     */
+    void chown(const user& user, const group& group);
+
+    /**
+     * ...
+     */
+    void chmod(const mode mode);
 
     /**
      * Closes this descriptor.

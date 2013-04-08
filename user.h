@@ -4,8 +4,8 @@
 #define POSIXXX_USER_H
 
 namespace posix {
-  using user_id = unsigned int;
   class user;
+  using user_id = unsigned int;
 }
 
 /**
