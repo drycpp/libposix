@@ -10,7 +10,20 @@
 #include <string>  /* for std::string */
 #include <utility> /* for std::move() */
 
-namespace posix { class message_queue; }
+namespace posix {
+  class message_queue;
+  struct message_queue_attr;
+}
+
+/**
+ * @see http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/mqueue.h.html
+ */
+struct posix::message_queue_attr {
+  long flags   = 0;
+  long maxmsg  = 0;
+  long msgsize = 0;
+  long curmsgs = 0;
+};
 
 /**
  * Represents a POSIX message queue.
@@ -21,7 +34,11 @@ namespace posix { class message_queue; }
  */
 class posix::message_queue : public posix::descriptor {
   public:
-    static message_queue open(const std::string& name, int flags, mode mode = 0);
+    static message_queue open(const std::string& name,
+      int flags, mode mode = 0);
+
+    static message_queue open(const std::string& name,
+      int flags, mode mode, const message_queue_attr& attributes);
 
     /**
      * Constructor.
@@ -42,6 +59,10 @@ class posix::message_queue : public posix::descriptor {
      * Destructor.
      */
     ~message_queue() {}
+
+  protected:
+    static message_queue open(const char* name,
+      int flags, mode mode, const message_queue_attr* attributes);
 };
 
 #endif /* POSIXXX_MESSAGE_QUEUE_H */
