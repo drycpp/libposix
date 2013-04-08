@@ -6,6 +6,7 @@
 #include "descriptor.h"
 
 #include <cstddef> /* for std::size_t */
+#include <string>  /* for std::string */
 #include <utility> /* for std::move() */
 
 namespace posix { class message_queue; }
@@ -19,6 +20,8 @@ namespace posix { class message_queue; }
  */
 class posix::message_queue : public posix::descriptor {
   public:
+    static message_queue open(const std::string& name, int flags);
+
     /**
      * Constructor.
      */
