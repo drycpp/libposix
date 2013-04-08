@@ -6,6 +6,8 @@
 
 #include "directory.h"
 
+#include "pathname.h"
+
 #include <cassert>      /* for assert() */
 #include <dirent.h>     /* for fdopendir() */
 #include <fcntl.h>      /* for AT_FDCWD, fcntl() */
@@ -15,8 +17,8 @@
 
 using namespace posix;
 
-int
-directory::open(const int dirfd, const std::string& pathname) {
+directory
+directory::open(const int dirfd, const pathname& pathname) {
   assert(dirfd > 0 || dirfd == AT_FDCWD);
   assert(!pathname.empty());
 
@@ -43,14 +45,19 @@ directory::open(const int dirfd, const std::string& pathname) {
     }
   }
 
-  return fd;
+  return directory(fd);
 }
 
-directory::directory(const std::string& pathname)
-  : descriptor(open(AT_FDCWD, pathname)) {}
+directory
+directory::open(const pathname& pathname) {
+  return open(AT_FDCWD, pathname);
+}
 
-directory::directory(const std::string& pathname, const int dirfd)
-  : descriptor(open(dirfd, pathname)) {}
+directory
+directory::open(const directory& directory,
+                const pathname& pathname) {
+  return open(directory.fd(), pathname);
+}
 
 directory::iterator
 directory::begin() const {

@@ -7,7 +7,10 @@
 
 #include <string> /* for std::string */
 
-namespace posix { class directory; }
+namespace posix {
+  class directory;
+  class pathname;
+}
 
 /**
  * Represents a POSIX directory.
@@ -18,10 +21,18 @@ class posix::directory : public posix::descriptor {
   public:
     class iterator;
 
-    directory(const std::string& pathname);
+    static directory open(const pathname& pathname);
 
-    directory(const std::string& pathname, int dirfd);
+    static directory open(const directory& directory, const pathname& pathname);
 
+    /**
+     * Constructor.
+     */
+    directory(const int fd) : descriptor(fd) {}
+
+    /**
+     * Destructor.
+     */
     ~directory() {}
 
     iterator begin() const;
@@ -33,7 +44,7 @@ class posix::directory : public posix::descriptor {
     const iterator cend() const;
 
   protected:
-    static int open(int dirfd, const std::string& pathname);
+    static directory open(int dirfd, const pathname& pathname);
 };
 
 class posix::directory::iterator {

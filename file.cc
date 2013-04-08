@@ -27,6 +27,7 @@ file::open(const int dirfd,
            const pathname& pathname,
            const int flags,
            const file_mode mode) {
+  assert(dirfd > 0 || dirfd == AT_FDCWD);
   assert(!pathname.empty());
 
   int fd;
