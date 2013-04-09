@@ -33,17 +33,20 @@ class posix::file : public posix::descriptor {
     /**
      * Constructor.
      */
-    file(const int fd) : descriptor(fd) {}
+    file(const int fd) noexcept
+      : descriptor(fd) {}
 
     /**
      * Copy constructor.
      */
-    file(const file& other) : descriptor(other) {}
+    file(const file& other) /* may throw */
+      : descriptor(other) {}
 
     /**
      * Move constructor.
      */
-    file(file&& other) : descriptor(std::move(other)) {}
+    file(file&& other) noexcept
+      : descriptor(std::move(other)) {}
 
     /**
      * Destructor.

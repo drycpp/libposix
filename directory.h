@@ -29,17 +29,20 @@ class posix::directory : public posix::descriptor {
     /**
      * Constructor.
      */
-    directory(const int fd) : descriptor(fd) {}
+    directory(const int fd) noexcept
+      : descriptor(fd) {}
 
     /**
      * Copy constructor.
      */
-    directory(const directory& other) : descriptor(other) {}
+    directory(const directory& other) /* may throw */
+      : descriptor(other) {}
 
     /**
      * Move constructor.
      */
-    directory(directory&& other) : descriptor(std::move(other)) {}
+    directory(directory&& other) noexcept
+      : descriptor(std::move(other)) {}
 
     /**
      * Destructor.
@@ -60,7 +63,7 @@ class posix::directory : public posix::descriptor {
 
 class posix::directory::iterator {
   public:
-    iterator() {}
+    iterator() noexcept {}
 
     iterator(const directory& dir);
 

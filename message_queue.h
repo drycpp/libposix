@@ -43,17 +43,20 @@ class posix::message_queue : public posix::descriptor {
     /**
      * Constructor.
      */
-    message_queue(const int fd) : descriptor(fd) {}
+    message_queue(const int fd) noexcept
+      : descriptor(fd) {}
 
     /**
      * Copy constructor.
      */
-    message_queue(const message_queue& other) : descriptor(other) {}
+    message_queue(const message_queue& other) /* may throw */
+      : descriptor(other) {}
 
     /**
      * Move constructor.
      */
-    message_queue(message_queue&& other) : descriptor(std::move(other)) {}
+    message_queue(message_queue&& other) noexcept
+      : descriptor(std::move(other)) {}
 
     /**
      * Destructor.

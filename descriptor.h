@@ -24,24 +24,25 @@ struct posix::descriptor {
     /**
      * Default constructor. The descriptor is invalid after construction.
      */
-    descriptor() {}
+    descriptor() noexcept {}
 
     /**
      * Constructor.
      */
-    descriptor(const int fd) {
+    descriptor(const int fd) noexcept {
       _fd = fd;
     }
 
     /**
      * Copy constructor.
      */
-    descriptor(const descriptor& other);
+    descriptor(const descriptor& other); /* may throw */
 
     /**
      * Move constructor.
      */
-    descriptor(descriptor&& other) : descriptor() {
+    descriptor(descriptor&& other) noexcept
+      : descriptor() {
       std::swap(_fd, other._fd);
     }
 
@@ -53,7 +54,7 @@ struct posix::descriptor {
     /**
      * Copy assignment operator.
      */
-    descriptor& operator=(descriptor other) {
+    descriptor& operator=(descriptor other) noexcept {
       std::swap(_fd, other._fd);
       return *this;
     }
@@ -61,7 +62,7 @@ struct posix::descriptor {
     /**
      * Move assignment operator.
      */
-    descriptor& operator=(descriptor&& other) {
+    descriptor& operator=(descriptor&& other) noexcept {
       if (this != &other) {
         close();
       }
@@ -72,7 +73,7 @@ struct posix::descriptor {
     /**
      * Assigns a new value to this descriptor.
      */
-    descriptor& assign(const int fd) {
+    descriptor& assign(const int fd) noexcept {
       close();
       _fd = fd;
       return *this;
@@ -109,14 +110,14 @@ struct posix::descriptor {
     /**
      * Returns the underlying native integer descriptor.
      */
-    inline int fd() const {
+    inline int fd() const noexcept {
       return _fd;
     }
 
     /**
      * Checks whether this descriptor is valid.
      */
-    inline bool valid() const {
+    inline bool valid() const noexcept {
       return _fd >= 0;
     }
 
