@@ -10,6 +10,7 @@
 #include "mode.h"
 #include "user.h"
 
+#include <array>        /* for std::array */
 #include <cassert>      /* for assert() */
 #include <cerrno>       /* for errno */
 #include <fcntl.h>      /* for F_*, fcntl() */
@@ -17,7 +18,7 @@
 #include <string>       /* for std::string */
 #include <sys/stat.h>   /* for fchmod() */
 #include <system_error> /* for std::system_error */
-#include <unistd.h>     /* for close(), fchown() */
+#include <unistd.h>     /* for close(), fchown(), read() */
 
 using namespace posix;
 
@@ -110,6 +111,35 @@ descriptor::chmod(const mode mode) {
         throw std::system_error(errno, std::system_category()); // FIXME
       default:
         throw std::system_error(errno, std::system_category());
+    }
+  }
+}
+
+std::string
+descriptor::read() {
+  std::string result;
+  std::array<char, 4096> buffer;
+
+  for (;;) {
+    const ssize_t rc = ::read(_fd, buffer.data(), buffer.size());
+    switch (rc) {
+      case -1:
+        switch (errno) {
+          case EINTR: /* Interrupted system call */
+            continue; /* try again */
+          case EFAULT:
+            assert(errno != EFAULT); /* should never be reached */
+            throw std::system_error(errno, std::system_category());
+          default:
+            throw std::system_error(errno, std::system_category());
+        }
+
+      case 0:
+        return result; /* all done, EOF reached */
+
+      default:
+        assert(rc > 0);
+        result.append(buffer.data(), static_cast<std::size_t>(rc));
     }
   }
 }

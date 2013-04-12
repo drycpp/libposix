@@ -5,6 +5,7 @@
 
 #include "mode.h"
 
+#include <string>  /* for std::string */
 #include <utility> /* for std::swap() */
 
 namespace posix {
@@ -150,6 +151,11 @@ struct posix::descriptor {
      * ...
      */
     void chmod(const mode mode);
+
+    /**
+     * ...
+     */
+    std::string read();
 
     /**
      * Closes this descriptor.
