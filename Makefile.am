@@ -1,6 +1,6 @@
 AM_CPPFLAGS     = -I$(top_srcdir)/lib -I$(top_srcdir)/src -iquote $(srcdir)
 AM_CXXFLAGS     = -Wall -Wextra -pipe
-AM_LDFLAGS      = -rdynamic -Xlinker '-z,relro' -Xlinker '--as-needed'
+AM_LDFLAGS      = -rdynamic -Xlinker '-z,relro' -Xlinker '--as-needed' -lrt
 LDADD           = libposix++.la
 lib_LTLIBRARIES = libposix++.la
 
