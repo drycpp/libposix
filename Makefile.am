@@ -10,6 +10,7 @@ libposix___la_SOURCES =   \
   feature.cc              \
   file.cc                 \
   group.cc                \
+  local_socket.cc         \
   message_queue.cc        \
   mode.cc                 \
   module.cc               \
@@ -27,6 +28,7 @@ base_pkginclude_HEADERS = \
   feature.h               \
   file.h                  \
   group.h                 \
+  local_socket.h          \
   message_queue.h         \
   mode.h                  \
   module.h                \
