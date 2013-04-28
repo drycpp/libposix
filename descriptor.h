@@ -145,6 +145,21 @@ struct posix::descriptor {
     /**
      * ...
      */
+    int fcntl(int cmd) const;
+
+    /**
+     * ...
+     */
+    int fcntl(int cmd, int arg);
+
+    /**
+     * ...
+     */
+    int fcntl(int cmd, void* arg);
+
+    /**
+     * ...
+     */
     void chown(const user& user, const group& group);
 
     /**

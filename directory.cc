@@ -81,9 +81,9 @@ directory::cend() const {
 
 directory::iterator::iterator(const directory& dir) {
 #ifdef F_DUPFD_CLOEXEC
-  const int dirfd = fcntl(dir.fd(), F_DUPFD_CLOEXEC, 0);
+  const int dirfd = ::fcntl(dir.fd(), F_DUPFD_CLOEXEC, 0);
 #else
-  const int dirfd = fcntl(dir.fd(), F_DUPFD, 0);
+  const int dirfd = ::fcntl(dir.fd(), F_DUPFD, 0);
 #endif
   if (dirfd == -1) {
     switch (errno) {

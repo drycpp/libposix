@@ -29,9 +29,9 @@ descriptor::descriptor(const descriptor& other) {
 #ifdef F_DUPFD_CLOEXEC
     const bool fd_cloexec = other.flags() & FD_CLOEXEC;
     const int fcntl_cmd = fd_cloexec ? F_DUPFD_CLOEXEC : F_DUPFD;
-    _fd = fcntl(other._fd, fcntl_cmd, 0);
+    _fd = ::fcntl(other._fd, fcntl_cmd, 0);
 #else
-    _fd = fcntl(other._fd, F_DUPFD, 0);
+    _fd = ::fcntl(other._fd, F_DUPFD, 0);
 #endif
 
     if (_fd == -1) {
@@ -65,26 +65,50 @@ descriptor::writable() const {
 
 int
 descriptor::flags() const {
-  const int flags = fcntl(_fd, F_GETFD);
-  if (flags == -1) {
-    switch (errno) {
-      default:
-        throw std::system_error(errno, std::system_category());
-    }
-  }
-  return flags;
+  return fcntl(F_GETFD);
 }
 
 int
 descriptor::status() const {
-  const int status = fcntl(_fd, F_GETFL);
-  if (status == -1) {
+  return fcntl(F_GETFL);
+}
+
+int
+descriptor::fcntl(const int cmd) const {
+  const int result = ::fcntl(_fd, cmd);
+  if (result == -1) {
     switch (errno) {
       default:
         throw std::system_error(errno, std::system_category());
     }
   }
-  return status;
+  return result;
+}
+
+int
+descriptor::fcntl(const int cmd,
+                  const int arg) {
+  const int result = ::fcntl(_fd, cmd, arg);
+  if (result == -1) {
+    switch (errno) {
+      default:
+        throw std::system_error(errno, std::system_category());
+    }
+  }
+  return result;
+}
+
+int
+descriptor::fcntl(const int cmd,
+                  void* const arg) {
+  const int result = ::fcntl(_fd, cmd, arg);
+  if (result == -1) {
+    switch (errno) {
+      default:
+        throw std::system_error(errno, std::system_category());
+    }
+  }
+  return result;
 }
 
 void
