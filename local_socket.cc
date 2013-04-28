@@ -18,7 +18,7 @@
 using namespace posix;
 
 local_socket
-local_socket::open(const pathname& pathname) {
+local_socket::connect(const pathname& pathname) {
   assert(!pathname.empty());
 
   int sockfd;
@@ -42,7 +42,7 @@ local_socket::open(const pathname& pathname) {
   const socklen_t addrlen = sizeof(addr.sun_family) + std::strlen(addr.sun_path);
 
 retry:
-  if (connect(sockfd, reinterpret_cast<struct sockaddr*>(&addr), addrlen) == -1) {
+  if (::connect(sockfd, reinterpret_cast<struct sockaddr*>(&addr), addrlen) == -1) {
     switch (errno) {
       case EINTR:  /* Interrupted system call */
         goto retry;

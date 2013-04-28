@@ -22,7 +22,7 @@ namespace posix {
  */
 class posix::local_socket : public posix::descriptor {
   public:
-    static local_socket open(const pathname& pathname);
+    static local_socket connect(const pathname& pathname);
 
     /**
      * Constructor.
