@@ -46,6 +46,11 @@ class posix::local_socket : public posix::descriptor {
      * Destructor.
      */
     ~local_socket() noexcept {}
+
+    /**
+     * Receives a descriptor from the peer.
+     */
+    descriptor recvfd();
 };
 
 #endif /* POSIXXX_LOCAL_SOCKET_H */
