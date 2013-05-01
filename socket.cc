@@ -32,9 +32,9 @@ socket::send(const void* const data,
              const std::size_t size) {
   assert(data != nullptr);
 
-  std::size_t sent = 0;
-  while (sent < size) {
-    const ssize_t rc = ::send(fd(), reinterpret_cast<const std::uint8_t*>(data) + sent, size - sent, 0);
+  std::size_t pos = 0;
+  while (pos < size) {
+    const ssize_t rc = ::send(fd(), reinterpret_cast<const std::uint8_t*>(data) + pos, size - pos, 0);
     if (rc == -1) {
       switch (errno) {
         case EINTR:  /* Interrupted system call */
@@ -45,6 +45,6 @@ socket::send(const void* const data,
           throw std::system_error(errno, std::system_category());
       }
     }
-    sent += rc;
+    pos += rc;
   }
 }

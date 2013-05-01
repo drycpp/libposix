@@ -5,6 +5,7 @@
 
 #include "mode.h"
 
+#include <cstddef> /* for std::size_t */
 #include <string>  /* for std::string */
 #include <utility> /* for std::swap() */
 
@@ -168,7 +169,27 @@ struct posix::descriptor {
     void chmod(const mode mode);
 
     /**
-     * ...
+     * Writes a string to this descriptor.
+     */
+    void write(const std::string& string);
+
+    /**
+     * Writes data to this descriptor.
+     */
+    void write(const char* data);
+
+    /**
+     * Writes data to this descriptor.
+     *
+     * Will either write all the given data, or throw an error.
+     *
+     * Retries the operation automatically in case an `EINTR`
+     * (interrupted system call) error is encountered.
+     */
+    void write(const void* data, std::size_t size);
+
+    /**
+     * Reads a string from this descriptor.
      */
     std::string read();
 

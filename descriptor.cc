@@ -13,16 +13,18 @@
 #include <array>        /* for std::array */
 #include <cassert>      /* for assert() */
 #include <cerrno>       /* for errno */
+#include <cstring>      /* for std::strlen() */
 #include <fcntl.h>      /* for F_*, fcntl() */
 #include <stdexcept>    /* for std::invalid_argument */
 #include <string>       /* for std::string */
 #include <sys/stat.h>   /* for fchmod() */
 #include <system_error> /* for std::system_error */
-#include <unistd.h>     /* for close(), fchown(), read() */
+#include <unistd.h>     /* for close(), fchown(), read(), write() */
 
 using namespace posix;
 
-static const std::string invalid_in_copy_constructor = "invalid descriptor passed to copy constructor";
+static const std::string invalid_in_copy_constructor =
+  "invalid descriptor passed to copy constructor";
 
 descriptor::descriptor(const descriptor& other) {
   if (other.valid()) {
@@ -136,6 +138,40 @@ descriptor::chmod(const mode mode) {
       default:
         throw std::system_error(errno, std::system_category());
     }
+  }
+}
+
+void
+descriptor::write(const std::string& string) {
+  return write(string.data(), string.size());
+}
+
+void
+descriptor::write(const char* const data) {
+  assert(data != nullptr);
+
+  return write(data, std::strlen(data));
+}
+
+void
+descriptor::write(const void* const data,
+                  const std::size_t size) {
+  assert(data != nullptr);
+
+  std::size_t pos = 0;
+  while (pos < size) {
+    const ssize_t rc = ::write(fd(), reinterpret_cast<const std::uint8_t*>(data) + pos, size - pos);
+    if (rc == -1) {
+      switch (errno) {
+        case EINTR:  /* Interrupted system call */
+          continue;
+        case ENOMEM: /* Cannot allocate memory in kernel */
+          throw std::system_error(errno, std::system_category()); // FIXME
+        default:
+          throw std::system_error(errno, std::system_category());
+      }
+    }
+    pos += rc;
   }
 }
 
