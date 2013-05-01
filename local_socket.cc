@@ -11,6 +11,7 @@
 #include <array>        /* for std::array */
 #include <cassert>      /* for assert() */
 #include <cerrno>       /* for errno */
+#include <cstdint>      /* for std::uint8_t */
 #include <cstring>      /* for std::memset(), std::strlen() */
 #include <fcntl.h>      /* for F_*, fcntl() */
 #include <stdexcept>    /* for std::logic_error */
@@ -74,7 +75,21 @@ local_socket::send(const void* const data,
                    const std::size_t size) {
   assert(data != nullptr);
 
-  (void)data, (void)size; // TODO
+  std::size_t sent = 0;
+  while (sent < size) {
+    const ssize_t rc = ::send(fd(), reinterpret_cast<const std::uint8_t*>(data) + sent, size - sent, 0);
+    if (rc == -1) {
+      switch (errno) {
+        case EINTR:  /* Interrupted system call */
+          continue;
+        case ENOMEM: /* Cannot allocate memory in kernel */
+          throw std::system_error(errno, std::system_category()); // FIXME
+        default:
+          throw std::system_error(errno, std::system_category());
+      }
+    }
+    sent += rc;
+  }
 }
 
 void
