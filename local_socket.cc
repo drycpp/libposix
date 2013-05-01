@@ -14,7 +14,7 @@
 #include <cstring>      /* for std::memset(), std::strlen() */
 #include <fcntl.h>      /* for F_*, fcntl() */
 #include <stdexcept>    /* for std::logic_error */
-#include <sys/socket.h> /* for AF_LOCAL, CMSG_*, connect(), recvmsg(), socket() */
+#include <sys/socket.h> /* for AF_LOCAL, CMSG_*, connect(), recvmsg(), send(), socket() */
 #include <sys/un.h>     /* for struct sockaddr_un */
 #include <system_error> /* for std::system_error */
 
@@ -55,6 +55,31 @@ retry:
   }
 
   return socket;
+}
+
+void
+local_socket::send(const std::string& string) {
+  return send(string.c_str(), string.size());
+}
+
+void
+local_socket::send(const void* const data) {
+  assert(data != nullptr);
+
+  return send(data, std::strlen(reinterpret_cast<const char*>(data)));
+}
+
+void
+local_socket::send(const void* const data,
+                   const std::size_t size) {
+  assert(data != nullptr);
+
+  (void)data, (void)size; // TODO
+}
+
+void
+local_socket::send(const descriptor& descriptor) {
+  (void)descriptor; // TODO
 }
 
 descriptor

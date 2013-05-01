@@ -48,6 +48,26 @@ class posix::local_socket : public posix::descriptor {
     ~local_socket() noexcept {}
 
     /**
+     * Sends a string to the peer.
+     */
+    void send(const std::string& string);
+
+    /**
+     * Sends data to the peer.
+     */
+    void send(const void* data);
+
+    /**
+     * Sends data to the peer.
+     */
+    void send(const void* data, std::size_t size);
+
+    /**
+     * Sends a descriptor to the peer.
+     */
+    void send(const descriptor& descriptor);
+
+    /**
      * Receives a descriptor from the peer.
      */
     descriptor recvfd();
