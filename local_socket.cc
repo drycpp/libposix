@@ -15,7 +15,7 @@
 #include <cstring>      /* for std::memset(), std::strlen() */
 #include <fcntl.h>      /* for F_*, fcntl() */
 #include <stdexcept>    /* for std::logic_error */
-#include <sys/socket.h> /* for AF_LOCAL, CMSG_*, connect(), recvmsg(), send(), socket() */
+#include <sys/socket.h> /* for AF_LOCAL, CMSG_*, connect(), recvmsg(), sendmsg(), socket() */
 #include <sys/un.h>     /* for struct sockaddr_un */
 #include <system_error> /* for std::system_error */
 
@@ -26,7 +26,7 @@ local_socket::connect(const pathname& pathname) {
   assert(!pathname.empty());
 
   int sockfd;
-  if ((sockfd = socket(AF_LOCAL, SOCK_STREAM, 0)) == -1) {
+  if ((sockfd = ::socket(AF_LOCAL, SOCK_STREAM, 0)) == -1) {
     switch (errno) {
       case EMFILE: /* Too many open files */
       case ENFILE: /* Too many open files in system */
@@ -56,40 +56,6 @@ retry:
   }
 
   return socket;
-}
-
-void
-local_socket::send(const std::string& string) {
-  return send(string.c_str(), string.size());
-}
-
-void
-local_socket::send(const void* const data) {
-  assert(data != nullptr);
-
-  return send(data, std::strlen(reinterpret_cast<const char*>(data)));
-}
-
-void
-local_socket::send(const void* const data,
-                   const std::size_t size) {
-  assert(data != nullptr);
-
-  std::size_t sent = 0;
-  while (sent < size) {
-    const ssize_t rc = ::send(fd(), reinterpret_cast<const std::uint8_t*>(data) + sent, size - sent, 0);
-    if (rc == -1) {
-      switch (errno) {
-        case EINTR:  /* Interrupted system call */
-          continue;
-        case ENOMEM: /* Cannot allocate memory in kernel */
-          throw std::system_error(errno, std::system_category()); // FIXME
-        default:
-          throw std::system_error(errno, std::system_category());
-      }
-    }
-    sent += rc;
-  }
 }
 
 void

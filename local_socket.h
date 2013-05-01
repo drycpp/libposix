@@ -4,10 +4,8 @@
 #define POSIXXX_LOCAL_SOCKET_H
 
 #include "descriptor.h"
-#include "mode.h"
+#include "socket.h"
 
-#include <cstddef> /* for std::size_t */
-#include <string>  /* for std::string */
 #include <utility> /* for std::move() */
 
 namespace posix {
@@ -20,7 +18,7 @@ namespace posix {
  *
  * @see http://en.wikipedia.org/wiki/Unix_domain_socket
  */
-class posix::local_socket : public posix::descriptor {
+class posix::local_socket : public posix::socket {
   public:
     static local_socket connect(const pathname& pathname);
 
@@ -28,39 +26,24 @@ class posix::local_socket : public posix::descriptor {
      * Constructor.
      */
     local_socket(const int fd) noexcept
-      : descriptor(fd) {}
+      : socket(fd) {}
 
     /**
      * Copy constructor.
      */
     local_socket(const local_socket& other) /* may throw */
-      : descriptor(other) {}
+      : socket(other) {}
 
     /**
      * Move constructor.
      */
     local_socket(local_socket&& other) noexcept
-      : descriptor(std::move(other)) {}
+      : socket(std::move(other)) {}
 
     /**
      * Destructor.
      */
     ~local_socket() noexcept {}
-
-    /**
-     * Sends a string to the peer.
-     */
-    void send(const std::string& string);
-
-    /**
-     * Sends data to the peer.
-     */
-    void send(const void* data);
-
-    /**
-     * Sends data to the peer.
-     */
-    void send(const void* data, std::size_t size);
 
     /**
      * Sends a descriptor to the peer.
