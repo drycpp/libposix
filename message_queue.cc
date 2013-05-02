@@ -58,7 +58,7 @@ message_queue::open(const char* const name,
       case EMFILE: /* Too many open files */
       case ENFILE: /* Too many open files in system */
       case ENOMEM: /* Cannot allocate memory in kernel */
-        throw posix::error(errno); // FIXME
+        throw posix::fatal_error(errno);
       default:
         throw posix::error(errno);
     }

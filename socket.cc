@@ -41,7 +41,7 @@ socket::send(const void* const data,
         case EINTR:  /* Interrupted system call */
           continue;
         case ENOMEM: /* Cannot allocate memory in kernel */
-          throw posix::error(errno); // FIXME
+          throw posix::fatal_error(errno);
         default:
           throw posix::error(errno);
       }

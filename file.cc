@@ -33,7 +33,7 @@ file::open(const int dirfd,
       case EMFILE: /* Too many open files */
       case ENFILE: /* Too many open files in system */
       case ENOMEM: /* Cannot allocate memory in kernel */
-        throw posix::error(errno); // FIXME
+        throw posix::fatal_error(errno);
       default:
         throw posix::error(errno);
     }
@@ -76,8 +76,8 @@ file::size() const {
 
   if (fstat(_fd, &st) == -1) {
     switch (errno) {
-      case ENOMEM: /* Out of memory in the kernel */
-        throw posix::error(errno); // FIXME
+      case ENOMEM: /* Cannot allocate memory in kernel */
+        throw posix::fatal_error(errno);
       default:
         throw posix::error(errno);
     }

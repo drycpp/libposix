@@ -41,7 +41,7 @@ descriptor::descriptor(const descriptor& other) {
         case EBADF:  /* Bad file descriptor */
           throw std::invalid_argument(invalid_in_copy_constructor);
         case EMFILE: /* Too many open files */
-          throw posix::error(errno); // FIXME
+          throw posix::fatal_error(errno);
         default:
           throw posix::error(errno);
       }
@@ -122,7 +122,7 @@ descriptor::chown(const user& user,
   if (fchown(_fd, uid, gid) == -1) {
     switch (errno) {
       case ENOMEM: /* Cannot allocate memory in kernel */
-        throw posix::error(errno); // FIXME
+        throw posix::fatal_error(errno);
       default:
         throw posix::error(errno);
     }
@@ -134,7 +134,7 @@ descriptor::chmod(const mode mode) {
   if (fchmod(_fd, static_cast<mode_t>(mode)) == -1) {
     switch (errno) {
       case ENOMEM: /* Cannot allocate memory in kernel */
-        throw posix::error(errno); // FIXME
+        throw posix::fatal_error(errno);
       default:
         throw posix::error(errno);
     }
@@ -166,7 +166,7 @@ descriptor::write(const void* const data,
         case EINTR:  /* Interrupted system call */
           continue;
         case ENOMEM: /* Cannot allocate memory in kernel */
-          throw posix::error(errno); // FIXME
+          throw posix::fatal_error(errno);
         default:
           throw posix::error(errno);
       }

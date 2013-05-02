@@ -39,7 +39,7 @@ directory::open(const int dirfd, const pathname& pathname) {
       case EMFILE: /* Too many open files */
       case ENFILE: /* Too many open files in system */
       case ENOMEM: /* Cannot allocate memory in kernel */
-        throw posix::error(errno); // FIXME
+        throw posix::fatal_error(errno);
       default:
         throw posix::error(errno);
     }
@@ -88,7 +88,7 @@ directory::iterator::iterator(const directory& dir) {
   if (dirfd == -1) {
     switch (errno) {
       case EMFILE: /* Too many open files */
-        throw posix::error(errno); // FIXME
+        throw posix::fatal_error(errno);
       case EINVAL: /* Invalid argument as `fcntl()` argument */
         assert(false);
         throw posix::error(errno);
@@ -100,12 +100,12 @@ directory::iterator::iterator(const directory& dir) {
 
   if (!(_dirp = fdopendir(dirfd))) {
     switch (errno) {
-      case EMFILE: /* Too many open files */
-        throw posix::error(errno); // FIXME
+      case EMFILE:  /* Too many open files */
+      case ENOMEM:  /* Cannot allocate memory in kernel */
+        throw posix::fatal_error(errno);
       case EACCES:
       case EBADF:
       case ENOENT:
-      case ENOMEM:
       case ENOTDIR:
       default:
         throw posix::error(errno);
