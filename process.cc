@@ -6,12 +6,13 @@
 
 #include "process.h"
 
+#include "error.h"
+
 #include <cassert>      /* for assert() */
 #include <cerrno>       /* for errno */
 #include <csignal>      /* for SIG*, kill() */
 #include <sys/types.h>  /* for pid_t */
 #include <sys/wait.h>   /* for waitpid() */
-#include <system_error> /* for std::system_error */
 
 using namespace posix;
 
@@ -46,7 +47,7 @@ process::wait(int& status, const int options) {
           case EINTR: /* Interrupted system call */
             continue; /* try again */
           default:
-            throw std::system_error(errno, std::system_category());
+            throw posix::error(errno);
         }
 
       case 0:  /* the process hasn't changed state */
@@ -66,7 +67,7 @@ process::signal(const int signum) {
   if (kill(_id, signum) == -1) {
     switch (errno) {
       default:
-        throw std::system_error(errno, std::system_category());
+        throw posix::error(errno);
     }
   }
 }

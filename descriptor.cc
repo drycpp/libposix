@@ -6,20 +6,20 @@
 
 #include "descriptor.h"
 
+#include "error.h"
 #include "group.h"
 #include "mode.h"
 #include "user.h"
 
-#include <array>        /* for std::array */
-#include <cassert>      /* for assert() */
-#include <cerrno>       /* for errno */
-#include <cstring>      /* for std::strlen() */
-#include <fcntl.h>      /* for F_*, fcntl() */
-#include <stdexcept>    /* for std::invalid_argument */
-#include <string>       /* for std::string */
-#include <sys/stat.h>   /* for fchmod() */
-#include <system_error> /* for std::system_error */
-#include <unistd.h>     /* for close(), fchown(), read(), write() */
+#include <array>      /* for std::array */
+#include <cassert>    /* for assert() */
+#include <cerrno>     /* for errno */
+#include <cstring>    /* for std::strlen() */
+#include <fcntl.h>    /* for F_*, fcntl() */
+#include <stdexcept>  /* for std::invalid_argument */
+#include <string>     /* for std::string */
+#include <sys/stat.h> /* for fchmod() */
+#include <unistd.h>   /* for close(), fchown(), read(), write() */
 
 using namespace posix;
 
@@ -41,9 +41,9 @@ descriptor::descriptor(const descriptor& other) {
         case EBADF:  /* Bad file descriptor */
           throw std::invalid_argument(invalid_in_copy_constructor);
         case EMFILE: /* Too many open files */
-          throw std::system_error(errno, std::system_category()); // FIXME
+          throw posix::error(errno); // FIXME
         default:
-          throw std::system_error(errno, std::system_category());
+          throw posix::error(errno);
       }
     }
   }
@@ -81,7 +81,7 @@ descriptor::fcntl(const int cmd) const {
   if (result == -1) {
     switch (errno) {
       default:
-        throw std::system_error(errno, std::system_category());
+        throw posix::error(errno);
     }
   }
   return result;
@@ -94,7 +94,7 @@ descriptor::fcntl(const int cmd,
   if (result == -1) {
     switch (errno) {
       default:
-        throw std::system_error(errno, std::system_category());
+        throw posix::error(errno);
     }
   }
   return result;
@@ -107,7 +107,7 @@ descriptor::fcntl(const int cmd,
   if (result == -1) {
     switch (errno) {
       default:
-        throw std::system_error(errno, std::system_category());
+        throw posix::error(errno);
     }
   }
   return result;
@@ -122,9 +122,9 @@ descriptor::chown(const user& user,
   if (fchown(_fd, uid, gid) == -1) {
     switch (errno) {
       case ENOMEM: /* Cannot allocate memory in kernel */
-        throw std::system_error(errno, std::system_category()); // FIXME
+        throw posix::error(errno); // FIXME
       default:
-        throw std::system_error(errno, std::system_category());
+        throw posix::error(errno);
     }
   }
 }
@@ -134,9 +134,9 @@ descriptor::chmod(const mode mode) {
   if (fchmod(_fd, static_cast<mode_t>(mode)) == -1) {
     switch (errno) {
       case ENOMEM: /* Cannot allocate memory in kernel */
-        throw std::system_error(errno, std::system_category()); // FIXME
+        throw posix::error(errno); // FIXME
       default:
-        throw std::system_error(errno, std::system_category());
+        throw posix::error(errno);
     }
   }
 }
@@ -166,9 +166,9 @@ descriptor::write(const void* const data,
         case EINTR:  /* Interrupted system call */
           continue;
         case ENOMEM: /* Cannot allocate memory in kernel */
-          throw std::system_error(errno, std::system_category()); // FIXME
+          throw posix::error(errno); // FIXME
         default:
-          throw std::system_error(errno, std::system_category());
+          throw posix::error(errno);
       }
     }
     pos += rc;
@@ -189,9 +189,9 @@ descriptor::read() {
             continue; /* try again */
           case EFAULT:
             assert(errno != EFAULT); /* should never be reached */
-            throw std::system_error(errno, std::system_category());
+            throw posix::error(errno);
           default:
-            throw std::system_error(errno, std::system_category());
+            throw posix::error(errno);
         }
 
       case 0:

@@ -7,6 +7,7 @@ lib_LTLIBRARIES = libposix++.la
 libposix___la_SOURCES =   \
   descriptor.cc           \
   directory.cc            \
+  error.cc                \
   feature.cc              \
   file.cc                 \
   group.cc                \
@@ -27,6 +28,7 @@ base_pkgincludedir = $(includedir)/posix++
 base_pkginclude_HEADERS = \
   descriptor.h            \
   directory.h             \
+  error.h                 \
   feature.h               \
   file.h                  \
   group.h                 \

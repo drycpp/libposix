@@ -6,6 +6,7 @@
 
 #include "directory.h"
 
+#include "error.h"
 #include "pathname.h"
 
 #include <cassert>      /* for assert() */
@@ -13,7 +14,6 @@
 #include <fcntl.h>      /* for AT_FDCWD, fcntl() */
 #include <unistd.h>     /* for close() */
 #include <sys/types.h>  /* for DIR */
-#include <system_error> /* for std::system_error */
 
 using namespace posix;
 
@@ -39,9 +39,9 @@ directory::open(const int dirfd, const pathname& pathname) {
       case EMFILE: /* Too many open files */
       case ENFILE: /* Too many open files in system */
       case ENOMEM: /* Cannot allocate memory in kernel */
-        throw std::system_error(errno, std::system_category()); // FIXME
+        throw posix::error(errno); // FIXME
       default:
-        throw std::system_error(errno, std::system_category());
+        throw posix::error(errno);
     }
   }
 
@@ -88,27 +88,27 @@ directory::iterator::iterator(const directory& dir) {
   if (dirfd == -1) {
     switch (errno) {
       case EMFILE: /* Too many open files */
-        throw std::system_error(errno, std::system_category()); // FIXME
+        throw posix::error(errno); // FIXME
       case EINVAL: /* Invalid argument as `fcntl()` argument */
         assert(false);
-        throw std::system_error(errno, std::system_category());
+        throw posix::error(errno);
       case EBADF:
       default:
-        throw std::system_error(errno, std::system_category());
+        throw posix::error(errno);
     }
   }
 
   if (!(_dirp = fdopendir(dirfd))) {
     switch (errno) {
       case EMFILE: /* Too many open files */
-        throw std::system_error(errno, std::system_category()); // FIXME
+        throw posix::error(errno); // FIXME
       case EACCES:
       case EBADF:
       case ENOENT:
       case ENOMEM:
       case ENOTDIR:
       default:
-        throw std::system_error(errno, std::system_category());
+        throw posix::error(errno);
     }
   }
 }

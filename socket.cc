@@ -6,12 +6,13 @@
 
 #include "socket.h"
 
+#include "error.h"
+
 #include <cassert>      /* for assert() */
 #include <cerrno>       /* for errno */
 #include <cstdint>      /* for std::uint8_t */
 #include <cstring>      /* for std::strlen() */
 #include <sys/socket.h> /* for recv(), send() */
-#include <system_error> /* for std::system_error */
 
 using namespace posix;
 
@@ -40,9 +41,9 @@ socket::send(const void* const data,
         case EINTR:  /* Interrupted system call */
           continue;
         case ENOMEM: /* Cannot allocate memory in kernel */
-          throw std::system_error(errno, std::system_category()); // FIXME
+          throw posix::error(errno); // FIXME
         default:
-          throw std::system_error(errno, std::system_category());
+          throw posix::error(errno);
       }
     }
     pos += rc;

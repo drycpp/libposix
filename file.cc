@@ -7,6 +7,7 @@
 #include "file.h"
 
 #include "directory.h"
+#include "error.h"
 #include "pathname.h"
 
 #include <cassert>      /* for assert() */
@@ -14,7 +15,6 @@
 #include <fcntl.h>      /* for AT_FDCWD */
 #include <sys/stat.h>   /* for fstat() */
 #include <sys/types.h>  /* for struct stat */
-#include <system_error> /* for std::system_error */
 #include <unistd.h>     /* for lseek() */
 
 using namespace posix;
@@ -33,9 +33,9 @@ file::open(const int dirfd,
       case EMFILE: /* Too many open files */
       case ENFILE: /* Too many open files in system */
       case ENOMEM: /* Cannot allocate memory in kernel */
-        throw std::system_error(errno, std::system_category()); // FIXME
+        throw posix::error(errno); // FIXME
       default:
-        throw std::system_error(errno, std::system_category());
+        throw posix::error(errno);
     }
   }
 
@@ -77,9 +77,9 @@ file::size() const {
   if (fstat(_fd, &st) == -1) {
     switch (errno) {
       case ENOMEM: /* Out of memory in the kernel */
-        throw std::system_error(errno, std::system_category()); // FIXME
+        throw posix::error(errno); // FIXME
       default:
-        throw std::system_error(errno, std::system_category());
+        throw posix::error(errno);
     }
   }
 

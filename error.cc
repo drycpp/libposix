@@ -4,12 +4,12 @@
 #include <config.h>
 #endif
 
-#include "process_group.h"
-
 #include "error.h"
 
-#include <cassert>      /* for assert() */
-#include <cerrno>       /* for errno */
-#include <csignal>      /* for std::kill() */
+#include <cassert> /* for assert() */
+#include <cerrno>  /* for errno */
 
 using namespace posix;
+
+error::error() noexcept
+  : std::system_error(errno, std::system_category()) {}

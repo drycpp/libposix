@@ -6,9 +6,10 @@
 
 #include "sysv_segment.h"
 
+#include "error.h"
+
 #include <cassert>      /* for assert() */
 #include <cerrno>       /* for errno */
 #include <sys/shm.h>    /* for struct shmid_ds */
-#include <system_error> /* for std::system_error */
 
 using namespace posix;

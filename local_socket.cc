@@ -6,6 +6,7 @@
 
 #include "local_socket.h"
 
+#include "error.h"
 #include "pathname.h"
 
 #include <array>        /* for std::array */
@@ -17,7 +18,6 @@
 #include <stdexcept>    /* for std::logic_error */
 #include <sys/socket.h> /* for AF_LOCAL, CMSG_*, connect(), recvmsg(), sendmsg(), socket() */
 #include <sys/un.h>     /* for struct sockaddr_un */
-#include <system_error> /* for std::system_error */
 
 using namespace posix;
 
@@ -31,9 +31,9 @@ local_socket::connect(const pathname& pathname) {
       case EMFILE: /* Too many open files */
       case ENFILE: /* Too many open files in system */
       case ENOMEM: /* Cannot allocate memory in kernel */
-        throw std::system_error(errno, std::system_category()); // FIXME
+        throw posix::error(errno); // FIXME
       default:
-        throw std::system_error(errno, std::system_category());
+        throw posix::error(errno);
     }
   }
 
@@ -51,7 +51,7 @@ retry:
       case EINTR:  /* Interrupted system call */
         goto retry;
       default:
-        throw std::system_error(errno, std::system_category());
+        throw posix::error(errno);
     }
   }
 
@@ -104,9 +104,9 @@ retry:
       case EINTR:  /* Interrupted system call */
         goto retry;
       case ENOMEM: /* Cannot allocate memory in kernel */
-        throw std::system_error(errno, std::system_category()); // FIXME
+        throw posix::error(errno); // FIXME
       default:
-        throw std::system_error(errno, std::system_category());
+        throw posix::error(errno);
     }
   }
 

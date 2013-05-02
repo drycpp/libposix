@@ -6,11 +6,12 @@
 
 #include "message_queue.h"
 
+#include "error.h"
+
 #include <cassert>      /* for assert() */
 #include <cerrno>       /* for errno */
 #include <fcntl.h>      /* for O_* */
 #include <mqueue.h>     /* for mq_*() */
-#include <system_error> /* for std::system_error */
 
 using namespace posix;
 
@@ -57,9 +58,9 @@ message_queue::open(const char* const name,
       case EMFILE: /* Too many open files */
       case ENFILE: /* Too many open files in system */
       case ENOMEM: /* Cannot allocate memory in kernel */
-        throw std::system_error(errno, std::system_category()); // FIXME
+        throw posix::error(errno); // FIXME
       default:
-        throw std::system_error(errno, std::system_category());
+        throw posix::error(errno);
     }
   }
 

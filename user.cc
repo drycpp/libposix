@@ -6,9 +6,10 @@
 
 #include "user.h"
 
+#include "error.h"
+
 #include <cassert>      /* for assert() */
 #include <cerrno>       /* for errno */
 #include <pwd.h>        /* for getpwnam(), getpwuid() */
-#include <system_error> /* for std::system_error */
 
 using namespace posix;

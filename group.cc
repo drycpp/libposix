@@ -6,9 +6,10 @@
 
 #include "group.h"
 
+#include "error.h"
+
 #include <cassert>      /* for assert() */
 #include <cerrno>       /* for errno */
 #include <grp.h>        /* for getgrnam(), getgrgid() */
-#include <system_error> /* for std::system_error */
 
 using namespace posix;

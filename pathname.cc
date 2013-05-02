@@ -6,11 +6,12 @@
 
 #include "pathname.h"
 
+#include "error.h"
+
 #include <cassert>      /* for assert() */
 #include <cerrno>       /* for errno */
 #include <cstring>      /* for std::strcpy(), GNU basename() */
 #include <libgen.h>     /* for basename(), dirname() */
-#include <system_error> /* for std::system_error */
 
 #undef basename         /* get rid of the glibc macro */
 
