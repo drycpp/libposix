@@ -83,6 +83,16 @@ class posix::socket : public posix::descriptor {
     std::size_t recv(void* buffer, std::size_t buffer_size);
 
     /**
+     * Closes this socket for writing.
+     */
+    void close_write();
+
+    /**
+     * Closes this socket for reading.
+     */
+    void close_read();
+
+    /**
      * Shuts down part of a full-duplex connection.
      */
     void shutdown(int how);

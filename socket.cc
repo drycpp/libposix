@@ -195,6 +195,16 @@ exit:
 }
 
 void
+socket::close_write() {
+  shutdown(SHUT_WR);
+}
+
+void
+socket::close_read() {
+  shutdown(SHUT_RD);
+}
+
+void
 socket::shutdown(const int how) {
   if (::shutdown(fd(), how) == -1) {
     switch (errno) {
