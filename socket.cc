@@ -13,7 +13,7 @@
 #include <cerrno>       /* for errno */
 #include <cstdint>      /* for std::uint8_t */
 #include <cstring>      /* for std::strlen() */
-#include <sys/socket.h> /* for recv(), send() */
+#include <sys/socket.h> /* for recv(), send(), shutdown() */
 
 using namespace posix;
 
@@ -133,4 +133,18 @@ socket::recv(void* const buffer,
 
 exit:
   return byte_count;
+}
+
+void
+socket::shutdown(const int how) {
+  if (::shutdown(fd(), how) == -1) {
+    switch (errno) {
+      case EBADF:    /* Bad file descriptor */
+      case EINVAL:   /* Invalid argument */
+      case ENOTCONN: /* Transport endpoint is not connected */
+      case ENOTSOCK: /* Socket operation on non-socket */
+      default:
+        throw posix::error(errno);
+    }
+  }
 }

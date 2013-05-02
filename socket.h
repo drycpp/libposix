@@ -57,6 +57,11 @@ class posix::socket : public posix::descriptor {
      */
     std::size_t recv(void* buffer, std::size_t buffer_size);
 
+    /**
+     * Shuts down part of a full-duplex connection.
+     */
+    void shutdown(int how);
+
   protected:
     /**
      * Constructor.
