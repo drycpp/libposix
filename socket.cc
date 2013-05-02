@@ -20,8 +20,30 @@ using namespace posix;
 int
 socket::domain() const {
   int optval = 0;
+#ifdef SO_DOMAIN
   int optlen = sizeof(optval);
   getsockopt(SOL_SOCKET, SO_DOMAIN, &optval, &optlen);
+#endif
+  return optval;
+}
+
+int
+socket::type() const {
+  int optval = 0;
+#ifdef SO_TYPE
+  int optlen = sizeof(optval);
+  getsockopt(SOL_SOCKET, SO_TYPE, &optval, &optlen);
+#endif
+  return optval;
+}
+
+int
+socket::protocol() const {
+  int optval = 0;
+#ifdef SO_PROTOCOL
+  int optlen = sizeof(optval);
+  getsockopt(SOL_SOCKET, SO_PROTOCOL, &optval, &optlen);
+#endif
   return optval;
 }
 

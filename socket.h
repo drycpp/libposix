@@ -22,8 +22,24 @@ namespace posix {
  */
 class posix::socket : public posix::descriptor {
   public:
+    /**
+     * Returns the socket domain.
+     */
     int domain() const;
 
+    /**
+     * Returns the socket type.
+     */
+    int type() const;
+
+    /**
+     * Returns the socket protocol.
+     */
+    int protocol() const;
+
+    /**
+     * Returns socket options.
+     */
     void getsockopt(int level, int optname, void* optval, int* optlen) const;
 
     /**
