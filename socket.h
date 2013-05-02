@@ -22,6 +22,8 @@ namespace posix {
  */
 class posix::socket : public posix::descriptor {
   public:
+    int domain() const;
+
     /**
      * Sends a string to the peer.
      */

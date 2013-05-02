@@ -13,9 +13,27 @@
 #include <cerrno>       /* for errno */
 #include <cstdint>      /* for std::uint8_t */
 #include <cstring>      /* for std::strlen() */
-#include <sys/socket.h> /* for recv(), send(), shutdown() */
+#include <sys/socket.h> /* for getsockopt(), recv(), send(), shutdown() */
 
 using namespace posix;
+
+int
+socket::domain() const {
+  int optval = 0;
+  socklen_t optlen = sizeof(optval);
+  if (getsockopt(fd(), SOL_SOCKET, SO_DOMAIN, &optval, &optlen) == -1) {
+    switch (errno) {
+      case EBADF:       /* Bad file descriptor */
+      case EFAULT:      /* Bad address */
+      case EINVAL:      /* Invalid argument */
+      case ENOPROTOOPT: /* Protocol not available */
+      case ENOTSOCK:    /* Socket operation on non-socket */
+      default:
+        throw posix::error(errno);
+    }
+  }
+  return optval;
+}
 
 void
 socket::send(const std::string& string) {
