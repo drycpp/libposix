@@ -19,7 +19,7 @@
 #include <stdexcept>  /* for std::invalid_argument */
 #include <string>     /* for std::string */
 #include <sys/stat.h> /* for fchmod() */
-#include <unistd.h>   /* for close(), fchown(), read(), write() */
+#include <unistd.h>   /* for close(), fchown(), fsync(), read(), write() */
 
 using namespace posix;
 
@@ -200,6 +200,16 @@ descriptor::read() {
       default:
         assert(rc > 0);
         result.append(buffer.data(), static_cast<std::size_t>(rc));
+    }
+  }
+}
+
+void
+descriptor::sync() {
+  if (fsync(_fd) == -1) {
+    switch (errno) {
+      default:
+        throw posix::error(errno);
     }
   }
 }

@@ -194,6 +194,11 @@ struct posix::descriptor {
     std::string read();
 
     /**
+     * ...
+     */
+    void sync();
+
+    /**
      * Closes this descriptor.
      *
      * @note this method is idempotent
