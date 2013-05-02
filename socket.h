@@ -63,6 +63,11 @@ class posix::socket : public posix::descriptor {
     void send(const void* data, std::size_t size);
 
     /**
+     * Receives a text chunk from the peer.
+     */
+    std::string recv_chunk();
+
+    /**
      * Receives a string from the peer.
      */
     std::string recv_string();

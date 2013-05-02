@@ -111,6 +111,16 @@ socket::send(const void* const data,
 }
 
 std::string
+socket::recv_chunk() {
+  std::string buffer;
+  recv([&buffer](const void* const chunk_data, const std::size_t chunk_size) -> bool {
+    buffer.append(reinterpret_cast<const char*>(chunk_data), chunk_size);
+    return false; /* all done */
+  });
+  return buffer;
+}
+
+std::string
 socket::recv_string() {
   std::string buffer;
   recv(buffer);
