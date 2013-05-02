@@ -47,6 +47,16 @@ socket::protocol() const {
   return optval;
 }
 
+int
+socket::error() {
+  int optval = 0;
+#ifdef SO_ERROR
+  int optlen = sizeof(optval);
+  getsockopt(SOL_SOCKET, SO_ERROR, &optval, &optlen);
+#endif
+  return optval;
+}
+
 void
 socket::getsockopt(const int level,
                    const int optname,

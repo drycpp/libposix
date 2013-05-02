@@ -38,6 +38,11 @@ class posix::socket : public posix::descriptor {
     int protocol() const;
 
     /**
+     * Returns and clears the pending socket error.
+     */
+    int error();
+
+    /**
      * Returns socket options.
      */
     void getsockopt(int level, int optname, void* optval, int* optlen) const;
