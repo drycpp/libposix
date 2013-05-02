@@ -47,6 +47,8 @@ class posix::local_socket : public posix::socket {
      */
     ~local_socket() noexcept {}
 
+    using socket::send;
+
     /**
      * Sends a descriptor to the peer.
      */
