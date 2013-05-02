@@ -5,9 +5,10 @@
 
 #include "descriptor.h"
 
-#include <cstddef> /* for std::size_t */
-#include <string>  /* for std::string */
-#include <utility> /* for std::move() */
+#include <cstddef>    /* for std::size_t */
+#include <functional> /* for std::function */
+#include <string>     /* for std::string */
+#include <utility>    /* for std::move() */
 
 namespace posix {
   class socket;
@@ -35,6 +36,21 @@ class posix::socket : public posix::descriptor {
      * Sends data to the peer.
      */
     void send(const void* data, std::size_t size);
+
+    /**
+     * Receives data from the peer, chunk by chunk.
+     */
+    std::size_t recv(std::function<bool (const void* chunk_data, std::size_t chunk_size)> callback);
+
+    /**
+     * Receives data from the peer, into the given string buffer.
+     */
+    std::size_t recv(std::string& buffer);
+
+    /**
+     * Receives data from the peer, into the given raw buffer.
+     */
+    std::size_t recv(void* buffer, std::size_t buffer_size);
 
   protected:
     /**
