@@ -57,7 +57,7 @@ class posix::local_socket : public posix::socket {
     /**
      * Receives a descriptor from the peer.
      */
-    descriptor recvfd();
+    descriptor recv_descriptor();
 };
 
 #endif /* POSIXXX_LOCAL_SOCKET_H */

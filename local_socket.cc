@@ -80,7 +80,7 @@ local_socket::send(const descriptor& descriptor) {
 }
 
 descriptor
-local_socket::recvfd() {
+local_socket::recv_descriptor() {
   descriptor result;
 
   /* The control buffer must be large enough to hold a single frame of
