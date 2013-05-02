@@ -57,6 +57,13 @@ class posix::error : public std::system_error {
           const std::error_category& category,
           const char* const what) noexcept
       : std::system_error(code, category, what) {}
+
+    /**
+     * Returns the error number.
+     */
+    int number() const {
+      return code().value();
+    }
 };
 
 /**
