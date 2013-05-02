@@ -20,8 +20,18 @@ using namespace posix;
 int
 socket::domain() const {
   int optval = 0;
-  socklen_t optlen = sizeof(optval);
-  if (getsockopt(fd(), SOL_SOCKET, SO_DOMAIN, &optval, &optlen) == -1) {
+  int optlen = sizeof(optval);
+  getsockopt(SOL_SOCKET, SO_DOMAIN, &optval, &optlen);
+  return optval;
+}
+
+void
+socket::getsockopt(const int level,
+                   const int optname,
+                   void* const optval,
+                   int* const optlen) const {
+  static_assert(sizeof(socklen_t) == sizeof(int), "sizeof(socklen_t) != sizeof(int)");
+  if (::getsockopt(fd(), level, optname, optval, reinterpret_cast<socklen_t*>(optlen)) == -1) {
     switch (errno) {
       case EBADF:       /* Bad file descriptor */
       case EFAULT:      /* Bad address */
@@ -32,7 +42,6 @@ socket::domain() const {
         throw posix::error(errno);
     }
   }
-  return optval;
 }
 
 void

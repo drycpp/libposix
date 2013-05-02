@@ -24,6 +24,8 @@ class posix::socket : public posix::descriptor {
   public:
     int domain() const;
 
+    void getsockopt(int level, int optname, void* optval, int* optlen) const;
+
     /**
      * Sends a string to the peer.
      */
