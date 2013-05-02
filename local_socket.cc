@@ -16,10 +16,26 @@
 #include <cstring>      /* for std::memset(), std::strlen() */
 #include <fcntl.h>      /* for F_*, fcntl() */
 #include <stdexcept>    /* for std::logic_error */
-#include <sys/socket.h> /* for AF_LOCAL, CMSG_*, connect(), recvmsg(), sendmsg(), socket() */
+#include <sys/socket.h> /* for AF_LOCAL, CMSG_*, connect(), recvmsg(), sendmsg(), socket(), socketpair() */
 #include <sys/un.h>     /* for struct sockaddr_un */
 
 using namespace posix;
+
+std::pair<local_socket, local_socket>
+local_socket::pair() {
+  int fds[2] = {0, 0};
+  if (::socketpair(AF_LOCAL, SOCK_STREAM, 0, fds) == -1) {
+    switch (errno) {
+      case EMFILE: /* Too many open files */
+      case ENFILE: /* Too many open files in system */
+      case ENOMEM: /* Cannot allocate memory in kernel */
+        throw posix::fatal_error(errno);
+      default:
+        throw posix::error(errno);
+    }
+  }
+  return {local_socket(fds[0]), local_socket(fds[1])};
+}
 
 local_socket
 local_socket::connect(const pathname& pathname) {

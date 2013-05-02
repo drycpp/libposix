@@ -6,7 +6,7 @@
 #include "descriptor.h"
 #include "socket.h"
 
-#include <utility> /* for std::move() */
+#include <utility> /* for std::move(), std::pair */
 
 namespace posix {
   class local_socket;
@@ -20,6 +20,8 @@ namespace posix {
  */
 class posix::local_socket : public posix::socket {
   public:
+    static std::pair<local_socket, local_socket> pair();
+
     static local_socket connect(const pathname& pathname);
 
     /**
