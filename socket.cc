@@ -51,6 +51,21 @@ socket::send(const void* const data,
   }
 }
 
+std::string
+socket::recv_string() {
+  std::string buffer;
+  recv(buffer);
+  return buffer;
+}
+
+std::size_t
+socket::recv(std::string& buffer) {
+  return recv([&buffer](const void* const chunk_data, const std::size_t chunk_size) -> bool {
+    buffer.append(reinterpret_cast<const char*>(chunk_data), chunk_size);
+    return true; /* continue indefinitely */
+  });
+}
+
 std::size_t
 socket::recv(std::function<bool (const void* chunk_data, std::size_t chunk_size)> callback) {
   assert(callback != nullptr);
@@ -84,14 +99,6 @@ socket::recv(std::function<bool (const void* chunk_data, std::size_t chunk_size)
 
 exit:
   return byte_count;
-}
-
-std::size_t
-socket::recv(std::string& buffer) {
-  return recv([&buffer](const void* const chunk_data, const std::size_t chunk_size) -> bool {
-    buffer.append(reinterpret_cast<const char*>(chunk_data), chunk_size);
-    return true; /* continue indefinitely */
-  });
 }
 
 std::size_t
