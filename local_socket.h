@@ -52,7 +52,7 @@ class posix::local_socket : public posix::socket {
     /**
      * Sends a descriptor to the peer.
      */
-    void send(const descriptor& descriptor);
+    void send_descriptor(const descriptor& descriptor);
 
     /**
      * Receives a descriptor from the peer.

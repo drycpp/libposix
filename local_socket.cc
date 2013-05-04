@@ -75,8 +75,50 @@ retry:
 }
 
 void
-local_socket::send(const descriptor& descriptor) {
-  (void)descriptor; // TODO
+local_socket::send_descriptor(const descriptor& descriptor) {
+  /* The control buffer must be large enough to hold a single frame of
+   * cmsghdr ancillary data: */
+  std::array<std::uint8_t, CMSG_SPACE(sizeof(int))> cmsg_buffer;
+  static_assert(sizeof(struct cmsghdr) <= cmsg_buffer.size(),
+    "sizeof(struct cmsghdr) > cmsg_buffer.size()");
+  static_assert(CMSG_SPACE(sizeof(int)) <= cmsg_buffer.size(),
+    "CMSG_SPACE(sizeof(int)) > cmsg_buffer.size()");
+  static_assert(CMSG_LEN(sizeof(int)) <= cmsg_buffer.size(),
+    "CMSG_LEN(sizeof(int)) > cmsg_buffer.size()");
+
+  /* Linux and Solaris require there to be at least 1 byte of actual data: */
+  std::array<std::uint8_t, 1> data_buffer = {{'\0'}};
+
+  struct iovec iov;
+  std::memset(&iov, 0, sizeof(iov));
+  iov.iov_base = data_buffer.data();
+  iov.iov_len  = data_buffer.size();
+
+  struct msghdr msg;
+  std::memset(&msg, 0, sizeof(msghdr));
+  msg.msg_iov = &iov;
+  msg.msg_iovlen = 1;
+  msg.msg_control = cmsg_buffer.data();
+  msg.msg_controllen = cmsg_buffer.size();
+
+  struct cmsghdr* const cmsg = CMSG_FIRSTHDR(&msg);
+  cmsg->cmsg_len   = CMSG_LEN(sizeof(int));
+  cmsg->cmsg_level = SOL_SOCKET;
+  cmsg->cmsg_type  = SCM_RIGHTS;
+  *reinterpret_cast<int*>(CMSG_DATA(cmsg)) = descriptor.fd();
+
+retry:
+  const ssize_t rc = ::sendmsg(fd(), &msg, 0);
+  if (rc == -1) {
+    switch (errno) {
+      case EINTR:  /* Interrupted system call */
+        goto retry;
+      case ENOMEM: /* Cannot allocate memory in kernel */
+        throw posix::fatal_error(errno);
+      default:
+        throw posix::error(errno);
+    }
+  }
 }
 
 descriptor
