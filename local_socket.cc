@@ -66,6 +66,8 @@ retry:
     switch (errno) {
       case EINTR:  /* Interrupted system call */
         goto retry;
+      case EBADF:  /* Bad file descriptor */
+        throw posix::bad_descriptor();
       default:
         throw posix::error(errno);
     }
@@ -115,6 +117,8 @@ retry:
         goto retry;
       case ENOMEM: /* Cannot allocate memory in kernel */
         throw posix::fatal_error(errno);
+      case EBADF:  /* Bad file descriptor */
+        throw posix::bad_descriptor();
       default:
         throw posix::error(errno);
     }
@@ -163,6 +167,8 @@ retry:
         goto retry;
       case ENOMEM: /* Cannot allocate memory in kernel */
         throw posix::fatal_error(errno);
+      case EBADF:  /* Bad file descriptor */
+        throw posix::bad_descriptor();
       default:
         throw posix::error(errno);
     }

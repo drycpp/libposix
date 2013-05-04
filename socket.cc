@@ -66,6 +66,7 @@ socket::getsockopt(const int level,
   if (::getsockopt(fd(), level, optname, optval, reinterpret_cast<socklen_t*>(optlen)) == -1) {
     switch (errno) {
       case EBADF:       /* Bad file descriptor */
+        throw posix::bad_descriptor();
       case EFAULT:      /* Bad address */
       case EINVAL:      /* Invalid argument */
       case ENOPROTOOPT: /* Protocol not available */
@@ -102,6 +103,8 @@ socket::send(const void* const data,
           continue;
         case ENOMEM: /* Cannot allocate memory in kernel */
           throw posix::fatal_error(errno);
+        case EBADF:  /* Bad file descriptor */
+          throw posix::bad_descriptor();
         default:
           throw posix::error(errno);
       }
@@ -149,6 +152,8 @@ socket::recv(std::function<bool (const void* chunk_data, std::size_t chunk_size)
         switch (errno) {
           case EINTR: /* Interrupted system call */
             continue; /* try again */
+          case EBADF:  /* Bad file descriptor */
+            throw posix::bad_descriptor();
           default:
             throw posix::error(errno);
         }
@@ -186,6 +191,8 @@ socket::recv(void* const buffer,
         switch (errno) {
           case EINTR: /* Interrupted system call */
             continue; /* try again */
+          case EBADF:  /* Bad file descriptor */
+            throw posix::bad_descriptor();
           default:
             throw posix::error(errno);
         }
@@ -219,6 +226,7 @@ socket::shutdown(const int how) {
   if (::shutdown(fd(), how) == -1) {
     switch (errno) {
       case EBADF:    /* Bad file descriptor */
+        throw posix::bad_descriptor();
       case EINVAL:   /* Invalid argument */
       case ENOTCONN: /* Transport endpoint is not connected */
       case ENOTSOCK: /* Socket operation on non-socket */

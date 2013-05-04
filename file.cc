@@ -34,6 +34,8 @@ file::open(const int dirfd,
       case ENFILE: /* Too many open files in system */
       case ENOMEM: /* Cannot allocate memory in kernel */
         throw posix::fatal_error(errno);
+      case EBADF:  /* Bad file descriptor */
+        throw posix::bad_descriptor();
       default:
         throw posix::error(errno);
     }
@@ -78,6 +80,8 @@ file::size() const {
     switch (errno) {
       case ENOMEM: /* Cannot allocate memory in kernel */
         throw posix::fatal_error(errno);
+      case EBADF:  /* Bad file descriptor */
+        throw posix::bad_descriptor();
       default:
         throw posix::error(errno);
     }
