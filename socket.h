@@ -104,6 +104,12 @@ class posix::socket : public posix::descriptor {
 
   protected:
     /**
+     * Default constructor.
+     */
+    socket() noexcept
+      : descriptor() {}
+
+    /**
      * Constructor.
      */
     socket(const int fd) noexcept

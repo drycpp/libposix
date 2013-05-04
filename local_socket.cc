@@ -21,6 +21,25 @@
 
 using namespace posix;
 
+local_socket::local_socket() : socket() {
+  int flags = 0;
+
+  int sockfd;
+  if ((sockfd = ::socket(AF_LOCAL, SOCK_STREAM | flags, 0)) == -1) {
+    switch (errno) {
+      case EMFILE:  /* Too many open files */
+      case ENFILE:  /* Too many open files in system */
+      case ENOBUFS: /* No buffer space available in kernel */
+      case ENOMEM:  /* Cannot allocate memory in kernel */
+        throw posix::fatal_error(errno);
+      default:
+        throw posix::error(errno);
+    }
+  }
+
+  assign(sockfd);
+}
+
 std::pair<local_socket, local_socket>
 local_socket::pair() {
   int fds[2] = {0, 0};
@@ -38,22 +57,10 @@ local_socket::pair() {
 }
 
 local_socket
-local_socket::connect(const pathname& pathname) {
+local_socket::bind(const pathname& pathname) {
   assert(!pathname.empty());
 
-  int sockfd;
-  if ((sockfd = ::socket(AF_LOCAL, SOCK_STREAM, 0)) == -1) {
-    switch (errno) {
-      case EMFILE: /* Too many open files */
-      case ENFILE: /* Too many open files in system */
-      case ENOMEM: /* Cannot allocate memory in kernel */
-        throw posix::fatal_error(errno);
-      default:
-        throw posix::error(errno);
-    }
-  }
-
-  local_socket socket = local_socket(sockfd);
+  local_socket socket = local_socket();
 
   struct sockaddr_un addr;
   addr.sun_family = AF_LOCAL;
@@ -62,7 +69,36 @@ local_socket::connect(const pathname& pathname) {
   const socklen_t addrlen = sizeof(addr.sun_family) + std::strlen(addr.sun_path);
 
 retry:
-  if (::connect(sockfd, reinterpret_cast<struct sockaddr*>(&addr), addrlen) == -1) {
+  if (::bind(socket.fd(), reinterpret_cast<struct sockaddr*>(&addr), addrlen) == -1) {
+    switch (errno) {
+      case EINTR:  /* Interrupted system call */
+        goto retry;
+      case ENOMEM: /* Cannot allocate memory in kernel */
+        throw posix::fatal_error(errno);
+      case EBADF:  /* Bad file descriptor */
+        throw posix::bad_descriptor();
+      default:
+        throw posix::error(errno);
+    }
+  }
+
+  return socket;
+}
+
+local_socket
+local_socket::connect(const pathname& pathname) {
+  assert(!pathname.empty());
+
+  local_socket socket = local_socket();
+
+  struct sockaddr_un addr;
+  addr.sun_family = AF_LOCAL;
+  strcpy(addr.sun_path, pathname.c_str()); // TODO: check bounds
+
+  const socklen_t addrlen = sizeof(addr.sun_family) + std::strlen(addr.sun_path);
+
+retry:
+  if (::connect(socket.fd(), reinterpret_cast<struct sockaddr*>(&addr), addrlen) == -1) {
     switch (errno) {
       case EINTR:  /* Interrupted system call */
         goto retry;
