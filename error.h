@@ -8,6 +8,7 @@
 namespace posix {
   class error;
   class fatal_error;
+  class bad_descriptor;
 }
 
 /**
@@ -114,6 +115,19 @@ class posix::fatal_error : public posix::error {
                 const std::error_category& category,
                 const char* const what) noexcept
       : error(code, category, what) {}
+};
+
+/**
+ * Represents a POSIX `EBADF` error.
+ *
+ * @see http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/errno.h.html
+ */
+class posix::bad_descriptor : public posix::error {
+  public:
+    /**
+     * Default constructor.
+     */
+    bad_descriptor() noexcept;
 };
 
 #endif /* POSIXXX_ERROR_H */
