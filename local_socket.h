@@ -49,7 +49,10 @@ class posix::local_socket : public posix::socket {
      */
     ~local_socket() noexcept {}
 
-    using socket::send;
+    /**
+     * Accepts a connection on this socket.
+     */
+    local_socket accept();
 
     /**
      * Sends a descriptor to the peer.

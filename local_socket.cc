@@ -16,7 +16,7 @@
 #include <cstring>      /* for std::memset(), std::strlen() */
 #include <fcntl.h>      /* for F_*, fcntl() */
 #include <stdexcept>    /* for std::logic_error */
-#include <sys/socket.h> /* for AF_LOCAL, CMSG_*, connect(), recvmsg(), sendmsg(), socket(), socketpair() */
+#include <sys/socket.h> /* for AF_LOCAL, CMSG_*, accept(), connect(), recvmsg(), sendmsg(), socket(), socketpair() */
 #include <sys/un.h>     /* for struct sockaddr_un */
 
 using namespace posix;
@@ -110,6 +110,33 @@ retry:
   }
 
   return socket;
+}
+
+local_socket
+local_socket::accept() {
+  local_socket connection;
+
+  int sockfd;
+retry:
+  // FIXME: use accept4() if HAVE_ACCEPT4 is defined.
+  if ((sockfd = ::accept(fd(), nullptr, nullptr)) == -1) {
+    switch (errno) {
+      case EINTR:   /* Interrupted system call */
+        goto retry;
+      case EMFILE:  /* Too many open files */
+      case ENFILE:  /* Too many open files in system */
+      case ENOBUFS: /* No buffer space available in kernel */
+      case ENOMEM:  /* Cannot allocate memory in kernel */
+        throw posix::fatal_error(errno);
+      case EBADF:   /* Bad file descriptor */
+        throw posix::bad_descriptor();
+      default:
+        throw posix::error(errno);
+    }
+  }
+
+  connection.assign(sockfd);
+  return connection;
 }
 
 void
