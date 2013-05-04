@@ -13,7 +13,7 @@
 #include <cerrno>       /* for errno */
 #include <cstdint>      /* for std::uint8_t */
 #include <cstring>      /* for std::strlen() */
-#include <sys/socket.h> /* for getsockopt(), recv(), send(), shutdown() */
+#include <sys/socket.h> /* for getsockopt(), listen(), recv(), send(), shutdown() */
 
 using namespace posix;
 
@@ -71,6 +71,18 @@ socket::getsockopt(const int level,
       case EINVAL:      /* Invalid argument */
       case ENOPROTOOPT: /* Protocol not available */
       case ENOTSOCK:    /* Socket operation on non-socket */
+      default:
+        throw posix::error(errno);
+    }
+  }
+}
+
+void
+socket::listen(const unsigned int backlog) {
+  if (::listen(fd(), static_cast<int>(backlog)) == -1) {
+    switch (errno) {
+      case EBADF: /* Bad file descriptor */
+        throw posix::bad_descriptor();
       default:
         throw posix::error(errno);
     }

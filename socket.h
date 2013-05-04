@@ -48,6 +48,11 @@ class posix::socket : public posix::descriptor {
     void getsockopt(int level, int optname, void* optval, int* optlen) const;
 
     /**
+     * Listens for connections on this socket.
+     */
+    void listen(unsigned int backlog = 128);
+
+    /**
      * Sends a string to the peer.
      */
     void send(const std::string& string);
