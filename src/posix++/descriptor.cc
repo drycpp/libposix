@@ -75,6 +75,17 @@ descriptor::status() const {
   return fcntl(F_GETFL);
 }
 
+bool
+descriptor::cloexec() const {
+  return fcntl(F_GETFD) & FD_CLOEXEC;
+}
+
+void
+descriptor::cloexec(const bool state) {
+  const int flags = fcntl(F_GETFD);
+  fcntl(F_SETFD, state ? flags | FD_CLOEXEC : flags & ~FD_CLOEXEC);
+}
+
 int
 descriptor::fcntl(const int cmd) const {
   const int result = ::fcntl(_fd, cmd);

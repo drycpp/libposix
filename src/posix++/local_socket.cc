@@ -42,9 +42,8 @@ local_socket::local_socket() : socket() {
   }
 
   assign(sockfd);
-
 #ifndef SOCK_CLOEXEC
-  fcntl(F_SETFD, fcntl(F_GETFD) | FD_CLOEXEC);
+  cloexec(true);
 #endif
 }
 
@@ -69,10 +68,9 @@ local_socket::pair() {
   }
 
   std::pair<local_socket, local_socket> pair{local_socket(fds[0]), local_socket(fds[1])};
-
 #ifndef SOCK_CLOEXEC
-  pair.first.fcntl(F_SETFD, pair.first.fcntl(F_GETFD) | FD_CLOEXEC);
-  pair.second.fcntl(F_SETFD, pair.second.fcntl(F_GETFD) | FD_CLOEXEC);
+  pair.first.cloexec(true);
+  pair.second.cloexec(true);
 #endif
 
   return pair;
@@ -162,9 +160,8 @@ retry:
   }
 
   connection.assign(connfd);
-
 #if !(defined(HAVE_ACCEPT4) && defined(SOCK_CLOEXEC))
-  connection.fcntl(F_SETFD, connection.fcntl(F_GETFD) | FD_CLOEXEC);
+  connection.cloexec(true);
 #endif
 
   return connection;
@@ -280,7 +277,7 @@ retry:
   }
 
 #ifndef MSG_CMSG_CLOEXEC
-  result.fcntl(F_SETFD, result.fcntl(F_GETFD) | FD_CLOEXEC);
+  result.cloexec(true);
 #endif
 
   return result;

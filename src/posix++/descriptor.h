@@ -144,6 +144,16 @@ struct posix::descriptor {
     int status() const;
 
     /**
+     * Returns the state of the close-on-exec flag.
+     */
+    bool cloexec() const;
+
+    /**
+     * Sets or clears the close-on-exec flag.
+     */
+    void cloexec(bool state);
+
+    /**
      * ...
      */
     int fcntl(int cmd) const;
