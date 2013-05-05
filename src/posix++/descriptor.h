@@ -154,6 +154,13 @@ struct posix::descriptor {
     void cloexec(bool state);
 
     /**
+     * Duplicates this descriptor.
+     *
+     * @note Preserves the state of the close-on-exec flag in the copy.
+     */
+    descriptor dup() const;
+
+    /**
      * ...
      */
     int fcntl(int cmd) const;

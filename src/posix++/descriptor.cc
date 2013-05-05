@@ -30,6 +30,7 @@ descriptor::descriptor(const descriptor& other) {
   if (other.valid()) {
     const bool cloexec_flag = other.cloexec();
 #ifdef F_DUPFD_CLOEXEC
+    /* POSIX.1-2008 feature to set FD_CLOEXEC atomically: */
     const int fcntl_cmd = cloexec_flag ? F_DUPFD_CLOEXEC : F_DUPFD;
     _fd = ::fcntl(other._fd, fcntl_cmd, 0);
 #else
@@ -90,6 +91,11 @@ void
 descriptor::cloexec(const bool state) {
   const int flags = fcntl(F_GETFD);
   fcntl(F_SETFD, state ? flags | FD_CLOEXEC : flags & ~FD_CLOEXEC);
+}
+
+descriptor
+descriptor::dup() const {
+  return descriptor(*this); /* rely on copy constructor */
 }
 
 int
