@@ -134,8 +134,6 @@ retry:
 
 local_socket
 local_socket::accept() {
-  local_socket connection;
-
   int connfd;
 retry:
 #if defined(HAVE_ACCEPT4) && defined(SOCK_CLOEXEC)
@@ -159,7 +157,7 @@ retry:
     }
   }
 
-  connection.assign(connfd);
+  local_socket connection(connfd);
 #if !(defined(HAVE_ACCEPT4) && defined(SOCK_CLOEXEC))
   connection.cloexec(true);
 #endif
