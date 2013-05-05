@@ -50,8 +50,14 @@ local_socket::local_socket() : socket() {
 
 std::pair<local_socket, local_socket>
 local_socket::pair() {
+  int flags = 0;
+#ifdef SOCK_CLOEXEC
+  /* Nonstandard Linux extension to set O_CLOEXEC atomically: */
+  flags |= SOCK_CLOEXEC;
+#endif
+
   int fds[2] = {0, 0};
-  if (::socketpair(AF_LOCAL, SOCK_STREAM, 0, fds) == -1) {
+  if (::socketpair(AF_LOCAL, SOCK_STREAM | flags, 0, fds) == -1) {
     switch (errno) {
       case EMFILE: /* Too many open files */
       case ENFILE: /* Too many open files in system */
@@ -61,7 +67,15 @@ local_socket::pair() {
         throw posix::error(errno);
     }
   }
-  return {local_socket(fds[0]), local_socket(fds[1])};
+
+  std::pair<local_socket, local_socket> pair{local_socket(fds[0]), local_socket(fds[1])};
+
+#ifndef SOCK_CLOEXEC
+  pair.first.fcntl(F_SETFD, pair.first.fcntl(F_GETFD) | FD_CLOEXEC);
+  pair.second.fcntl(F_SETFD, pair.second.fcntl(F_GETFD) | FD_CLOEXEC);
+#endif
+
+  return pair;
 }
 
 local_socket
