@@ -23,6 +23,10 @@ using namespace posix;
 
 local_socket::local_socket() : socket() {
   int flags = 0;
+#ifdef SOCK_CLOEXEC
+  /* Nonstandard Linux extension to set O_CLOEXEC atomically: */
+  flags |= SOCK_CLOEXEC;
+#endif
 
   int sockfd;
   if ((sockfd = ::socket(AF_LOCAL, SOCK_STREAM | flags, 0)) == -1) {
@@ -38,6 +42,10 @@ local_socket::local_socket() : socket() {
   }
 
   assign(sockfd);
+
+#ifndef SOCK_CLOEXEC
+  fcntl(F_SETFD, fcntl(F_GETFD) | FD_CLOEXEC);
+#endif
 }
 
 std::pair<local_socket, local_socket>
