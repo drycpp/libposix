@@ -116,10 +116,14 @@ local_socket
 local_socket::accept() {
   local_socket connection;
 
-  int sockfd;
+  int connfd;
 retry:
-  // FIXME: use accept4() if HAVE_ACCEPT4 is defined.
-  if ((sockfd = ::accept(fd(), nullptr, nullptr)) == -1) {
+#if defined(HAVE_ACCEPT4) && defined(SOCK_CLOEXEC)
+  /* Nonstandard Linux extension to set O_CLOEXEC atomically: */
+  if ((connfd = ::accept4(fd(), nullptr, nullptr, SOCK_CLOEXEC)) == -1) {
+#else
+  if ((connfd = ::accept(fd(), nullptr, nullptr)) == -1) {
+#endif
     switch (errno) {
       case EINTR:   /* Interrupted system call */
         goto retry;
@@ -135,7 +139,12 @@ retry:
     }
   }
 
-  connection.assign(sockfd);
+  connection.assign(connfd);
+
+#if !(defined(HAVE_ACCEPT4) && defined(SOCK_CLOEXEC))
+  connection.fcntl(F_SETFD, connection.fcntl(F_GETFD) | FD_CLOEXEC);
+#endif
+
   return connection;
 }
 
