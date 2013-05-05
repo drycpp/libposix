@@ -28,9 +28,9 @@ static const std::string invalid_in_copy_constructor =
 
 descriptor::descriptor(const descriptor& other) {
   if (other.valid()) {
+    const bool cloexec_flag = other.cloexec();
 #ifdef F_DUPFD_CLOEXEC
-    const bool fd_cloexec = other.flags() & FD_CLOEXEC;
-    const int fcntl_cmd = fd_cloexec ? F_DUPFD_CLOEXEC : F_DUPFD;
+    const int fcntl_cmd = cloexec_flag ? F_DUPFD_CLOEXEC : F_DUPFD;
     _fd = ::fcntl(other._fd, fcntl_cmd, 0);
 #else
     _fd = ::fcntl(other._fd, F_DUPFD, 0);
@@ -46,6 +46,12 @@ descriptor::descriptor(const descriptor& other) {
           throw posix::error(errno);
       }
     }
+
+#ifndef F_DUPFD_CLOEXEC
+    if (cloexec_flag) {
+      cloexec(true);
+    }
+#endif
   }
 }
 
