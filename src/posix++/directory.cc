@@ -82,24 +82,7 @@ directory::cend() const {
 }
 
 directory::iterator::iterator(const directory& dir) {
-#ifdef F_DUPFD_CLOEXEC
-  const int dirfd = ::fcntl(dir.fd(), F_DUPFD_CLOEXEC, 0);
-#else
-  const int dirfd = ::fcntl(dir.fd(), F_DUPFD, 0);
-#endif
-  if (dirfd == -1) {
-    switch (errno) {
-      case EMFILE: /* Too many open files */
-        throw posix::fatal_error(errno);
-      case EBADF:  /* Bad file descriptor */
-        throw posix::bad_descriptor();
-      case EINVAL: /* Invalid argument as `fcntl()` argument */
-        assert(false);
-        throw posix::error(errno);
-      default:
-        throw posix::error(errno);
-    }
-  }
+  const int dirfd = dir.dup(/*true*/).release();
 
   if (!(_dirp = fdopendir(dirfd))) {
     switch (errno) {
@@ -120,7 +103,7 @@ directory::iterator::iterator(const directory& dir) {
 directory::iterator::~iterator() noexcept {
   if (_dirp) {
     if (closedir(reinterpret_cast<DIR*>(_dirp)) == -1) {
-      /* Ignore any errors from `closedir()`. */
+      /* Ignore any errors from closedir(). */
     }
     _dirp = nullptr;
   }
