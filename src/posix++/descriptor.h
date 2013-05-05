@@ -82,6 +82,18 @@ struct posix::descriptor {
     }
 
     /**
+     * Releases the ownership of the native integer descriptor and returns
+     * it.
+     *
+     * @post This descriptor is in an invalid state.
+     */
+    int release() noexcept {
+      const int fd = _fd;
+      _fd = -1;
+      return fd;
+    }
+
+    /**
      * ...
      */
     bool operator==(const descriptor& other) const {
