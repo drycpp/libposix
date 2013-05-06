@@ -1,7 +1,7 @@
 AM_CPPFLAGS     = -I$(top_srcdir)/lib -I$(top_srcdir)/src -iquote $(srcdir)
 AM_CXXFLAGS     = -Wall -Wextra -pipe
 AM_LDFLAGS      =
-LDADD           = libposix++.la
+LDADD           = libposix++.la $(top_srcdir)/lib/libcompat.a
 lib_LTLIBRARIES = libposix++.la
 
 libposix___la_SOURCES =   \

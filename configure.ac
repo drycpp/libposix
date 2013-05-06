@@ -88,17 +88,17 @@ AC_C_INLINE
 AC_C_RESTRICT
 
 dnl Check for library functions:
-AC_FUNC_ALLOCA
+dnl AC_FUNC_ALLOCA
 AC_CHECK_FUNCS_ONCE([accept4])
-AC_CHECK_FUNCS_ONCE([openat])
+AC_CHECK_FUNCS([openat], [], [AC_LIBOBJ([openat])])
 
 dnl Check for system services:
 
 dnl Generate output:
-AC_CONFIG_FILES([Makefile src/Makefile src/posix++/Makefile test/Makefile test/posix++/Makefile])
+AC_CONFIG_FILES([Makefile lib/Makefile src/Makefile src/posix++/Makefile test/Makefile test/posix++/Makefile])
 AC_SUBST([PACKAGE_VERSION_MAJOR], ["VERSION_MAJOR"])
 AC_SUBST([PACKAGE_VERSION_MINOR], ["VERSION_MINOR"])
 AC_SUBST([PACKAGE_VERSION_PATCH], ["VERSION_PATCH"])
 AC_CONFIG_FILES([src/posix++/version.h])
-#AH_BOTTOM([#include "posix++/prelude.h"])
+AH_BOTTOM([#include "libcompat.h"])
 AC_OUTPUT
