@@ -16,6 +16,7 @@ check_PROGRAMS =      \
   check_pathname      \
   check_process       \
   check_process_group \
+  check_stdio         \
   check_socket        \
   check_sysv_segment  \
   check_user          \
