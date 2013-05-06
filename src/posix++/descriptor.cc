@@ -210,6 +210,31 @@ descriptor::write(const void* const data,
   }
 }
 
+std::size_t
+descriptor::read(char& result) {
+retry:
+  const ssize_t rc = ::read(fd(), &result, sizeof(result));
+  switch (rc) {
+    case -1:
+      switch (errno) {
+        case EINTR: /* Interrupted system call */
+          goto retry; /* try again */
+        case EBADF: /* Bad file descriptor */
+          throw posix::bad_descriptor();
+        default:
+          assert(errno != EFAULT);
+          throw posix::error(errno);
+      }
+
+    case 0:
+      return rc; /* EOF */
+
+    default:
+      assert(rc == 1);
+      return rc;
+  }
+}
+
 std::string
 descriptor::read() {
   std::string result;
@@ -222,12 +247,10 @@ descriptor::read() {
         switch (errno) {
           case EINTR: /* Interrupted system call */
             continue; /* try again */
-          case EFAULT:
-            assert(errno != EFAULT); /* should never be reached */
-            throw posix::error(errno);
           case EBADF: /* Bad file descriptor */
             throw posix::bad_descriptor();
           default:
+            assert(errno != EFAULT);
             throw posix::error(errno);
         }
 
