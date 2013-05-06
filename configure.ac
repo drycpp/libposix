@@ -89,6 +89,7 @@ AC_C_RESTRICT
 dnl Check for library functions:
 AC_FUNC_ALLOCA
 AC_CHECK_FUNCS_ONCE([accept4])
+AC_CHECK_FUNCS_ONCE([openat])
 
 dnl Check for system services:
 
