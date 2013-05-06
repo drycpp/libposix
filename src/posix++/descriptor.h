@@ -218,6 +218,11 @@ struct posix::descriptor {
     void write(const void* data, std::size_t size);
 
     /**
+     * Reads a line of text from this descriptor.
+     */
+    std::size_t read_line(std::string& buffer);
+
+    /**
      * Reads data from this descriptor until the given separator character
      * is encountered.
      */

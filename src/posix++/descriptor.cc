@@ -212,6 +212,11 @@ descriptor::write(const void* const data,
 }
 
 std::size_t
+descriptor::read_line(std::string& buffer) {
+  return read_until('\n', buffer);
+}
+
+std::size_t
 descriptor::read_until(const char separator,
                        std::string& buffer) {
   std::size_t byte_count = 0;
@@ -219,8 +224,10 @@ descriptor::read_until(const char separator,
   char character;
   while (read(character)) {
     byte_count++;
+
     if (character == separator)
       break; /* all done */
+
     buffer.push_back(character);
   }
 
@@ -229,9 +236,6 @@ descriptor::read_until(const char separator,
 
 std::size_t
 descriptor::read(char& result) {
-#if 0
-  return read(&result, sizeof(result));
-#else
 retry:
   const ssize_t rc = ::read(fd(), &result, sizeof(result));
   switch (rc) {
@@ -253,7 +257,6 @@ retry:
       assert(rc == 1);
       return rc;
   }
-#endif
 }
 
 std::size_t
