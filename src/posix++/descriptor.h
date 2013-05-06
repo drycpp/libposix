@@ -223,6 +223,11 @@ struct posix::descriptor {
     std::size_t read(char& result);
 
     /**
+     * Reads data from this descriptor.
+     */
+    std::size_t read(void* buffer, std::size_t buffer_size);
+
+    /**
      * Reads a string from this descriptor.
      */
     std::string read();

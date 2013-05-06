@@ -14,6 +14,7 @@
 #include <array>      /* for std::array */
 #include <cassert>    /* for assert() */
 #include <cerrno>     /* for errno */
+#include <cstdint>    /* for std::uint8_t */
 #include <cstring>    /* for std::strlen() */
 #include <fcntl.h>    /* for F_*, fcntl() */
 #include <stdexcept>  /* for std::invalid_argument */
@@ -212,6 +213,9 @@ descriptor::write(const void* const data,
 
 std::size_t
 descriptor::read(char& result) {
+#if 1
+  return read(&result, sizeof(result));
+#else
 retry:
   const ssize_t rc = ::read(fd(), &result, sizeof(result));
   switch (rc) {
@@ -233,6 +237,43 @@ retry:
       assert(rc == 1);
       return rc;
   }
+#endif
+}
+
+std::size_t
+descriptor::read(void* const buffer,
+                 const std::size_t buffer_size) {
+  assert(buffer != nullptr);
+
+  std::size_t byte_count = 0;
+
+  while (byte_count < buffer_size) {
+    const ssize_t rc = ::read(fd(),
+      reinterpret_cast<std::uint8_t*>(buffer) + byte_count,
+      buffer_size - byte_count);
+    switch (rc) {
+      case -1:
+        switch (errno) {
+          case EINTR: /* Interrupted system call */
+            continue; /* try again */
+          case EBADF:  /* Bad file descriptor */
+            throw posix::bad_descriptor();
+          default:
+            throw posix::error(errno);
+        }
+
+      case 0:
+        goto exit; /* end of file */
+
+      default:
+        assert(rc > 0);
+        const std::size_t chunk_size = static_cast<std::size_t>(rc);
+        byte_count += chunk_size;
+    }
+  }
+
+exit:
+  return byte_count;
 }
 
 std::string
