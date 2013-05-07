@@ -11,16 +11,11 @@ libposix___la_SOURCES =   \
   feature.cc              \
   file.cc                 \
   group.cc                \
-  local_socket.cc         \
-  message_queue.cc        \
   mode.cc                 \
   module.cc               \
   pathname.cc             \
   process.cc              \
   process_group.cc        \
-  stdio.cc                \
-  socket.cc               \
-  sysv_segment.cc         \
   user.cc                 \
   version.cc
 
@@ -33,15 +28,30 @@ base_pkginclude_HEADERS = \
   feature.h               \
   file.h                  \
   group.h                 \
-  local_socket.h          \
-  message_queue.h         \
   mode.h                  \
   module.h                \
   pathname.h              \
   process.h               \
   process_group.h         \
-  stdio.h                 \
-  socket.h                \
-  sysv_segment.h          \
   user.h                  \
   version.h
+
+if !DISABLE_MQUEUE
+  libposix___la_SOURCES   += message_queue.cc
+  base_pkginclude_HEADERS += message_queue.h
+endif
+
+if !DISABLE_STDIO
+  libposix___la_SOURCES   += stdio.cc
+  base_pkginclude_HEADERS += stdio.h
+endif
+
+if !DISABLE_SOCKET
+  libposix___la_SOURCES   += socket.cc local_socket.cc
+  base_pkginclude_HEADERS += socket.h local_socket.h
+endif
+
+if !DISABLE_SYSV
+  libposix___la_SOURCES   += sysv_segment.cc
+  base_pkginclude_HEADERS += sysv_segment.h
+endif

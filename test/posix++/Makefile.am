@@ -10,17 +10,28 @@ check_PROGRAMS =      \
   check_feature       \
   check_file          \
   check_group         \
-  check_local_socket  \
-  check_message_queue \
   check_module        \
   check_pathname      \
   check_process       \
   check_process_group \
-  check_stdio         \
-  check_socket        \
-  check_sysv_segment  \
   check_user          \
   check_version
+
+if !DISABLE_MQUEUE
+  check_PROGRAMS += check_message_queue
+endif
+
+if !DISABLE_STDIO
+  check_PROGRAMS += check_stdio
+endif
+
+if !DISABLE_SOCKET
+  check_PROGRAMS += check_socket check_local_socket
+endif
+
+if !DISABLE_SYSV
+  check_PROGRAMS += check_sysv_segment
+endif
 
 TESTS = $(check_PROGRAMS)
 

@@ -65,6 +65,30 @@ AC_ARG_ENABLE([unicode],
   [AS_HELP_STRING([--disable-unicode], [omit support for Unicode strings])])
 AS_IF([test "x$enable_unicode" == "xno"],
   [AC_DEFINE([DISABLE_UNICODE], 1, [Define to disable Unicode string support.])])
+# --enable-mqueue/--disable-mqueue
+AC_ARG_ENABLE([mqueue],
+  [AS_HELP_STRING([--disable-mqueue], [omit support for POSIX message queues])])
+AS_IF([test "x$enable_mqueue" == "xno"], [
+  AC_DEFINE([DISABLE_MQUEUE], 1, [Define to disable POSIX message queue support.])])
+AM_CONDITIONAL([DISABLE_MQUEUE], [test "x$enable_mqueue" == "xno"])
+# --enable-stdio/--disable-stdio
+AC_ARG_ENABLE([stdio],
+  [AS_HELP_STRING([--disable-stdio], [omit support for POSIX standard I/O])])
+AS_IF([test "x$enable_stdio" == "xno"], [
+  AC_DEFINE([DISABLE_STDIO], 1, [Define to disable POSIX standard I/O support.])])
+AM_CONDITIONAL([DISABLE_STDIO], [test "x$enable_stdio" == "xno"])
+# --enable-socket/--disable-socket
+AC_ARG_ENABLE([socket],
+  [AS_HELP_STRING([--disable-socket], [omit support for POSIX sockets])])
+AS_IF([test "x$enable_socket" == "xno"], [
+  AC_DEFINE([DISABLE_SOCKET], 1, [Define to disable POSIX socket support.])])
+AM_CONDITIONAL([DISABLE_SOCKET], [test "x$enable_socket" == "xno"])
+# --enable-sysv/--disable-sysv
+AC_ARG_ENABLE([sysv],
+  [AS_HELP_STRING([--disable-sysv], [omit support for SysV features])])
+AS_IF([test "x$enable_sysv" == "xno"], [
+  AC_DEFINE([DISABLE_SYSV], 1, [Define to disable SysV feature support.])])
+AM_CONDITIONAL([DISABLE_SYSV], [test "x$enable_sysv" == "xno"])
 
 dnl Check for libraries:
 # libboost (libboost-dev on Ubuntu, boost on Mac OS X + MacPorts)
