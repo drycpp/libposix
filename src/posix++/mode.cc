@@ -10,4 +10,8 @@
 
 using namespace posix;
 
-static_assert(sizeof(mode_t) == sizeof(mode), "sizeof(mode_t) != sizeof(mode)");
+/*
+ * x86-64 Linux 3.x:   uint32_t.
+ * x86-64 Darwin 11.x: uint16_t.
+ */
+static_assert(sizeof(mode_t) <= sizeof(mode), "sizeof(mode_t) > sizeof(mode)");
