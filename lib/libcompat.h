@@ -3,6 +3,10 @@
 #ifndef LIBCOMPAT_H
 #define LIBCOMPAT_H
 
+#ifndef HAVE_FDOPENDIR
+#include "fdopendir.h"
+#endif
+
 #ifndef HAVE_OPENAT
 #include "openat.h"
 #endif
