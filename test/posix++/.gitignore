@@ -5,6 +5,8 @@
 *.o
 *.la
 *.lo
+*.log
+*.trs
 check_descriptor
 check_directory
 check_error
