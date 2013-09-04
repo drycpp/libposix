@@ -6,7 +6,9 @@
 #include <stdexcept> /* for std::invalid_argument */
 #include <string>    /* for std::string */
 
-namespace posix { class pathname; }
+namespace posix {
+  class pathname;
+}
 
 /**
  * Represents a POSIX pathname.
@@ -14,54 +16,59 @@ namespace posix { class pathname; }
  * @see http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap03.html#tag_03_266
  */
 class posix::pathname {
-  public:
-    /**
-     * Constructor.
-     */
-    pathname(const std::string& path) : _string(path) {}
+public:
+  /**
+   * Constructor.
+   */
+  pathname(const std::string& path) : _string(path) {}
 
-    /**
-     * Constructor.
-     */
-    pathname(const char* const path) : _string(path) {
-      if (!path) {
-        throw std::invalid_argument("path cannot be nullptr");
-      }
+  /**
+   * Constructor.
+   */
+  pathname(const char* const path) : _string(path) {
+    if (!path) {
+      throw std::invalid_argument("path cannot be nullptr");
     }
+  }
 
-    /**
-     * ...
-     */
-    bool empty() const noexcept {
-      return _string.empty();
-    }
+  /**
+   * Destructor.
+   */
+  ~pathname() noexcept = default;
 
-    /**
-     * ...
-     */
-    const std::string& string() const noexcept {
-      return _string;
-    }
+  /**
+   * ...
+   */
+  bool empty() const noexcept {
+    return _string.empty();
+  }
 
-    /**
-     * ...
-     */
-    const char* c_str() const noexcept {
-      return _string.c_str();
-    }
+  /**
+   * ...
+   */
+  const std::string& string() const noexcept {
+    return _string;
+  }
 
-    /**
-     * ...
-     */
-    posix::pathname dirname() const;
+  /**
+   * ...
+   */
+  const char* c_str() const noexcept {
+    return _string.c_str();
+  }
 
-    /**
-     * ...
-     */
-    posix::pathname basename() const;
+  /**
+   * ...
+   */
+  posix::pathname dirname() const;
 
-  protected:
-    std::string _string;
+  /**
+   * ...
+   */
+  posix::pathname basename() const;
+
+protected:
+  std::string _string;
 };
 
 #endif /* POSIXXX_PATHNAME_H */
