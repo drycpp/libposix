@@ -4,11 +4,15 @@
 #include <config.h>
 #endif
 
+#include "descriptor.h"
+#include "error.h"
 #include "stdio.h"
 
 #include <array>    /* for std::array */
+#include <cassert>  /* for assert() */
+#include <cerrno>   /* for E*, errno */
 #include <cstdint>  /* for std::uint8_t */
-#include <unistd.h> /* for STD{IN,OUT,ERR}_FILENO */
+#include <unistd.h> /* for STD{IN,OUT,ERR}_FILENO, write() */
 
 using namespace posix;
 
@@ -37,4 +41,26 @@ posix::standard_error() noexcept {
   static const descriptor* const stderr =
     new(static_data.standard_error.data()) descriptor(STDERR_FILENO);
   return *stderr;
+}
+
+void
+posix::write(const int fd, const void* const buffer, const std::size_t count) {
+  assert(fd > 0);
+  assert(buffer != nullptr);
+
+  std::size_t position = 0;
+
+  while (position < count) {
+    const ssize_t rc = ::write(fd, reinterpret_cast<const uint8_t*>(buffer) + position, count - position);
+    if (rc == -1) {
+      switch (errno) {
+        case EINTR:
+        case EAGAIN:
+          continue; /* try again */
+        default:
+          throw posix::error(errno);
+      }
+    }
+    position += static_cast<decltype(position)>(rc);
+  }
 }
