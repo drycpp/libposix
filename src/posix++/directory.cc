@@ -5,7 +5,6 @@
 #endif
 
 #include "directory.h"
-
 #include "error.h"
 #include "pathname.h"
 
@@ -18,9 +17,10 @@
 using namespace posix;
 
 directory
-directory::open(const int dirfd, const pathname& pathname) {
+directory::open(const int dirfd, const char* const pathname) {
   assert(dirfd > 0 || dirfd == AT_FDCWD);
-  assert(!pathname.empty());
+  assert(pathname != nullptr);
+  assert(*pathname != '\0');
 
   int flags = O_RDONLY;
 #ifdef O_CLOEXEC
@@ -34,7 +34,7 @@ directory::open(const int dirfd, const pathname& pathname) {
 #endif
 
   int fd;
-  if ((fd = openat(dirfd, pathname.c_str(), flags)) == -1) {
+  if ((fd = openat(dirfd, pathname, flags)) == -1) {
     switch (errno) {
       case EMFILE: /* Too many open files */
       case ENFILE: /* Too many open files in system */
@@ -52,12 +52,23 @@ directory::open(const int dirfd, const pathname& pathname) {
 
 directory
 directory::open(const pathname& pathname) {
+  return open(AT_FDCWD, pathname.c_str());
+}
+
+directory
+directory::open(const char* const pathname) {
   return open(AT_FDCWD, pathname);
 }
 
 directory
 directory::open(const directory& directory,
                 const pathname& pathname) {
+  return open(directory.fd(), pathname.c_str());
+}
+
+directory
+directory::open(const directory& directory,
+                const char* const pathname) {
   return open(directory.fd(), pathname);
 }
 

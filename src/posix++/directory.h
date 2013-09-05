@@ -30,7 +30,17 @@ public:
   /**
    * Opens an existing directory.
    */
+  static directory open(const char* pathname);
+
+  /**
+   * Opens an existing directory.
+   */
   static directory open(const directory& directory, const pathname& pathname);
+
+  /**
+   * Opens an existing directory.
+   */
+  static directory open(const directory& directory, const char* pathname);
 
   /**
    * Constructor.
@@ -64,7 +74,7 @@ public:
   const iterator cend() const;
 
 protected:
-  static directory open(int dirfd, const pathname& pathname);
+  static directory open(int dirfd, const char* pathname);
 };
 
 /**
