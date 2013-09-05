@@ -19,68 +19,86 @@ namespace posix {
  * @see http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap03.html#tag_03_128
  */
 class posix::directory : public posix::descriptor {
-  public:
-    class iterator;
+public:
+  class iterator;
 
-    static directory open(const pathname& pathname);
+  /**
+   * Opens an existing directory.
+   */
+  static directory open(const pathname& pathname);
 
-    static directory open(const directory& directory, const pathname& pathname);
+  /**
+   * Opens an existing directory.
+   */
+  static directory open(const directory& directory, const pathname& pathname);
 
-    /**
-     * Constructor.
-     */
-    directory(const int fd) noexcept
-      : descriptor(fd) {}
+  /**
+   * Constructor.
+   */
+  directory(const int fd) noexcept
+    : descriptor(fd) {}
 
-    /**
-     * Copy constructor.
-     */
-    directory(const directory& other) /* may throw */
-      : descriptor(other) {}
+  /**
+   * Copy constructor.
+   */
+  directory(const directory& other) /* may throw */
+    : descriptor(other) {}
 
-    /**
-     * Move constructor.
-     */
-    directory(directory&& other) noexcept
-      : descriptor(std::move(other)) {}
+  /**
+   * Move constructor.
+   */
+  directory(directory&& other) noexcept
+    : descriptor(std::move(other)) {}
 
-    /**
-     * Destructor.
-     */
-    ~directory() noexcept {}
+  /**
+   * Destructor.
+   */
+  ~directory() noexcept {}
 
-    iterator begin() const;
+  iterator begin() const;
 
-    iterator end() const;
+  iterator end() const;
 
-    const iterator cbegin() const;
+  const iterator cbegin() const;
 
-    const iterator cend() const;
+  const iterator cend() const;
 
-  protected:
-    static directory open(int dirfd, const pathname& pathname);
+protected:
+  static directory open(int dirfd, const pathname& pathname);
 };
 
+/**
+ * POSIX directory iterator.
+ */
 class posix::directory::iterator {
-  public:
-    iterator() noexcept {}
+public:
+  /**
+   * Default constructor.
+   */
+  iterator() noexcept = default;
 
-    iterator(const directory& dir);
+  /**
+   * Constructor.
+   */
+  iterator(const directory& dir);
 
-    ~iterator() noexcept;
+  /**
+   * Destructor.
+   */
+  ~iterator() noexcept;
 
-    bool operator==(const iterator& other) {
-      return !operator!=(other);
-    }
+  bool operator==(const iterator& other) {
+    return !operator!=(other);
+  }
 
-    bool operator!=(const iterator& other);
+  bool operator!=(const iterator& other);
 
-    iterator& operator++();
+  iterator& operator++();
 
-    std::string operator*();
+  std::string operator*();
 
-  protected:
-    void* _dirp = nullptr;
+protected:
+  void* _dirp = nullptr;
 };
 
 #endif /* POSIXXX_DIRECTORY_H */
