@@ -11,7 +11,7 @@
 #include <cassert>      /* for assert() */
 #include <dirent.h>     /* for fdopendir() */
 #include <fcntl.h>      /* for AT_FDCWD, fcntl() */
-#include <unistd.h>     /* for close() */
+#include <unistd.h>     /* for close(), readlinkat() */
 #include <sys/types.h>  /* for DIR */
 
 using namespace posix;
@@ -70,6 +70,28 @@ directory
 directory::open(const directory& directory,
                 const char* const pathname) {
   return open(directory.fd(), pathname);
+}
+
+pathname
+directory::readlink(const char* const pathname) const {
+  char buffer[PATH_MAX];
+
+  const int rc = readlinkat(fd(), pathname, buffer, sizeof(buffer) - 1);
+  if (rc == -1) {
+    switch (errno) {
+      case ENOMEM: /* Cannot allocate memory in kernel */
+        throw posix::fatal_error(errno);
+      case EBADF:  /* Bad file descriptor */
+        throw posix::bad_descriptor();
+      default:
+        throw posix::error(errno);
+    }
+  }
+
+  assert(rc < sizeof(buffer));
+  buffer[rc] = '\0';
+
+  return posix::pathname(buffer);
 }
 
 directory::iterator

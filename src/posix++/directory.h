@@ -63,7 +63,14 @@ public:
   /**
    * Destructor.
    */
-  ~directory() noexcept {}
+  ~directory() noexcept = default;
+
+  // TODO: copy/move assignment operators.
+
+  /**
+   * Reads the target path of a symbolic link.
+   */
+  pathname readlink(const char* pathname) const;
 
   iterator begin() const;
 
