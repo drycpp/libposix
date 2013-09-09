@@ -7,7 +7,7 @@
 #include "error.h"
 
 #include <cassert> /* for assert() */
-#include <cerrno>  /* for EBADF, errno */
+#include <cerrno>  /* for E*, errno */
 
 using namespace posix;
 
@@ -15,4 +15,4 @@ error::error() noexcept
   : std::system_error(errno, std::system_category()) {}
 
 bad_descriptor::bad_descriptor() noexcept
-  : error(EBADF) {}
+  : logic_error(EBADF) {}

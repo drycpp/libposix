@@ -37,7 +37,7 @@ file::open(const int dirfd,
       case EBADF:  /* Bad file descriptor */
         throw posix::bad_descriptor();
       default:
-        throw posix::error(errno);
+        throw posix::runtime_error(errno);
     }
   }
 
@@ -83,7 +83,7 @@ file::size() const {
       case EBADF:  /* Bad file descriptor */
         throw posix::bad_descriptor();
       default:
-        throw posix::error(errno);
+        throw posix::runtime_error(errno);
     }
   }
 

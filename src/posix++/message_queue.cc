@@ -60,7 +60,7 @@ message_queue::open(const char* const name,
       case ENOMEM: /* Cannot allocate memory in kernel */
         throw posix::fatal_error(errno);
       default:
-        throw posix::error(errno);
+        throw posix::runtime_error(errno);
     }
   }
 

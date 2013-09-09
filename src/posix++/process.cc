@@ -47,7 +47,7 @@ process::wait(int& status, const int options) {
           case EINTR: /* Interrupted system call */
             continue; /* try again */
           default:
-            throw posix::error(errno);
+            throw posix::runtime_error(errno);
         }
 
       case 0:  /* the process hasn't changed state */
@@ -67,7 +67,7 @@ process::signal(const int signum) {
   if (kill(_id, signum) == -1) {
     switch (errno) {
       default:
-        throw posix::error(errno);
+        throw posix::runtime_error(errno);
     }
   }
 }

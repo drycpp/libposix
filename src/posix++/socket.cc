@@ -72,7 +72,7 @@ socket::getsockopt(const int level,
       case ENOPROTOOPT: /* Protocol not available */
       case ENOTSOCK:    /* Socket operation on non-socket */
       default:
-        throw posix::error(errno);
+        throw posix::runtime_error(errno);
     }
   }
 }
@@ -84,7 +84,7 @@ socket::listen(const unsigned int backlog) {
       case EBADF: /* Bad file descriptor */
         throw posix::bad_descriptor();
       default:
-        throw posix::error(errno);
+        throw posix::runtime_error(errno);
     }
   }
 }
@@ -118,7 +118,7 @@ socket::send(const void* const data,
         case EBADF:  /* Bad file descriptor */
           throw posix::bad_descriptor();
         default:
-          throw posix::error(errno);
+          throw posix::runtime_error(errno);
       }
     }
     pos += rc;
@@ -167,7 +167,7 @@ socket::recv(std::function<bool (const void* chunk_data, std::size_t chunk_size)
           case EBADF:  /* Bad file descriptor */
             throw posix::bad_descriptor();
           default:
-            throw posix::error(errno);
+            throw posix::runtime_error(errno);
         }
 
       case 0:
@@ -206,7 +206,7 @@ socket::recv(void* const buffer,
           case EBADF:  /* Bad file descriptor */
             throw posix::bad_descriptor();
           default:
-            throw posix::error(errno);
+            throw posix::runtime_error(errno);
         }
 
       case 0:
@@ -243,7 +243,7 @@ socket::shutdown(const int how) {
       case ENOTCONN: /* Transport endpoint is not connected */
       case ENOTSOCK: /* Socket operation on non-socket */
       default:
-        throw posix::error(errno);
+        throw posix::runtime_error(errno);
     }
   }
 }

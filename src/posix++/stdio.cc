@@ -57,8 +57,10 @@ posix::write(const int fd, const void* const buffer, const std::size_t count) {
         case EINTR:
         case EAGAIN:
           continue; /* try again */
+        case EBADF: /* Bad file descriptor */
+          throw posix::bad_descriptor();
         default:
-          throw posix::error(errno);
+          throw posix::runtime_error(errno);
       }
     }
     position += static_cast<decltype(position)>(rc);

@@ -43,7 +43,7 @@ directory::open(const int dirfd, const char* const pathname) {
       case EBADF:  /* Bad file descriptor */
         throw posix::bad_descriptor();
       default:
-        throw posix::error(errno);
+        throw posix::runtime_error(errno);
     }
   }
 
@@ -95,7 +95,7 @@ directory::unlink(const char* const pathname,
       case EBADF:  /* Bad file descriptor */
         throw posix::bad_descriptor();
       default:
-        throw posix::error(errno);
+        throw posix::runtime_error(errno);
     }
   }
 }
@@ -112,7 +112,7 @@ directory::readlink(const char* const pathname) const {
       case EBADF:  /* Bad file descriptor */
         throw posix::bad_descriptor();
       default:
-        throw posix::error(errno);
+        throw posix::runtime_error(errno);
     }
   }
 
@@ -156,7 +156,7 @@ directory::iterator::iterator(const directory& dir) {
       case ENOENT:
       case ENOTDIR:
       default:
-        throw posix::error(errno);
+        throw posix::runtime_error(errno);
     }
   }
 }

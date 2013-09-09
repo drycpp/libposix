@@ -45,7 +45,7 @@ descriptor::descriptor(const descriptor& other) {
         case EMFILE: /* Too many open files */
           throw posix::fatal_error(errno);
         default:
-          throw posix::error(errno);
+          throw posix::runtime_error(errno);
       }
     }
 
@@ -107,7 +107,7 @@ descriptor::fcntl(const int cmd) const {
       case EBADF: /* Bad file descriptor */
         throw posix::bad_descriptor();
       default:
-        throw posix::error(errno);
+        throw posix::runtime_error(errno);
     }
   }
   return result;
@@ -122,7 +122,7 @@ descriptor::fcntl(const int cmd,
       case EBADF: /* Bad file descriptor */
         throw posix::bad_descriptor();
       default:
-        throw posix::error(errno);
+        throw posix::runtime_error(errno);
     }
   }
   return result;
@@ -137,7 +137,7 @@ descriptor::fcntl(const int cmd,
       case EBADF: /* Bad file descriptor */
         throw posix::bad_descriptor();
       default:
-        throw posix::error(errno);
+        throw posix::runtime_error(errno);
     }
   }
   return result;
@@ -156,7 +156,7 @@ descriptor::chown(const user& user,
       case EBADF:  /* Bad file descriptor */
         throw posix::bad_descriptor();
       default:
-        throw posix::error(errno);
+        throw posix::runtime_error(errno);
     }
   }
 }
@@ -170,7 +170,7 @@ descriptor::chmod(const mode mode) {
       case EBADF:  /* Bad file descriptor */
         throw posix::bad_descriptor();
       default:
-        throw posix::error(errno);
+        throw posix::runtime_error(errno);
     }
   }
 }
@@ -204,7 +204,7 @@ descriptor::write(const void* const data,
         case EBADF:  /* Bad file descriptor */
           throw posix::bad_descriptor();
         default:
-          throw posix::error(errno);
+          throw posix::runtime_error(errno);
       }
     }
     pos += rc;
@@ -247,7 +247,7 @@ retry:
           throw posix::bad_descriptor();
         default:
           assert(errno != EFAULT);
-          throw posix::error(errno);
+          throw posix::runtime_error(errno);
       }
 
     case 0:
@@ -278,7 +278,7 @@ descriptor::read(void* const buffer,
           case EBADF:  /* Bad file descriptor */
             throw posix::bad_descriptor();
           default:
-            throw posix::error(errno);
+            throw posix::runtime_error(errno);
         }
 
       case 0:
@@ -311,7 +311,7 @@ descriptor::read() {
             throw posix::bad_descriptor();
           default:
             assert(errno != EFAULT);
-            throw posix::error(errno);
+            throw posix::runtime_error(errno);
         }
 
       case 0:
@@ -331,7 +331,7 @@ descriptor::sync() {
       case EBADF: /* Bad file descriptor */
         throw posix::bad_descriptor();
       default:
-        throw posix::error(errno);
+        throw posix::runtime_error(errno);
     }
   }
 }
