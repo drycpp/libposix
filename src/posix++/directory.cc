@@ -97,6 +97,7 @@ directory::unlink(const char* const pathname,
       case EFAULT:  /* Bad address */
         throw posix::bad_address();
       case EINVAL:  /* Invalid argument */
+        throw posix::invalid_argument();
       case ENAMETOOLONG: /* File name too long */
       case ENOTDIR: /* Not a directory */
         throw posix::logic_error(errno);

@@ -19,3 +19,6 @@ bad_descriptor::bad_descriptor() noexcept
 
 bad_address::bad_address() noexcept
   : logic_error(EFAULT) {}
+
+invalid_argument::invalid_argument() noexcept
+  : logic_error(EINVAL) {}

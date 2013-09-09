@@ -12,6 +12,7 @@ namespace posix {
   class fatal_error;
   class bad_descriptor;
   class bad_address;
+  class invalid_argument;
 }
 
 /**
@@ -65,7 +66,7 @@ public:
   /**
    * Returns the error number.
    */
-  int number() const noexcept {
+  inline int number() const noexcept {
     return code().value();
   }
 };
@@ -124,6 +125,19 @@ public:
    * Default constructor.
    */
   bad_address() noexcept;
+};
+
+/**
+ * Represents a POSIX `EINVAL` (Invalid argument) error.
+ *
+ * @see http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/errno.h.html
+ */
+class posix::invalid_argument : public posix::logic_error {
+public:
+  /**
+   * Default constructor.
+   */
+  invalid_argument() noexcept;
 };
 
 #endif /* POSIXXX_ERROR_H */

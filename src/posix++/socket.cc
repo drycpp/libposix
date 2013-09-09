@@ -70,6 +70,7 @@ socket::getsockopt(const int level,
       case EFAULT:      /* Bad address */
         throw posix::bad_address();
       case EINVAL:      /* Invalid argument */
+        throw posix::invalid_argument();
       case ENOPROTOOPT: /* Protocol not available */
       case ENOTSOCK:    /* Socket operation on non-socket */
       default:
@@ -241,6 +242,7 @@ socket::shutdown(const int how) {
       case EBADF:    /* Bad file descriptor */
         throw posix::bad_descriptor();
       case EINVAL:   /* Invalid argument */
+        throw posix::invalid_argument();
       case ENOTCONN: /* Transport endpoint is not connected */
       case ENOTSOCK: /* Socket operation on non-socket */
       default:
