@@ -11,6 +11,7 @@ namespace posix {
   class runtime_error;
   class fatal_error;
   class bad_descriptor;
+  class bad_address;
 }
 
 /**
@@ -100,7 +101,7 @@ public:
 };
 
 /**
- * Represents a POSIX `EBADF` error.
+ * Represents a POSIX `EBADF` (Bad file descriptor) error.
  *
  * @see http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/errno.h.html
  */
@@ -110,6 +111,19 @@ public:
    * Default constructor.
    */
   bad_descriptor() noexcept;
+};
+
+/**
+ * Represents a POSIX `EFAULT` (Bad address) error.
+ *
+ * @see http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/errno.h.html
+ */
+class posix::bad_address : public posix::logic_error {
+public:
+  /**
+   * Default constructor.
+   */
+  bad_address() noexcept;
 };
 
 #endif /* POSIXXX_ERROR_H */

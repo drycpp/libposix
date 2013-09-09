@@ -16,3 +16,6 @@ error::error() noexcept
 
 bad_descriptor::bad_descriptor() noexcept
   : logic_error(EBADF) {}
+
+bad_address::bad_address() noexcept
+  : logic_error(EFAULT) {}

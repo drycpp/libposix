@@ -68,6 +68,7 @@ socket::getsockopt(const int level,
       case EBADF:       /* Bad file descriptor */
         throw posix::bad_descriptor();
       case EFAULT:      /* Bad address */
+        throw posix::bad_address();
       case EINVAL:      /* Invalid argument */
       case ENOPROTOOPT: /* Protocol not available */
       case ENOTSOCK:    /* Socket operation on non-socket */

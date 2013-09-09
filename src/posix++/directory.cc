@@ -90,10 +90,16 @@ directory::unlink(const char* const pathname,
 
   if (unlinkat(fd(), pathname, flags) == -1) {
     switch (errno) {
-      case ENOMEM: /* Cannot allocate memory in kernel */
+      case ENOMEM:  /* Cannot allocate memory in kernel */
         throw posix::fatal_error(errno);
-      case EBADF:  /* Bad file descriptor */
+      case EBADF:   /* Bad file descriptor */
         throw posix::bad_descriptor();
+      case EFAULT:  /* Bad address */
+        throw posix::bad_address();
+      case EINVAL:  /* Invalid argument */
+      case ENAMETOOLONG: /* File name too long */
+      case ENOTDIR: /* Not a directory */
+        throw posix::logic_error(errno);
       default:
         throw posix::runtime_error(errno);
     }
