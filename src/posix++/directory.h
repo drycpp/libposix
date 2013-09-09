@@ -68,6 +68,16 @@ public:
   // TODO: copy/move assignment operators.
 
   /**
+   * Removes the specified directory entry, which must be an empty subdirectory.
+   */
+  void rmdir(const char* pathname) const;
+
+  /**
+   * Removes the specified directory entry.
+   */
+  void unlink(const char* pathname) const;
+
+  /**
    * Reads the target path of a symbolic link.
    */
   pathname readlink(const char* pathname) const;
@@ -82,6 +92,8 @@ public:
 
 protected:
   static directory open(int dirfd, const char* pathname);
+
+  void unlink(const char* pathname, int flags) const;
 };
 
 /**

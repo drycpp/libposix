@@ -11,7 +11,7 @@
 #include <cassert>      /* for assert() */
 #include <dirent.h>     /* for fdopendir() */
 #include <fcntl.h>      /* for AT_FDCWD, fcntl() */
-#include <unistd.h>     /* for close(), readlinkat() */
+#include <unistd.h>     /* for close(), readlinkat(), unlinkat() */
 #include <sys/types.h>  /* for DIR */
 
 using namespace posix;
@@ -70,6 +70,34 @@ directory
 directory::open(const directory& directory,
                 const char* const pathname) {
   return open(directory.fd(), pathname);
+}
+
+void
+directory::rmdir(const char* const pathname) const {
+  return unlink(pathname, AT_REMOVEDIR);
+}
+
+void
+directory::unlink(const char* const pathname) const {
+  return unlink(pathname, 0);
+}
+
+void
+directory::unlink(const char* const pathname,
+                  const int flags) const {
+  assert(pathname != nullptr);
+  assert(*pathname != '\0');
+
+  if (unlinkat(fd(), pathname, flags) == -1) {
+    switch (errno) {
+      case ENOMEM: /* Cannot allocate memory in kernel */
+        throw posix::fatal_error(errno);
+      case EBADF:  /* Bad file descriptor */
+        throw posix::bad_descriptor();
+      default:
+        throw posix::error(errno);
+    }
+  }
 }
 
 pathname
