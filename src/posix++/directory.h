@@ -68,6 +68,13 @@ public:
   // TODO: copy/move assignment operators.
 
   /**
+   * Checks whether this directory is empty.
+   *
+   * @see http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_144
+   */
+  bool empty() const;
+
+  /**
    * Removes the specified directory entry, which must be an empty subdirectory.
    */
   void rmdir(const char* pathname) const;
