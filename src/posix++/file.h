@@ -21,45 +21,45 @@ namespace posix {
  * @see http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap03.html#tag_03_163
  */
 class posix::file : public posix::descriptor {
-  public:
-    static file create(const pathname& pathname, mode mode);
+public:
+  static file create(const pathname& pathname, mode mode);
 
-    static file create(const directory& directory, const pathname& pathname, mode mode);
+  static file create(const directory& directory, const pathname& pathname, mode mode);
 
-    static file open(const pathname& pathname, int flags);
+  static file open(const pathname& pathname, int flags);
 
-    static file open(const directory& directory, const pathname& pathname, int flags);
+  static file open(const directory& directory, const pathname& pathname, int flags);
 
-    /**
-     * Constructor.
-     */
-    file(const int fd) noexcept
-      : descriptor(fd) {}
+  /**
+   * Constructor.
+   */
+  file(const int fd) noexcept
+    : descriptor(fd) {}
 
-    /**
-     * Copy constructor.
-     */
-    file(const file& other) /* may throw */
-      : descriptor(other) {}
+  /**
+   * Copy constructor.
+   */
+  file(const file& other) /* may throw */
+    : descriptor(other) {}
 
-    /**
-     * Move constructor.
-     */
-    file(file&& other) noexcept
-      : descriptor(std::move(other)) {}
+  /**
+   * Move constructor.
+   */
+  file(file&& other) noexcept
+    : descriptor(std::move(other)) {}
 
-    /**
-     * Destructor.
-     */
-    ~file() noexcept {}
+  /**
+   * Destructor.
+   */
+  ~file() noexcept {}
 
-    /**
-     * ...
-     */
-    std::size_t size() const;
+  /**
+   * ...
+   */
+  std::size_t size() const;
 
-  protected:
-    static file open(int dirfd, const pathname& pathname, int flags, mode mode = 0);
+protected:
+  static file open(int dirfd, const pathname& pathname, int flags, mode mode = 0);
 };
 
 #endif /* POSIXXX_FILE_H */

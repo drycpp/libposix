@@ -19,56 +19,56 @@ namespace posix {
  * @see http://en.wikipedia.org/wiki/Unix_domain_socket
  */
 class posix::local_socket : public posix::socket {
-  public:
-    static std::pair<local_socket, local_socket> pair();
+public:
+  static std::pair<local_socket, local_socket> pair();
 
-    static local_socket bind(const pathname& pathname);
+  static local_socket bind(const pathname& pathname);
 
-    static local_socket connect(const pathname& pathname);
+  static local_socket connect(const pathname& pathname);
 
-    /**
-     * Constructor.
-     */
-    local_socket(const int fd) noexcept
-      : socket(fd) {}
+  /**
+   * Constructor.
+   */
+  local_socket(const int fd) noexcept
+    : socket(fd) {}
 
-    /**
-     * Copy constructor.
-     */
-    local_socket(const local_socket& other) /* may throw */
-      : socket(other) {}
+  /**
+   * Copy constructor.
+   */
+  local_socket(const local_socket& other) /* may throw */
+    : socket(other) {}
 
-    /**
-     * Move constructor.
-     */
-    local_socket(local_socket&& other) noexcept
-      : socket(std::move(other)) {}
+  /**
+   * Move constructor.
+   */
+  local_socket(local_socket&& other) noexcept
+    : socket(std::move(other)) {}
 
-    /**
-     * Destructor.
-     */
-    ~local_socket() noexcept {}
+  /**
+   * Destructor.
+   */
+  ~local_socket() noexcept {}
 
-    /**
-     * Accepts a connection on this socket.
-     */
-    local_socket accept();
+  /**
+   * Accepts a connection on this socket.
+   */
+  local_socket accept();
 
-    /**
-     * Sends a descriptor to the peer.
-     */
-    void send_descriptor(const descriptor& descriptor);
+  /**
+   * Sends a descriptor to the peer.
+   */
+  void send_descriptor(const descriptor& descriptor);
 
-    /**
-     * Receives a descriptor from the peer.
-     */
-    descriptor recv_descriptor();
+  /**
+   * Receives a descriptor from the peer.
+   */
+  descriptor recv_descriptor();
 
-  protected:
-    /**
-     * Default constructor.
-     */
-    local_socket();
+protected:
+  /**
+   * Default constructor.
+   */
+  local_socket();
 };
 
 #endif /* POSIXXX_LOCAL_SOCKET_H */

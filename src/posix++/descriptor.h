@@ -22,244 +22,244 @@ namespace posix {
  * @see http://en.wikipedia.org/wiki/File_descriptor
  */
 struct posix::descriptor {
-  public:
-    /**
-     * Default constructor. The descriptor is invalid after construction.
-     */
-    descriptor() noexcept {}
+public:
+  /**
+   * Default constructor. The descriptor is invalid after construction.
+   */
+  descriptor() noexcept {}
 
-    /**
-     * Constructor.
-     */
-    descriptor(const int fd) noexcept {
-      _fd = fd;
-    }
+  /**
+   * Constructor.
+   */
+  descriptor(const int fd) noexcept {
+    _fd = fd;
+  }
 
-    /**
-     * Copy constructor.
-     */
-    descriptor(const descriptor& other); /* may throw */
+  /**
+   * Copy constructor.
+   */
+  descriptor(const descriptor& other); /* may throw */
 
-    /**
-     * Move constructor.
-     */
-    descriptor(descriptor&& other) noexcept
-      : descriptor() {
-      std::swap(_fd, other._fd);
-    }
+  /**
+   * Move constructor.
+   */
+  descriptor(descriptor&& other) noexcept
+    : descriptor() {
+    std::swap(_fd, other._fd);
+  }
 
-    /**
-     * Destructor. Invokes `close()` if the descriptor is valid.
-     */
-    ~descriptor() noexcept;
+  /**
+   * Destructor. Invokes `close()` if the descriptor is valid.
+   */
+  ~descriptor() noexcept;
 
-    /**
-     * Copy assignment operator.
-     */
-    descriptor& operator=(descriptor other) noexcept {
-      std::swap(_fd, other._fd);
-      return *this;
-    }
+  /**
+   * Copy assignment operator.
+   */
+  descriptor& operator=(descriptor other) noexcept {
+    std::swap(_fd, other._fd);
+    return *this;
+  }
 
-    /**
-     * Move assignment operator.
-     */
-    descriptor& operator=(descriptor&& other) noexcept {
-      if (this != &other) {
-        close();
-      }
-      std::swap(_fd, other._fd);
-      return *this;
-    }
-
-    /**
-     * Assigns a new value to this descriptor.
-     */
-    descriptor& assign(const int fd) noexcept {
+  /**
+   * Move assignment operator.
+   */
+  descriptor& operator=(descriptor&& other) noexcept {
+    if (this != &other) {
       close();
-      _fd = fd;
-      return *this;
     }
+    std::swap(_fd, other._fd);
+    return *this;
+  }
 
-    /**
-     * Releases the ownership of the native integer descriptor and returns
-     * it.
-     *
-     * @post This descriptor is in an invalid state.
-     */
-    int release() noexcept {
-      const int fd = _fd;
-      _fd = -1;
-      return fd;
-    }
+  /**
+   * Assigns a new value to this descriptor.
+   */
+  descriptor& assign(const int fd) noexcept {
+    close();
+    _fd = fd;
+    return *this;
+  }
 
-    /**
-     * ...
-     */
-    bool operator==(const descriptor& other) const {
-      return _fd == other._fd;
-    }
+  /**
+   * Releases the ownership of the native integer descriptor and returns
+   * it.
+   *
+   * @post This descriptor is in an invalid state.
+   */
+  int release() noexcept {
+    const int fd = _fd;
+    _fd = -1;
+    return fd;
+  }
 
-    /**
-     * ...
-     */
-    bool operator!=(const descriptor& other) const {
-      return !operator==(other);
-    }
+  /**
+   * ...
+   */
+  bool operator==(const descriptor& other) const {
+    return _fd == other._fd;
+  }
 
-    /**
-     * Returns the underlying native integer descriptor.
-     */
-    int operator*() const {
-      return _fd;
-    }
+  /**
+   * ...
+   */
+  bool operator!=(const descriptor& other) const {
+    return !operator==(other);
+  }
 
-    /**
-     * ...
-     */
-    explicit operator bool() const {
-      return valid();
-    }
+  /**
+   * Returns the underlying native integer descriptor.
+   */
+  int operator*() const {
+    return _fd;
+  }
 
-    /**
-     * Returns the underlying native integer descriptor.
-     */
-    inline int fd() const noexcept {
-      return _fd;
-    }
+  /**
+   * ...
+   */
+  explicit operator bool() const {
+    return valid();
+  }
 
-    /**
-     * Checks whether this descriptor is valid.
-     */
-    inline bool valid() const noexcept {
-      return _fd >= 0;
-    }
+  /**
+   * Returns the underlying native integer descriptor.
+   */
+  inline int fd() const noexcept {
+    return _fd;
+  }
 
-    /**
-     * Checks whether this descriptor is readable.
-     */
-    bool readable() const;
+  /**
+   * Checks whether this descriptor is valid.
+   */
+  inline bool valid() const noexcept {
+    return _fd >= 0;
+  }
 
-    /**
-     * Checks whether this descriptor is writable.
-     */
-    bool writable() const;
+  /**
+   * Checks whether this descriptor is readable.
+   */
+  bool readable() const;
 
-    /**
-     * Returns the file descriptor flags.
-     */
-    int flags() const;
+  /**
+   * Checks whether this descriptor is writable.
+   */
+  bool writable() const;
 
-    /**
-     * Returns the file status flags.
-     */
-    int status() const;
+  /**
+   * Returns the file descriptor flags.
+   */
+  int flags() const;
 
-    /**
-     * Returns the state of the close-on-exec flag.
-     */
-    bool cloexec() const;
+  /**
+   * Returns the file status flags.
+   */
+  int status() const;
 
-    /**
-     * Sets or clears the close-on-exec flag.
-     */
-    void cloexec(bool state);
+  /**
+   * Returns the state of the close-on-exec flag.
+   */
+  bool cloexec() const;
 
-    /**
-     * Duplicates this descriptor.
-     *
-     * @note Preserves the state of the close-on-exec flag in the copy.
-     */
-    descriptor dup() const;
+  /**
+   * Sets or clears the close-on-exec flag.
+   */
+  void cloexec(bool state);
 
-    /**
-     * ...
-     */
-    int fcntl(int cmd) const;
+  /**
+   * Duplicates this descriptor.
+   *
+   * @note Preserves the state of the close-on-exec flag in the copy.
+   */
+  descriptor dup() const;
 
-    /**
-     * ...
-     */
-    int fcntl(int cmd, int arg);
+  /**
+   * ...
+   */
+  int fcntl(int cmd) const;
 
-    /**
-     * ...
-     */
-    int fcntl(int cmd, void* arg);
+  /**
+   * ...
+   */
+  int fcntl(int cmd, int arg);
 
-    /**
-     * ...
-     */
-    void chown(const user& user, const group& group);
+  /**
+   * ...
+   */
+  int fcntl(int cmd, void* arg);
 
-    /**
-     * ...
-     */
-    void chmod(const mode mode);
+  /**
+   * ...
+   */
+  void chown(const user& user, const group& group);
 
-    /**
-     * Writes a string to this descriptor.
-     */
-    void write(const std::string& string);
+  /**
+   * ...
+   */
+  void chmod(const mode mode);
 
-    /**
-     * Writes data to this descriptor.
-     */
-    void write(const char* data);
+  /**
+   * Writes a string to this descriptor.
+   */
+  void write(const std::string& string);
 
-    /**
-     * Writes data to this descriptor.
-     *
-     * Will either write all the given data, or throw an error.
-     *
-     * Retries the operation automatically in case an `EINTR`
-     * (interrupted system call) error is encountered.
-     */
-    void write(const void* data, std::size_t size);
+  /**
+   * Writes data to this descriptor.
+   */
+  void write(const char* data);
 
-    /**
-     * Reads a line of text from this descriptor.
-     */
-    std::size_t read_line(std::string& buffer);
+  /**
+   * Writes data to this descriptor.
+   *
+   * Will either write all the given data, or throw an error.
+   *
+   * Retries the operation automatically in case an `EINTR`
+   * (interrupted system call) error is encountered.
+   */
+  void write(const void* data, std::size_t size);
 
-    /**
-     * Reads data from this descriptor until the given separator character
-     * is encountered.
-     */
-    std::size_t read_until(char separator, std::string& buffer);
+  /**
+   * Reads a line of text from this descriptor.
+   */
+  std::size_t read_line(std::string& buffer);
 
-    /**
-     * Reads a character from this descriptor.
-     */
-    std::size_t read(char& result);
+  /**
+   * Reads data from this descriptor until the given separator character
+   * is encountered.
+   */
+  std::size_t read_until(char separator, std::string& buffer);
 
-    /**
-     * Reads data from this descriptor.
-     */
-    std::size_t read(void* buffer, std::size_t buffer_size);
+  /**
+   * Reads a character from this descriptor.
+   */
+  std::size_t read(char& result);
 
-    /**
-     * Reads a string from this descriptor.
-     */
-    std::string read();
+  /**
+   * Reads data from this descriptor.
+   */
+  std::size_t read(void* buffer, std::size_t buffer_size);
 
-    /**
-     * ...
-     */
-    void sync();
+  /**
+   * Reads a string from this descriptor.
+   */
+  std::string read();
 
-    /**
-     * Closes this descriptor.
-     *
-     * @note this method is idempotent
-     */
-    void close() noexcept;
+  /**
+   * ...
+   */
+  void sync();
 
-  protected:
-    /**
-     * The underlying native integer descriptor.
-     */
-    int _fd = -1;
+  /**
+   * Closes this descriptor.
+   *
+   * @note this method is idempotent
+   */
+  void close() noexcept;
+
+protected:
+  /**
+   * The underlying native integer descriptor.
+   */
+  int _fd = -1;
 };
 
 #endif /* POSIXXX_DESCRIPTOR_H */

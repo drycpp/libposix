@@ -21,121 +21,121 @@ namespace posix {
  * @see https://en.wikipedia.org/wiki/Berkeley_sockets
  */
 class posix::socket : public posix::descriptor {
-  public:
-    /**
-     * Returns the socket domain.
-     */
-    int domain() const;
+public:
+  /**
+   * Returns the socket domain.
+   */
+  int domain() const;
 
-    /**
-     * Returns the socket type.
-     */
-    int type() const;
+  /**
+   * Returns the socket type.
+   */
+  int type() const;
 
-    /**
-     * Returns the socket protocol.
-     */
-    int protocol() const;
+  /**
+   * Returns the socket protocol.
+   */
+  int protocol() const;
 
-    /**
-     * Returns and clears the pending socket error.
-     */
-    int error();
+  /**
+   * Returns and clears the pending socket error.
+   */
+  int error();
 
-    /**
-     * Returns socket options.
-     */
-    void getsockopt(int level, int optname, void* optval, int* optlen) const;
+  /**
+   * Returns socket options.
+   */
+  void getsockopt(int level, int optname, void* optval, int* optlen) const;
 
-    /**
-     * Listens for connections on this socket.
-     */
-    void listen(unsigned int backlog = 128);
+  /**
+   * Listens for connections on this socket.
+   */
+  void listen(unsigned int backlog = 128);
 
-    /**
-     * Sends a string to the peer.
-     */
-    void send(const std::string& string);
+  /**
+   * Sends a string to the peer.
+   */
+  void send(const std::string& string);
 
-    /**
-     * Sends data to the peer.
-     */
-    void send(const char* data);
+  /**
+   * Sends data to the peer.
+   */
+  void send(const char* data);
 
-    /**
-     * Sends data to the peer.
-     */
-    void send(const void* data, std::size_t size);
+  /**
+   * Sends data to the peer.
+   */
+  void send(const void* data, std::size_t size);
 
-    /**
-     * Receives a text chunk from the peer.
-     */
-    std::string recv_chunk();
+  /**
+   * Receives a text chunk from the peer.
+   */
+  std::string recv_chunk();
 
-    /**
-     * Receives a string from the peer.
-     */
-    std::string recv_string();
+  /**
+   * Receives a string from the peer.
+   */
+  std::string recv_string();
 
-    /**
-     * Receives data from the peer, into the given string buffer.
-     */
-    std::size_t recv(std::string& buffer);
+  /**
+   * Receives data from the peer, into the given string buffer.
+   */
+  std::size_t recv(std::string& buffer);
 
-    /**
-     * Receives data from the peer, chunk by chunk.
-     */
-    std::size_t recv(std::function<bool (const void* chunk_data, std::size_t chunk_size)> callback);
+  /**
+   * Receives data from the peer, chunk by chunk.
+   */
+  std::size_t recv(std::function<bool (const void* chunk_data, std::size_t chunk_size)> callback);
 
-    /**
-     * Receives data from the peer, into the given raw buffer.
-     */
-    std::size_t recv(void* buffer, std::size_t buffer_size);
+  /**
+   * Receives data from the peer, into the given raw buffer.
+   */
+  std::size_t recv(void* buffer, std::size_t buffer_size);
 
-    /**
-     * Closes this socket for writing.
-     */
-    void close_write();
+  /**
+   * Closes this socket for writing.
+   */
+  void close_write();
 
-    /**
-     * Closes this socket for reading.
-     */
-    void close_read();
+  /**
+   * Closes this socket for reading.
+   */
+  void close_read();
 
-    /**
-     * Shuts down part of a full-duplex connection.
-     */
-    void shutdown(int how);
+  /**
+   * Shuts down part of a full-duplex connection.
+   */
+  void shutdown(int how);
 
-  protected:
-    /**
-     * Default constructor.
-     */
-    socket() noexcept
-      : descriptor() {}
+protected:
+  /**
+   * Default constructor.
+   */
+  socket() noexcept
+    : descriptor() {}
 
-    /**
-     * Constructor.
-     */
-    socket(const int fd) noexcept
-      : descriptor(fd) {}
+  /**
+   * Constructor.
+   */
+  socket(const int fd) noexcept
+    : descriptor(fd) {}
 
-    /**
-     * Copy constructor.
-     */
-    socket(const socket& other) /* may throw */
-      : descriptor(other) {}
+  /**
+   * Copy constructor.
+   */
+  socket(const socket& other) /* may throw */
+    : descriptor(other) {}
 
-    /**
-     * Move constructor.
-     */
-    socket(socket&& other) noexcept
-      : descriptor(std::move(other)) {}
+  /**
+   * Move constructor.
+   */
+  socket(socket&& other) noexcept
+    : descriptor(std::move(other)) {}
 
-    /**
-     * Destructor.
-     */
-    ~socket() noexcept {}
+  /**
+   * Destructor.
+   */
+  ~socket() noexcept {}
 };
 
 #endif /* POSIXXX_SOCKET_H */

@@ -33,46 +33,46 @@ struct posix::message_queue_attr {
  * @see  http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap03.html#tag_03_224
  */
 class posix::message_queue : public posix::descriptor {
-  public:
-    static message_queue open(const std::string& name,
-      int flags, mode mode = 0);
+public:
+  static message_queue open(const std::string& name,
+    int flags, mode mode = 0);
 
-    static message_queue open(const std::string& name,
-      int flags, mode mode, const message_queue_attr& attributes);
+  static message_queue open(const std::string& name,
+    int flags, mode mode, const message_queue_attr& attributes);
 
-    /**
-     * Constructor.
-     */
-    message_queue(const int fd) noexcept
-      : descriptor(fd) {}
+  /**
+   * Constructor.
+   */
+  message_queue(const int fd) noexcept
+    : descriptor(fd) {}
 
-    /**
-     * Copy constructor.
-     */
-    message_queue(const message_queue& other) /* may throw */
-      : descriptor(other) {}
+  /**
+   * Copy constructor.
+   */
+  message_queue(const message_queue& other) /* may throw */
+    : descriptor(other) {}
 
-    /**
-     * Move constructor.
-     */
-    message_queue(message_queue&& other) noexcept
-      : descriptor(std::move(other)) {}
+  /**
+   * Move constructor.
+   */
+  message_queue(message_queue&& other) noexcept
+    : descriptor(std::move(other)) {}
 
-    /**
-     * Destructor.
-     */
-    ~message_queue() noexcept;
+  /**
+   * Destructor.
+   */
+  ~message_queue() noexcept;
 
-    /**
-     * Closes this message queue.
-     *
-     * @note this method is idempotent
-     */
-    void close() noexcept;
+  /**
+   * Closes this message queue.
+   *
+   * @note this method is idempotent
+   */
+  void close() noexcept;
 
-  protected:
-    static message_queue open(const char* name,
-      int flags, mode mode, const message_queue_attr* attributes);
+protected:
+  static message_queue open(const char* name,
+    int flags, mode mode, const message_queue_attr* attributes);
 };
 
 #endif /* POSIXXX_MESSAGE_QUEUE_H */

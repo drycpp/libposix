@@ -11,21 +11,21 @@ namespace posix {
  * Represents a System V shared memory segment.
  */
 class posix::sysv_segment {
-  public:
-    /**
-     * Constructor.
-     */
-    sysv_segment(const int id) : _id(id) {}
+public:
+  /**
+   * Constructor.
+   */
+  sysv_segment(const int id) : _id(id) {}
 
-    /**
-     * Returns the integer identifier for this sysv_segment.
-     */
-    inline int id() const {
-      return _id;
-    }
+  /**
+   * Returns the integer identifier for this sysv_segment.
+   */
+  inline int id() const {
+    return _id;
+  }
 
-  protected:
-    int _id = -1;
+protected:
+  int _id = -1;
 };
 
 #endif /* POSIXXX_SYSV_SEGMENT_H */

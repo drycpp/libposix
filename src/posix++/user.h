@@ -14,24 +14,24 @@ namespace posix {
  * @see http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap03.html#tag_03_424
  */
 class posix::user {
-  public:
-    /**
-     * Constructor.
-     */
-    user(const user_id id) : _id(id) {}
+public:
+  /**
+   * Constructor.
+   */
+  user(const user_id id) : _id(id) {}
 
-    /**
-     * Returns the integer identifier for this user.
-     */
-    inline user_id id() const {
-      return _id;
-    }
+  /**
+   * Returns the integer identifier for this user.
+   */
+  inline user_id id() const {
+    return _id;
+  }
 
-  protected:
-    /**
-     * @see http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap03.html#tag_03_425
-     */
-    user_id _id = 0;
+protected:
+  /**
+   * @see http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap03.html#tag_03_425
+   */
+  user_id _id = 0;
 };
 
 #endif /* POSIXXX_USER_H */
