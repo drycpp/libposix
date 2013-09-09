@@ -2,7 +2,7 @@
 
 #include "fdopendir.h"
 
-#include <errno.h>  /* for E*, errno */
+#include <errno.h>  /* for ENOSYS, errno */
 #include <stddef.h> /* for NULL */
 
 DIR*

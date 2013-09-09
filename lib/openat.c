@@ -2,7 +2,7 @@
 
 #include "openat.h"
 
-#include <errno.h>    /* for E*, errno */
+#include <errno.h>    /* for ENOSYS, errno */
 #include <sys/stat.h> /* for mode_t */
 
 int

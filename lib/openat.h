@@ -17,7 +17,9 @@ extern "C" {
  * A special `dirfd` value used to indicate that `openat()` should operate
  * relative to the current working directory.
  */
+#ifndef AT_FDCWD
 #define AT_FDCWD -100
+#endif
 
 /**
  * Opens a file relative to a directory file descriptor.

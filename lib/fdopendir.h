@@ -9,11 +9,11 @@
  * @see http://pubs.opengroup.org/onlinepubs/9699919799/functions/opendir.html
  */
 
+#include <dirent.h> /* for DIR */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include <dirent.h> /* for DIR */
 
 /**
  * Opens the directory associated with a file descriptor.
