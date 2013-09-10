@@ -58,6 +58,11 @@ public:
    */
   std::size_t size() const;
 
+  /**
+   * Sets the file offset to the beginning of the file.
+   */
+  void rewind() const;
+
 protected:
   static file open(int dirfd, const char* pathname, int flags, mode mode = 0);
 };

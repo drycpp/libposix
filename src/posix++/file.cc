@@ -10,12 +10,12 @@
 #include "error.h"
 #include "pathname.h"
 
-#include <cassert>      /* for assert() */
-#include <cerrno>       /* for errno */
-#include <fcntl.h>      /* for AT_FDCWD, O_CLOEXEC */
-#include <sys/stat.h>   /* for fstat() */
-#include <sys/types.h>  /* for struct stat */
-#include <unistd.h>     /* for lseek() */
+#include <cassert>     /* for assert() */
+#include <cerrno>      /* for errno */
+#include <fcntl.h>     /* for AT_FDCWD, O_CLOEXEC */
+#include <sys/stat.h>  /* for fstat() */
+#include <sys/types.h> /* for struct stat */
+#include <unistd.h>    /* for lseek() */
 
 using namespace posix;
 
@@ -83,16 +83,30 @@ std::size_t
 file::size() const {
   struct stat st;
 
-  if (fstat(_fd, &st) == -1) {
+  if (fstat(fd(), &st) == -1) {
     switch (errno) {
       case ENOMEM: /* Cannot allocate memory in kernel */
         throw posix::fatal_error(errno);
       case EBADF:  /* Bad file descriptor */
         throw posix::bad_descriptor();
       default:
+        assert(errno != EFAULT);
         throw posix::runtime_error(errno);
     }
   }
 
   return static_cast<std::size_t>(st.st_size);
+}
+
+void
+file::rewind() const {
+  if (lseek(fd(), 0, SEEK_SET) == static_cast<off_t>(-1)) {
+    switch (errno) {
+      case EBADF:  /* Bad file descriptor */
+        throw posix::bad_descriptor();
+      default:
+        assert(errno != EINVAL);
+        throw posix::runtime_error(errno);
+    }
+  }
 }
