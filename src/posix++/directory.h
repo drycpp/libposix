@@ -90,6 +90,11 @@ public:
   void unlink(const char* pathname) const;
 
   /**
+   * Renames the specified directory entry to a new pathname.
+   */
+  void rename(const char* old_pathname, const char* new_pathname) const;
+
+  /**
    * Reads the target path of a symbolic link.
    */
   pathname readlink(const char* pathname) const;

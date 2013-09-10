@@ -9,6 +9,7 @@
 #include "pathname.h"
 
 #include <cassert>      /* for assert() */
+#include <cstdio>       /* for renameat() */
 #include <dirent.h>     /* for fdopendir() */
 #include <fcntl.h>      /* for AT_FDCWD, fcntl() */
 #include <unistd.h>     /* for close(), readlinkat(), unlinkat() */
@@ -124,6 +125,34 @@ directory::unlink(const char* const pathname,
   if (unlinkat(fd(), pathname, flags) == -1) {
     switch (errno) {
       case ENOMEM:  /* Cannot allocate memory in kernel */
+        throw posix::fatal_error(errno);
+      case EBADF:   /* Bad file descriptor */
+        throw posix::bad_descriptor();
+      case EFAULT:  /* Bad address */
+        throw posix::bad_address();
+      case EINVAL:  /* Invalid argument */
+        throw posix::invalid_argument();
+      case ENAMETOOLONG: /* File name too long */
+      case ENOTDIR: /* Not a directory */
+        throw posix::logic_error(errno);
+      default:
+        throw posix::runtime_error(errno);
+    }
+  }
+}
+
+void
+directory::rename(const char* const old_pathname,
+                  const char* const new_pathname) const {
+  assert(old_pathname != nullptr);
+  assert(*old_pathname != '\0');
+  assert(new_pathname != nullptr);
+  assert(*new_pathname != '\0');
+
+  if (renameat(fd(), old_pathname, fd(), new_pathname) == -1) {
+    switch (errno) {
+      case ENOMEM:  /* Cannot allocate memory in kernel */
+      case ENOSPC:  /* No space left on device */
         throw posix::fatal_error(errno);
       case EBADF:   /* Bad file descriptor */
         throw posix::bad_descriptor();
