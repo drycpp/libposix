@@ -26,9 +26,9 @@ public:
 
   static file create(const directory& directory, const pathname& pathname, mode mode);
 
-  static file open(const pathname& pathname, int flags);
+  static file open(const pathname& pathname, int flags, mode mode = 0);
 
-  static file open(const directory& directory, const pathname& pathname, int flags);
+  static file open(const directory& directory, const pathname& pathname, int flags, mode mode = 0);
 
   /**
    * Constructor.
@@ -59,7 +59,7 @@ public:
   std::size_t size() const;
 
 protected:
-  static file open(int dirfd, const pathname& pathname, int flags, mode mode = 0);
+  static file open(int dirfd, const char* pathname, int flags, mode mode = 0);
 };
 
 #endif /* POSIXXX_FILE_H */
