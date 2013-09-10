@@ -11,6 +11,7 @@ libposix___la_SOURCES =   \
   feature.cc              \
   file.cc                 \
   group.cc                \
+  memory_mapping.cc       \
   mode.cc                 \
   module.cc               \
   pathname.cc             \
@@ -28,6 +29,7 @@ base_pkginclude_HEADERS = \
   feature.h               \
   file.h                  \
   group.h                 \
+  memory_mapping.h        \
   mode.h                  \
   module.h                \
   pathname.h              \

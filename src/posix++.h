@@ -16,6 +16,7 @@ namespace posix {}
 #include "posix++/file.h"
 #include "posix++/group.h"
 #include "posix++/local_socket.h"
+#include "posix++/memory_mapping.h"
 #include "posix++/message_queue.h"
 #include "posix++/mode.h"
 #include "posix++/module.h"
