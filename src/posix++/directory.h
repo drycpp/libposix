@@ -75,6 +75,11 @@ public:
   bool empty() const;
 
   /**
+   * Checks whether a given directory entry exists.
+   */
+  std::size_t count(const char* pathname) const;
+
+  /**
    * Removes the specified directory entry, which must be an empty subdirectory.
    */
   void rmdir(const char* pathname) const;

@@ -12,6 +12,7 @@
 #include <dirent.h>     /* for fdopendir() */
 #include <fcntl.h>      /* for AT_FDCWD, fcntl() */
 #include <unistd.h>     /* for close(), readlinkat(), unlinkat() */
+#include <sys/stat.h>   /* for fstatat() */
 #include <sys/types.h>  /* for DIR */
 
 using namespace posix;
@@ -70,6 +71,38 @@ directory
 directory::open(const directory& directory,
                 const char* const pathname) {
   return open(directory.fd(), pathname);
+}
+
+std::size_t
+directory::count(const char* const pathname) const {
+  assert(pathname != nullptr);
+  assert(*pathname != '\0');
+
+  struct stat buffer;
+
+  if (fstatat(fd(), pathname, &buffer, AT_SYMLINK_NOFOLLOW) == -1) {
+    switch (errno) {
+      case ENOENT:  /* No such file or directory */
+        return 0;
+      case ENOMEM:  /* Cannot allocate memory in kernel */
+        throw posix::fatal_error(errno);
+      case EBADF:   /* Bad file descriptor */
+        throw posix::bad_descriptor();
+      case EFAULT:  /* Bad address */
+        throw posix::bad_address();
+      case EINVAL:  /* Invalid argument */
+        throw posix::invalid_argument();
+      case ENAMETOOLONG: /* File name too long */
+      case ENOTDIR: /* Not a directory */
+        throw posix::logic_error(errno);
+      case EACCES:  /* Permission denied */
+      case ELOOP:   /* Too many levels of symbolic links */
+      default:
+        throw posix::runtime_error(errno);
+    }
+  }
+
+  return 1;
 }
 
 void
