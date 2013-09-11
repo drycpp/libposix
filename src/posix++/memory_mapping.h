@@ -24,11 +24,15 @@ public:
 
   /**
    * Constructor.
+   *
+   * @throws posix::error on failure
    */
   memory_mapping(const descriptor& descriptor);
 
   /**
    * Constructor.
+   *
+   * @throws posix::error on failure
    */
   memory_mapping(const descriptor& descriptor,
                  const std::size_t size,
@@ -36,16 +40,22 @@ public:
 
   /**
    * Constructor.
+   *
+   * @throws posix::error on failure
    */
   memory_mapping(int fd);
 
   /**
    * Constructor.
+   *
+   * @throws posix::error on failure
    */
   memory_mapping(int fd, std::size_t size, std::size_t offset = 0);
 
   /**
    * Constructor.
+   *
+   * @throws posix::error on failure
    */
   memory_mapping(void* data, std::size_t size) noexcept;
 
@@ -73,6 +83,22 @@ public:
    * Move assignment operator.
    */
   memory_mapping& operator=(memory_mapping&& other) noexcept = default;
+
+  /**
+   * Returns a pointer to the mapped memory.
+   */
+  template <typename T>
+  inline const T* data() const noexcept {
+    return reinterpret_cast<const T*>(_data);
+  }
+
+  /**
+   * Returns a pointer to the mapped memory.
+   */
+  template <typename T>
+  inline T* data() noexcept {
+    return reinterpret_cast<T*>(_data);
+  }
 
   /**
    * Returns a pointer to the mapped memory.
