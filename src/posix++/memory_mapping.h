@@ -120,6 +120,8 @@ public:
 protected:
   void* _data{nullptr};
   std::size_t _size{0};
+
+  void* map(int fd, std::size_t size, std::size_t offset);
 };
 
 #endif /* POSIXXX_MEMORY_MAPPING_H */
