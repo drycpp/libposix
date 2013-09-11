@@ -4,6 +4,7 @@
 #define POSIXXX_MEMORY_MAPPING_H
 
 #include <cstddef> /* for std::size_t */
+#include <cstdint> /* for std::uint8_t */
 
 namespace posix {
   struct descriptor;
@@ -85,6 +86,13 @@ public:
   memory_mapping& operator=(memory_mapping&& other) noexcept = default;
 
   /**
+   * Returns the byte size of the mapping.
+   */
+  inline std::size_t size() const noexcept {
+    return _size;
+  }
+
+  /**
    * Returns a pointer to the mapped memory.
    */
   template <typename T>
@@ -103,22 +111,15 @@ public:
   /**
    * Returns a pointer to the mapped memory.
    */
-  inline const void* data() const noexcept {
+  inline const std::uint8_t* data() const noexcept {
     return _data;
   }
 
   /**
    * Returns a pointer to the mapped memory.
    */
-  inline void* data() noexcept {
+  inline std::uint8_t* data() noexcept {
     return _data;
-  }
-
-  /**
-   * Returns the byte size of the mapping.
-   */
-  inline std::size_t size() const noexcept {
-    return _size;
   }
 
   /**
@@ -126,6 +127,13 @@ public:
    */
   explicit operator bool() const noexcept {
     return _data != nullptr;
+  }
+
+  /**
+   * Returns the byte at the given offset.
+   */
+  inline std::uint8_t operator[](const std::size_t offset) const noexcept {
+    return _data[offset];
   }
 
   /**
@@ -144,10 +152,10 @@ public:
   bool executable() const noexcept;
 
 protected:
-  void* _data{nullptr};
+  std::uint8_t* _data{nullptr};
   std::size_t _size{0};
 
-  void* map(int fd, std::size_t size, std::size_t offset);
+  std::uint8_t* map(int fd, std::size_t size, std::size_t offset);
 };
 
 #endif /* POSIXXX_MEMORY_MAPPING_H */

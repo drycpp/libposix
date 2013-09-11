@@ -7,14 +7,24 @@
 
 using namespace posix;
 
-static char buffer[64];
+static std::uint8_t buffer[0x1000] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
-BOOST_AUTO_TEST_CASE(test_operator_bool) {
-  BOOST_CHECK(!memory_mapping(nullptr, 0));
-  BOOST_CHECK(memory_mapping(buffer, 0x1000));
+BOOST_AUTO_TEST_CASE(test_size) {
+  BOOST_CHECK_EQUAL(memory_mapping(buffer, sizeof(buffer)).size(), sizeof(buffer));
 }
 
 BOOST_AUTO_TEST_CASE(test_data) {
-  BOOST_CHECK_EQUAL(memory_mapping(buffer, 0x1000).data(), buffer);
-  BOOST_CHECK_EQUAL(memory_mapping(buffer, 0x1000).data<char>(), buffer);
+  BOOST_CHECK_EQUAL(memory_mapping(buffer, sizeof(buffer)).data(), buffer);
+  BOOST_CHECK_EQUAL(memory_mapping(buffer, sizeof(buffer)).data<std::uint8_t>(), buffer);
+}
+
+BOOST_AUTO_TEST_CASE(test_operator_bool) {
+#ifdef NDEBUG
+  BOOST_CHECK(!memory_mapping(nullptr, 0)); /* asserts */
+#endif
+  BOOST_CHECK(memory_mapping(buffer, sizeof(buffer)));
+}
+
+BOOST_AUTO_TEST_CASE(test_operator_at) {
+  BOOST_CHECK_EQUAL(memory_mapping(buffer, sizeof(buffer))[1], buffer[1]);
 }
