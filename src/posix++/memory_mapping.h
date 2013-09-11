@@ -96,30 +96,30 @@ public:
    * Returns a pointer to the mapped memory.
    */
   template <typename T>
-  inline const T* data() const noexcept {
-    return reinterpret_cast<const T*>(_data);
+  inline const T* data(const std::size_t offset = 0) const noexcept {
+    return reinterpret_cast<const T*>(_data + offset);
   }
 
   /**
    * Returns a pointer to the mapped memory.
    */
   template <typename T>
-  inline T* data() noexcept {
-    return reinterpret_cast<T*>(_data);
+  inline T* data(const std::size_t offset = 0) noexcept {
+    return reinterpret_cast<T*>(_data + offset);
   }
 
   /**
    * Returns a pointer to the mapped memory.
    */
-  inline const std::uint8_t* data() const noexcept {
-    return _data;
+  inline const std::uint8_t* data(const std::size_t offset = 0) const noexcept {
+    return _data + offset;
   }
 
   /**
    * Returns a pointer to the mapped memory.
    */
-  inline std::uint8_t* data() noexcept {
-    return _data;
+  inline std::uint8_t* data(const std::size_t offset = 0) noexcept {
+    return _data + offset;
   }
 
   /**

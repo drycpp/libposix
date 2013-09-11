@@ -16,6 +16,7 @@ BOOST_AUTO_TEST_CASE(test_size) {
 BOOST_AUTO_TEST_CASE(test_data) {
   BOOST_CHECK_EQUAL(memory_mapping(buffer, sizeof(buffer)).data(), buffer);
   BOOST_CHECK_EQUAL(memory_mapping(buffer, sizeof(buffer)).data<std::uint8_t>(), buffer);
+  BOOST_CHECK_EQUAL(memory_mapping(buffer, sizeof(buffer)).data(1), buffer + 1);
 }
 
 BOOST_AUTO_TEST_CASE(test_operator_bool) {
