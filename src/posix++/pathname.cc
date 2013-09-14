@@ -17,6 +17,11 @@
 
 using namespace posix;
 
+bool
+pathname::is_portable() const noexcept {
+  return true; // TODO
+}
+
 pathname
 pathname::dirname() const {
   char buffer[_string.size() + 1];

@@ -76,6 +76,13 @@ public:
   }
 
   /**
+   * Determines whether this is a portable pathname.
+   *
+   * @see http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_277
+   */
+  bool is_portable() const noexcept;
+
+  /**
    * @see http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_129
    */
   posix::pathname dirname() const;
