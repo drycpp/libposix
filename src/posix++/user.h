@@ -22,14 +22,23 @@ public:
 
   /**
    * Returns the integer identifier for this user.
+   *
+   * @see http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_430
    */
-  inline user_id id() const {
+  inline user_id id() const noexcept {
     return _id;
+  }
+
+  /**
+   * Determines whether this is the superuser (aka `root`).
+   */
+  inline bool is_root() const noexcept {
+    return _id == 0;
   }
 
 protected:
   /**
-   * @see http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap03.html#tag_03_425
+   * @see http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_430
    */
   user_id _id = 0;
 };
