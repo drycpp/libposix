@@ -58,12 +58,30 @@ public:
   }
 
   /**
-   * ...
+   * Determines whether this is an absolute pathname.
+   *
+   * @see http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_02
+   */
+  bool is_absolute() const noexcept {
+    return _string[0] == '/';
+  }
+
+  /**
+   * Determines whether this is a relative pathname.
+   *
+   * @see http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_320
+   */
+  inline bool is_relative() const noexcept {
+    return !is_absolute();
+  }
+
+  /**
+   * @see http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_129
    */
   posix::pathname dirname() const;
 
   /**
-   * ...
+   * @see http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_40
    */
   posix::pathname basename() const;
 
