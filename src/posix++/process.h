@@ -4,6 +4,7 @@
 #define POSIXXX_PROCESS_H
 
 namespace posix {
+  class group;
   using process_id = unsigned int;
   class process;
   class user;
@@ -51,6 +52,22 @@ public:
    * @see http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_142
    */
   user euid() const noexcept;
+
+  /**
+   * Returns the real group ID of this process.
+   *
+   * @note This method always succeeds.
+   * @see http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_308
+   */
+  group gid() const noexcept;
+
+  /**
+   * Returns the effective group ID of this process.
+   *
+   * @note This method always succeeds.
+   * @see http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_141
+   */
+  group egid() const noexcept;
 
   /**
    * Checks whether this process is still alive.

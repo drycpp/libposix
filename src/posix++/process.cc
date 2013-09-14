@@ -11,9 +11,9 @@
 #include <cassert>      /* for assert() */
 #include <cerrno>       /* for errno */
 #include <csignal>      /* for SIG*, kill() */
-#include <sys/types.h>  /* for pid_t, uid_t */
+#include <sys/types.h>  /* for gid_t, pid_t, uid_t */
 #include <sys/wait.h>   /* for waitpid() */
-#include <unistd.h>     /* for getuid(), geteuid() */
+#include <unistd.h>     /* for get*gid(), get*uid() */
 
 using namespace posix;
 
@@ -25,6 +25,16 @@ process::uid() const noexcept {
 user
 process::euid() const noexcept {
   return user(geteuid());
+}
+
+user
+process::gid() const noexcept {
+  return user(getgid());
+}
+
+user
+process::egid() const noexcept {
+  return user(getegid());
 }
 
 bool

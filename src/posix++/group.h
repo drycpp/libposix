@@ -18,12 +18,15 @@ public:
   /**
    * Constructor.
    */
-  group(const group_id id) : _id(id) {}
+  group(const group_id id) noexcept
+    : _id(id) {}
 
   /**
    * Returns the integer identifier for this group.
+   *
+   * @see http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_189
    */
-  inline group_id id() const {
+  inline group_id id() const noexcept {
     return _id;
   }
 

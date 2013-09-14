@@ -18,7 +18,8 @@ public:
   /**
    * Constructor.
    */
-  user(const user_id id) : _id(id) {}
+  user(const user_id id) noexcept
+    : _id(id) {}
 
   /**
    * Returns the integer identifier for this user.
