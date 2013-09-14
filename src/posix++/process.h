@@ -8,6 +8,22 @@ namespace posix {
   using process_id = unsigned int;
   class process;
   class user;
+
+  /**
+   * Returns the current process ID.
+   *
+   * @note This function always succeeds.
+   * @see http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_296
+   */
+  process current_process() noexcept;
+
+  /**
+   * Returns the parent process ID of the current process.
+   *
+   * @note This function always succeeds.
+   * @see http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_266
+   */
+  process parent_process() noexcept;
 }
 
 /**
@@ -20,7 +36,8 @@ public:
   /**
    * Constructor.
    */
-  process(const process_id id) : _id(id) {}
+  process(const process_id id) noexcept
+    : _id(id) {}
 
   /**
    * Assigns a new identifier value to this process.
@@ -33,7 +50,7 @@ public:
   /**
    * Returns the integer identifier for this process.
    */
-  inline process_id id() const {
+  inline process_id id() const noexcept {
     return _id;
   }
 
@@ -72,12 +89,12 @@ public:
   /**
    * Checks whether this process is still alive.
    */
-  bool alive();
+  bool alive() noexcept;
 
   /**
    * Waits for this process to terminate.
    */
-  int wait();
+  int wait() noexcept;
 
   /**
    * Waits for this process to change state.

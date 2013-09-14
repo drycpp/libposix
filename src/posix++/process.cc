@@ -5,6 +5,7 @@
 #endif
 
 #include "error.h"
+#include "group.h"
 #include "process.h"
 #include "user.h"
 
@@ -13,9 +14,19 @@
 #include <csignal>      /* for SIG*, kill() */
 #include <sys/types.h>  /* for gid_t, pid_t, uid_t */
 #include <sys/wait.h>   /* for waitpid() */
-#include <unistd.h>     /* for get*gid(), get*uid() */
+#include <unistd.h>     /* for get*gid(), get*pid(), get*uid() */
 
 using namespace posix;
+
+process
+current_process() noexcept {
+  return process(getpid());
+}
+
+process
+parent_process() noexcept {
+  return process(getppid());
+}
 
 user
 process::uid() const noexcept {
@@ -27,24 +38,24 @@ process::euid() const noexcept {
   return user(geteuid());
 }
 
-user
+group
 process::gid() const noexcept {
-  return user(getgid());
+  return group(getgid());
 }
 
-user
+group
 process::egid() const noexcept {
-  return user(getegid());
+  return group(getegid());
 }
 
 bool
-process::alive() {
+process::alive() noexcept {
   int status;
   return _id ? !wait(status, WNOHANG) : false;
 }
 
 int
-process::wait() {
+process::wait() noexcept {
   assert(_id > 0);
 
   int status = 0;
