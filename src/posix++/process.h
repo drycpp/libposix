@@ -6,6 +6,7 @@
 namespace posix {
   using process_id = unsigned int;
   class process;
+  class user;
 }
 
 /**
@@ -34,6 +35,22 @@ public:
   inline process_id id() const {
     return _id;
   }
+
+  /**
+   * Returns the real user ID of this process.
+   *
+   * @note This method always succeeds.
+   * @see http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_311
+   */
+  user uid() const noexcept;
+
+  /**
+   * Returns the effective user ID of this process.
+   *
+   * @note This method always succeeds.
+   * @see http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_142
+   */
+  user euid() const noexcept;
 
   /**
    * Checks whether this process is still alive.

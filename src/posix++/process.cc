@@ -4,17 +4,28 @@
 #include <config.h>
 #endif
 
-#include "process.h"
-
 #include "error.h"
+#include "process.h"
+#include "user.h"
 
 #include <cassert>      /* for assert() */
 #include <cerrno>       /* for errno */
 #include <csignal>      /* for SIG*, kill() */
-#include <sys/types.h>  /* for pid_t */
+#include <sys/types.h>  /* for pid_t, uid_t */
 #include <sys/wait.h>   /* for waitpid() */
+#include <unistd.h>     /* for getuid(), geteuid() */
 
 using namespace posix;
+
+user
+process::uid() const noexcept {
+  return user(getuid());
+}
+
+user
+process::euid() const noexcept {
+  return user(geteuid());
+}
 
 bool
 process::alive() {
