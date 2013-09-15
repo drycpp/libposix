@@ -3,6 +3,8 @@
 #ifndef POSIXXX_PROCESS_H
 #define POSIXXX_PROCESS_H
 
+#include "user.h"
+
 namespace posix {
   class group;
   using process_id = unsigned int;
@@ -85,6 +87,15 @@ public:
    * @see http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_141
    */
   group egid() const noexcept;
+
+  /**
+   * Determines whether this is a privileged process.
+   *
+   * @note This method always succeeds.
+   */
+  bool is_privileged() const noexcept {
+    return euid().is_root();
+  }
 
   /**
    * Checks whether this process is still alive.
