@@ -70,7 +70,7 @@ sysv_segment::~sysv_segment() noexcept {
     }
     _addr = nullptr;
   }
-  if (_id) {
+  if (_id != -1) {
 #if 0 // TODO: think this through.
     if (shmctl(_id, IPC_RMID, nullptr) == -1) {
       /* Ignore any errors from shmctl(). */
@@ -134,7 +134,7 @@ sysv_segment::detach() {
  */
 void
 sysv_segment::remove() {
-  if (_id) {
+  if (_id != -1) {
     if (shmctl(_id, IPC_RMID, nullptr) == -1) {
       switch (errno) {
         case EINVAL: /* Invalid argument */
