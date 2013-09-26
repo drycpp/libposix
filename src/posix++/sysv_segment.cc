@@ -15,6 +15,35 @@
 
 using namespace posix;
 
+void
+sysv_segment::for_each(std::function<void (sysv_segment segment)> callback) {
+#ifdef __linux__
+  struct shm_info shminfo;
+  const int max_shmidx = shmctl(0, SHM_INFO, reinterpret_cast<struct shmid_ds*>(&shminfo));
+  if (max_shmidx == -1) {
+    throw posix::error();
+  }
+
+  for (int shmidx = 0; shmidx <= max_shmidx; shmidx++) {
+    struct shmid_ds ds;
+    const int shmid = shmctl(shmidx, SHM_STAT, &ds);
+    if (shmid == -1) {
+      switch (errno) {
+        case EINVAL: /* Invalid argument */
+        case EACCES: /* Permission denied */
+          continue;
+        default:
+          assert(errno != EFAULT);
+          throw posix::error();
+      }
+    }
+    callback(sysv_segment(shmid));
+  }
+#else
+  throw posix::error(ENOSYS); /* Function not implemented */
+#endif /* __linux__ */
+}
+
 /**
  * @see http://pubs.opengroup.org/onlinepubs/9699919799/functions/shmget.html
  * @see http://man7.org/linux/man-pages/man2/shmget.2.html

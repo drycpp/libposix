@@ -5,6 +5,7 @@
 
 #include <cstddef>     /* for std::size_t */
 #include <cstdint>     /* for std::uint8_t */
+#include <functional>  /* for std::function */
 #include <sys/types.h> /* for key_t */
 
 namespace posix {
@@ -19,6 +20,14 @@ namespace posix {
  */
 class posix::sysv_segment {
 public:
+  /**
+   * Applies a function to every existing segment in the system.
+   *
+   * @throws posix::error on failure
+   * @note This operation is Linux-specific.
+   */
+  static void for_each(std::function<void (sysv_segment segment)> callback);
+
   /**
    * Creates a new segment.
    *
