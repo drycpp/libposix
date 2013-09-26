@@ -3,10 +3,11 @@
 #ifndef POSIXXX_SYSV_SEGMENT_H
 #define POSIXXX_SYSV_SEGMENT_H
 
-#include <cstddef>     /* for std::size_t */
-#include <cstdint>     /* for std::uint8_t */
-#include <functional>  /* for std::function */
-#include <sys/types.h> /* for key_t */
+#include <cstddef>    /* for std::size_t */
+#include <cstdint>    /* for std::uint8_t */
+#include <functional> /* for std::function */
+#include <sys/ipc.h>  /* for key_t */
+#include <sys/shm.h>  /* for shmid_ds */
 
 namespace posix {
   class sysv_segment;
@@ -140,6 +141,13 @@ public:
   inline std::uint8_t* data(const std::size_t offset = 0) noexcept {
     return reinterpret_cast<std::uint8_t*>(_addr) + offset;
   }
+
+  /**
+   * Returns information from the associated kernel data structure.
+   *
+   * @throws posix::error on failure
+   */
+  shmid_ds stat() const;
 
   /**
    * Attaches this segment to the process address space.

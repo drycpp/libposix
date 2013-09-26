@@ -21,11 +21,11 @@ sysv_segment::for_each(std::function<void (sysv_segment segment)> callback) {
   struct shm_info shminfo;
   const int max_shmidx = shmctl(0, SHM_INFO, reinterpret_cast<struct shmid_ds*>(&shminfo));
   if (max_shmidx == -1) {
-    throw posix::error();
+    throw posix::runtime_error(errno);
   }
 
   for (int shmidx = 0; shmidx <= max_shmidx; shmidx++) {
-    struct shmid_ds ds;
+    shmid_ds ds;
     const int shmid = shmctl(shmidx, SHM_STAT, &ds);
     if (shmid == -1) {
       switch (errno) {
@@ -34,13 +34,13 @@ sysv_segment::for_each(std::function<void (sysv_segment segment)> callback) {
           continue;
         default:
           assert(errno != EFAULT);
-          throw posix::error();
+          throw posix::runtime_error(errno);
       }
     }
     callback(sysv_segment(shmid));
   }
 #else
-  throw posix::error(ENOSYS); /* Function not implemented */
+  throw posix::runtime_error(ENOSYS); /* Function not implemented */
 #endif /* __linux__ */
 }
 
@@ -107,6 +107,21 @@ sysv_segment::~sysv_segment() noexcept {
 #endif
     _id = -1;
   }
+}
+
+shmid_ds
+sysv_segment::stat() const {
+  shmid_ds ds;
+  if (shmctl(_id, IPC_STAT, &ds) == -1) {
+    switch (errno) {
+      case EINVAL: /* Invalid argument */
+        throw posix::invalid_argument();
+      default:
+        assert(errno != EFAULT);
+        throw posix::runtime_error(errno);
+    }
+  }
+  return ds;
 }
 
 /**
