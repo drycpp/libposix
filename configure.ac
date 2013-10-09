@@ -120,7 +120,7 @@ AC_REPLACE_FUNCS([fdopendir openat readlinkat unlinkat])
 dnl Check for system services:
 
 dnl Generate output:
-AC_CONFIG_FILES([Makefile lib/Makefile src/Makefile src/posix++/Makefile test/Makefile test/posix++/Makefile])
+AC_CONFIG_FILES([Makefile lib/Makefile src/Makefile src/posix++/Makefile test/Makefile])
 AC_SUBST([PACKAGE_VERSION_MAJOR], ["VERSION_MAJOR"])
 AC_SUBST([PACKAGE_VERSION_MINOR], ["VERSION_MINOR"])
 AC_SUBST([PACKAGE_VERSION_PATCH], ["VERSION_PATCH"])
