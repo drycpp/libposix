@@ -4,6 +4,7 @@
 #define POSIXXX_DIRECTORY_H
 
 #include "descriptor.h"
+#include "mode.h"
 
 #include <string>  /* for std::string */
 #include <utility> /* for std::move() */
@@ -78,6 +79,11 @@ public:
    * Checks whether a given directory entry exists.
    */
   std::size_t count(const char* pathname) const;
+
+  /**
+   * Creates a subdirectory.
+   */
+  void mkdir(const char* pathname, mode mode) const;
 
   /**
    * Removes the specified directory entry, which must be an empty subdirectory.

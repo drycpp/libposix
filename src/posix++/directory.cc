@@ -107,6 +107,31 @@ directory::count(const char* const pathname) const {
 }
 
 void
+directory::mkdir(const char* const pathname,
+                 const mode mode) const {
+  assert(pathname != nullptr);
+  assert(*pathname != '\0');
+
+  if (mkdirat(fd(), pathname, static_cast<mode_t>(mode)) == -1) {
+    switch (errno) {
+      case ENOMEM:  /* Cannot allocate memory in kernel */
+        throw posix::fatal_error(errno);
+      case EBADF:   /* Bad file descriptor */
+        throw posix::bad_descriptor();
+      case EFAULT:  /* Bad address */
+        throw posix::bad_address();
+      case EINVAL:  /* Invalid argument */
+        throw posix::invalid_argument();
+      case ENAMETOOLONG: /* File name too long */
+      case ENOTDIR: /* Not a directory */
+        throw posix::logic_error(errno);
+      default:
+        throw posix::runtime_error(errno);
+    }
+  }
+}
+
+void
 directory::rmdir(const char* const pathname) const {
   return unlink(pathname, AT_REMOVEDIR);
 }
