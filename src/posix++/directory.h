@@ -81,6 +81,11 @@ public:
   std::size_t count(const char* pathname) const;
 
   /**
+   * Creates a link relative to this directory.
+   */
+  void link(const char* old_pathname, const char* new_pathname) const;
+
+  /**
    * Creates a subdirectory.
    */
   void mkdir(const char* pathname, mode mode) const;
