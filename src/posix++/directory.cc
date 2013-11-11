@@ -223,12 +223,19 @@ directory::unlink(const char* const pathname,
 void
 directory::rename(const char* const old_pathname,
                   const char* const new_pathname) const {
+  rename(old_pathname, *this, new_pathname);
+}
+
+void
+directory::rename(const char* const old_pathname,
+                  const directory& new_directory,
+                  const char* const new_pathname) const {
   assert(old_pathname != nullptr);
   assert(*old_pathname != '\0');
   assert(new_pathname != nullptr);
   assert(*new_pathname != '\0');
 
-  if (renameat(fd(), old_pathname, fd(), new_pathname) == -1) {
+  if (renameat(fd(), old_pathname, new_directory.fd(), new_pathname) == -1) {
     switch (errno) {
       case ENOMEM:  /* Cannot allocate memory in kernel */
       case ENOSPC:  /* No space left on device */
