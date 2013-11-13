@@ -22,3 +22,6 @@ bad_address::bad_address() noexcept
 
 invalid_argument::invalid_argument() noexcept
   : logic_error(EINVAL) {}
+
+connection_refused::connection_refused() noexcept
+  : runtime_error(ECONNREFUSED) {}

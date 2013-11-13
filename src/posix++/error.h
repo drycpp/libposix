@@ -13,6 +13,7 @@ namespace posix {
   class bad_descriptor;
   class bad_address;
   class invalid_argument;
+  class connection_refused;
 }
 
 /**
@@ -138,6 +139,19 @@ public:
    * Default constructor.
    */
   invalid_argument() noexcept;
+};
+
+/**
+ * Represents a POSIX `ECONNREFUSED` (Connection refused) error.
+ *
+ * @see http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/errno.h.html
+ */
+class posix::connection_refused : public posix::runtime_error {
+public:
+  /**
+   * Default constructor.
+   */
+  connection_refused() noexcept;
 };
 
 #endif /* POSIXXX_ERROR_H */

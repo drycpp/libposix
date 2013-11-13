@@ -124,6 +124,8 @@ retry:
         goto retry;
       case EBADF:  /* Bad file descriptor */
         throw posix::bad_descriptor();
+      case ECONNREFUSED: /* Connection refused */
+        throw posix::connection_refused();
       default:
         throw posix::runtime_error(errno);
     }
