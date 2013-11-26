@@ -6,6 +6,7 @@
 #include "mode.h"
 
 #include <cstddef> /* for std::size_t */
+#include <set>     /* for std::set */
 #include <string>  /* for std::string */
 #include <utility> /* for std::swap() */
 
@@ -221,6 +222,11 @@ public:
    * (interrupted system call) error is encountered.
    */
   void write(const void* data, std::size_t size);
+
+  /**
+   * Reads lines of text from this descriptor until EOF.
+   */
+  std::size_t read_lines(std::set<std::string>& result);
 
   /**
    * Reads a line of text from this descriptor.

@@ -218,6 +218,18 @@ descriptor::write(const void* const data,
 }
 
 std::size_t
+descriptor::read_lines(std::set<std::string>& result) {
+  std::size_t total_byte_count = 0, byte_count = 0;
+  std::string line;
+  while ((byte_count = read_line(line))) {
+    total_byte_count += byte_count;
+    result.insert(line);
+    line.clear();
+  }
+  return total_byte_count;
+}
+
+std::size_t
 descriptor::read_line(std::string& buffer) {
   return read_until('\n', buffer);
 }
