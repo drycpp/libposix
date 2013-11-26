@@ -25,9 +25,9 @@ public:
 
   static void create(const directory& directory, const pathname& pathname, mode mode);
 
-  static named_pipe open(const pathname& pathname, int flags, mode mode = 0);
+  static named_pipe open(const pathname& pathname, int flags);
 
-  static named_pipe open(const directory& directory, const pathname& pathname, int flags, mode mode = 0);
+  static named_pipe open(const directory& directory, const pathname& pathname, int flags);
 
   /**
    * Default constructor.
@@ -57,7 +57,7 @@ public:
 
 protected:
   static void create(int dirfd, const char* pathname, mode mode = 0);
-  static named_pipe open(int dirfd, const char* pathname, int flags, mode mode = 0);
+  static named_pipe open(int dirfd, const char* pathname, int flags);
 };
 
 #endif /* POSIXXX_NAMED_PIPE_H */

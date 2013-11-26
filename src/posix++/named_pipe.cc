@@ -40,8 +40,7 @@ named_pipe::create(const int dirfd,
 named_pipe
 named_pipe::open(const int dirfd,
                  const char* const pathname,
-                 int flags,
-                 const mode mode) {
+                 int flags) {
   assert(dirfd > 0 || dirfd == AT_FDCWD);
   assert(pathname);
   assert(pathname[0] != '\0');
@@ -51,7 +50,7 @@ named_pipe::open(const int dirfd,
 #endif
 
   int fd;
-  if ((fd = openat(dirfd, pathname, flags, mode)) == -1) {
+  if ((fd = openat(dirfd, pathname, flags)) == -1) {
     switch (errno) {
       case EMFILE: /* Too many open files */
       case ENFILE: /* Too many open files in system */
@@ -82,15 +81,13 @@ named_pipe::create(const directory& directory,
 
 named_pipe
 named_pipe::open(const pathname& pathname,
-                 const int flags,
-                 const mode mode) {
-  return open(AT_FDCWD, pathname.c_str(), flags, mode);
+                 const int flags) {
+  return open(AT_FDCWD, pathname.c_str(), flags);
 }
 
 named_pipe
 named_pipe::open(const directory& directory,
                  const pathname& pathname,
-                 const int flags,
-                 const mode mode) {
-  return open(directory.fd(), pathname.c_str(), flags, mode);
+                 const int flags) {
+  return open(directory.fd(), pathname.c_str(), flags);
 }
