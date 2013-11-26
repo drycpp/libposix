@@ -21,9 +21,9 @@ namespace posix {
  */
 class posix::named_pipe : public posix::descriptor {
 public:
-  static named_pipe create(const pathname& pathname, mode mode);
+  static void create(const pathname& pathname, mode mode);
 
-  static named_pipe create(const directory& directory, const pathname& pathname, mode mode);
+  static void create(const directory& directory, const pathname& pathname, mode mode);
 
   static named_pipe open(const pathname& pathname, int flags, mode mode = 0);
 
@@ -56,7 +56,7 @@ public:
   ~named_pipe() noexcept = default;
 
 protected:
-  static named_pipe create(int dirfd, const char* pathname, mode mode = 0);
+  static void create(int dirfd, const char* pathname, mode mode = 0);
   static named_pipe open(int dirfd, const char* pathname, int flags, mode mode = 0);
 };
 
