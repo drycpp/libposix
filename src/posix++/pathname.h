@@ -92,6 +92,11 @@ public:
    */
   posix::pathname basename() const;
 
+  /**
+   * Removes the file designated by this pathname.
+   */
+  void unlink() const;
+
 protected:
   std::string _string;
 };
