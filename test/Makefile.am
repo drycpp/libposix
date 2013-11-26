@@ -12,6 +12,7 @@ check_PROGRAMS =       \
   check_group          \
   check_memory_mapping \
   check_module         \
+  check_named_pipe     \
   check_pathname       \
   check_process        \
   check_process_group  \

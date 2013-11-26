@@ -17,6 +17,7 @@ check_local_socket
 check_memory_mapping
 check_message_queue
 check_module
+check_named_pipe
 check_pathname
 check_process
 check_process_group

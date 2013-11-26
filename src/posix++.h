@@ -20,6 +20,7 @@ namespace posix {}
 #include "posix++/message_queue.h"
 #include "posix++/mode.h"
 #include "posix++/module.h"
+#include "posix++/named_pipe.h"
 #include "posix++/pathname.h"
 #include "posix++/process.h"
 #include "posix++/process_group.h"

@@ -14,6 +14,7 @@ libposix___la_SOURCES =   \
   memory_mapping.cc       \
   mode.cc                 \
   module.cc               \
+  named_pipe.cc           \
   pathname.cc             \
   process.cc              \
   process_group.cc        \
@@ -32,6 +33,7 @@ base_pkginclude_HEADERS = \
   memory_mapping.h        \
   mode.h                  \
   module.h                \
+  named_pipe.h            \
   pathname.h              \
   process.h               \
   process_group.h         \
