@@ -176,8 +176,10 @@ descriptor::chmod(const mode mode) {
 }
 
 void
-descriptor::write(const std::string& string) {
-  return write(string.data(), string.size());
+descriptor::write_line(const char* const data) {
+  assert(data != nullptr);
+
+  return write(data), write('\n');
 }
 
 void

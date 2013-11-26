@@ -199,9 +199,23 @@ public:
   void chmod(const mode mode);
 
   /**
+   * Writes a line to this descriptor.
+   */
+  inline void write_line(const std::string& string) {
+    write_line(string.c_str());
+  }
+
+  /**
+   * Writes a line to this descriptor.
+   */
+  void write_line(const char* data);
+
+  /**
    * Writes a string to this descriptor.
    */
-  void write(const std::string& string);
+  inline void write(const std::string& string) {
+    write(string.c_str(), string.size());
+  }
 
   /**
    * Writes data to this descriptor.
