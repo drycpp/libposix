@@ -188,6 +188,12 @@ descriptor::write(const char* const data) {
 }
 
 void
+descriptor::write(const char c) {
+  char data[2] = {c, '\0'};
+  return write(data, 1);
+}
+
+void
 descriptor::write(const void* const data,
                   const std::size_t size) {
   assert(data != nullptr);

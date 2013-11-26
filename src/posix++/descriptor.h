@@ -208,6 +208,11 @@ public:
   void write(const char* data);
 
   /**
+   * Writes a character to this descriptor.
+   */
+  void write(char c);
+
+  /**
    * Writes data to this descriptor.
    *
    * Will either write all the given data, or throw an error.
