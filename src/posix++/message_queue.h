@@ -7,6 +7,7 @@
 #include "mode.h"
 
 #include <cstddef> /* for std::size_t */
+#include <cstdint> /* for std::int64_t */
 #include <string>  /* for std::string */
 #include <utility> /* for std::move() */
 
@@ -28,7 +29,7 @@ struct posix::message_queue_attr {
 /**
  * Represents a POSIX message queue.
  *
- * @note Assume that message queue descriptors are actually file descriptors.
+ * @note Assumes that message queue descriptors are actually file descriptors.
  *       This is the case on at least Linux and FreeBSD.
  * @see  http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap03.html#tag_03_224
  */
@@ -39,6 +40,11 @@ public:
 
   static message_queue open(const std::string& name,
     int flags, mode mode, const message_queue_attr& attributes);
+
+  /**
+   * Default constructor.
+   */
+  message_queue() = delete;
 
   /**
    * Constructor.
@@ -69,6 +75,20 @@ public:
    * @note this method is idempotent
    */
   void close() noexcept;
+
+  /**
+   * Sends a message to this message queue.
+   *
+   * @param message_data the message data
+   * @param message_size the message size in bytes
+   * @param message_priority the message priority (defaults to zero)
+   * @param send_timeout the send timeout in milliseconds, or -1 for a blocking send
+   * @pre `data` must not be `nullptr`.
+   */
+  void send(const void* message_data,
+    std::size_t message_size,
+    unsigned int message_priority = 0,
+    std::int64_t send_timeout = -1);
 
 protected:
   static message_queue open(const char* name,

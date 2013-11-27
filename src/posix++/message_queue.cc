@@ -4,12 +4,12 @@
 #include <config.h>
 #endif
 
-#include "message_queue.h"
-
 #include "error.h"
+#include "message_queue.h"
 
 #include <cassert>      /* for assert() */
 #include <cerrno>       /* for errno */
+#include <ctime>        /* for std::time(), mq_timed*() */
 #include <fcntl.h>      /* for O_* */
 #include <mqueue.h>     /* for mq_*() */
 
@@ -37,6 +37,9 @@ message_queue::open(const std::string& name,
   return open(name.c_str(), flags, mode, &attributes);
 }
 
+/**
+ * @see http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_open.html
+ */
 message_queue
 message_queue::open(const char* const name,
                     const int flags,
@@ -54,14 +57,7 @@ message_queue::open(const char* const name,
 
   mqd_t mqd;
   if ((mqd = mq_open(name, flags, mode, attributes ? &attr : nullptr)) == -1) {
-    switch (errno) {
-      case EMFILE: /* Too many open files */
-      case ENFILE: /* Too many open files in system */
-      case ENOMEM: /* Cannot allocate memory in kernel */
-        throw posix::fatal_error(errno);
-      default:
-        throw posix::runtime_error(errno);
-    }
+    throw_error();
   }
 
   return message_queue(mqd);
@@ -71,6 +67,9 @@ message_queue::~message_queue() noexcept {
   close();
 }
 
+/**
+ * @see http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_close.html
+ */
 void
 message_queue::close() noexcept {
   if (valid()) {
@@ -78,5 +77,33 @@ message_queue::close() noexcept {
       /* Ignore any errors from mq_close(). */
     }
     _fd = -1;
+  }
+}
+
+/**
+ * @see http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html
+ */
+void
+message_queue::send(const void* const message_data,
+                    const std::size_t message_size,
+                    const unsigned int message_priority,
+                    const std::int64_t send_timeout) {
+  assert(message_data);
+  assert(send_timeout >= -1);
+
+  int rc;
+  if (send_timeout == -1) {
+    rc = mq_send(fd(), reinterpret_cast<const char*>(message_data), message_size, message_priority);
+  }
+  else {
+    const struct timespec timeout = {
+      .tv_sec  = std::time(nullptr) + (send_timeout / 1000),
+      .tv_nsec = (send_timeout % 1000) * 1000000,
+    };
+    rc = mq_timedsend(fd(), reinterpret_cast<const char*>(message_data), message_size, message_priority, &timeout);
+  }
+
+  if (rc == -1) {
+    throw_error();
   }
 }
