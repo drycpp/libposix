@@ -14,6 +14,9 @@ namespace posix {
   class bad_address;
   class invalid_argument;
   class connection_refused;
+
+  extern void throw_error[[noreturn]]();
+  extern void throw_error[[noreturn]](int code);
 }
 
 /**
