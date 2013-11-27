@@ -85,13 +85,27 @@ public:
   void close() noexcept;
 
   /**
+   * Receives a message from this message queue.
+   *
+   * @param message_data the message data
+   * @param message_size the message size in bytes
+   * @param message_priority the message priority (optionally)
+   * @param recv_timeout the receive timeout in milliseconds, or -1 for a blocking receive
+   * @pre `message_data` must not be `nullptr`.
+   */
+  std::size_t recv(void* message_data,
+    std::size_t message_size,
+    unsigned int* message_priority = nullptr,
+    std::int64_t recv_timeout = -1);
+
+  /**
    * Sends a message to this message queue.
    *
    * @param message_data the message data
    * @param message_size the message size in bytes
    * @param message_priority the message priority (defaults to zero)
    * @param send_timeout the send timeout in milliseconds, or -1 for a blocking send
-   * @pre `data` must not be `nullptr`.
+   * @pre `message_data` must not be `nullptr`.
    */
   void send(const void* message_data,
     std::size_t message_size,

@@ -93,6 +93,36 @@ message_queue::close() noexcept {
 }
 
 /**
+ * @see http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_receive.html
+ */
+std::size_t
+message_queue::recv(void* message_data,
+                    const std::size_t message_size,
+                    unsigned int* message_priority,
+                    const std::int64_t recv_timeout) {
+  assert(message_data);
+  assert(recv_timeout >= -1);
+
+  ssize_t rc;
+  if (recv_timeout == -1) {
+    rc = mq_receive(fd(), reinterpret_cast<char*>(message_data), message_size, message_priority);
+  }
+  else {
+    const struct timespec timeout = {
+      .tv_sec  = std::time(nullptr) + (recv_timeout / 1000),
+      .tv_nsec = (recv_timeout % 1000) * 1000000,
+    };
+    rc = mq_timedreceive(fd(), reinterpret_cast<char*>(message_data), message_size, message_priority, &timeout);
+  }
+
+  if (rc == -1) {
+    throw_error();
+  }
+
+  return static_cast<std::size_t>(rc);
+}
+
+/**
  * @see http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_send.html
  */
 void
