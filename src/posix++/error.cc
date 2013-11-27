@@ -44,6 +44,8 @@ posix::throw_error(const int code) {
       throw invalid_argument();
     case EMFILE:       /* Too many open files */
       throw posix::fatal_error(code);
+    case EMSGSIZE:     /* Message too long */
+      throw posix::logic_error(code);
     case ENAMETOOLONG: /* File name too long */
       throw posix::logic_error(code);
     case ENFILE:       /* Too many open files in system */
