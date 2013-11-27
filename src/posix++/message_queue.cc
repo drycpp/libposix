@@ -63,6 +63,18 @@ message_queue::open(const char* const name,
   return message_queue(mqd);
 }
 
+/**
+ * @see http://pubs.opengroup.org/onlinepubs/9699919799/functions/mq_unlink.html
+ */
+void
+message_queue::unlink(const char* const queue_name) {
+  assert(queue_name);
+
+  if (mq_unlink(queue_name) == -1) {
+    throw_error();
+  }
+}
+
 message_queue::~message_queue() noexcept {
   close();
 }

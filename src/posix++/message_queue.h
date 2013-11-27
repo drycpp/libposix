@@ -35,11 +35,19 @@ struct posix::message_queue_attr {
  */
 class posix::message_queue : public posix::descriptor {
 public:
-  static message_queue open(const std::string& name,
+  static message_queue open(const std::string& queue_name,
     int flags, mode mode = 0);
 
-  static message_queue open(const std::string& name,
+  static message_queue open(const std::string& queue_name,
     int flags, mode mode, const message_queue_attr& attributes);
+
+  /**
+   * Removes a message queue.
+   *
+   * @param queue_name the name of the queue to remove
+   * @pre `queue_name` must not be `nullptr`.
+   */
+  static void unlink(const char* queue_name);
 
   /**
    * Default constructor.
