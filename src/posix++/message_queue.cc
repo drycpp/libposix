@@ -54,7 +54,6 @@ message_queue::open(const char* const name,
     attr.mq_flags   = attributes->flags;
     attr.mq_maxmsg  = attributes->maxmsg;
     attr.mq_msgsize = attributes->msgsize;
-    attr.mq_curmsgs = attributes->curmsgs;
   }
 
   mqd_t mqd;

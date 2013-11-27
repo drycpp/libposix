@@ -20,10 +20,9 @@ namespace posix {
  * @see http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/mqueue.h.html
  */
 struct posix::message_queue_attr {
-  long flags   = 0;
-  long maxmsg  = 0;
-  long msgsize = 0;
-  long curmsgs = 0;
+  long flags;
+  long maxmsg;
+  long msgsize;
 };
 
 /**
