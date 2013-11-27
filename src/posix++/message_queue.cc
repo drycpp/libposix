@@ -7,11 +7,13 @@
 #include "error.h"
 #include "message_queue.h"
 
-#include <cassert>      /* for assert() */
-#include <cerrno>       /* for errno */
-#include <ctime>        /* for std::time(), mq_timed*() */
-#include <fcntl.h>      /* for O_* */
-#include <mqueue.h>     /* for mq_*() */
+#include <algorithm> /* for std::min() */
+#include <cassert>   /* for assert() */
+#include <cerrno>    /* for errno */
+#include <cstring>   /* for std::memcpy() */
+#include <ctime>     /* for std::time(), mq_timed*() */
+#include <fcntl.h>   /* for O_* */
+#include <mqueue.h>  /* for mq_*() */
 
 using namespace posix;
 
@@ -103,21 +105,25 @@ message_queue::recv(void* message_data,
   assert(message_data);
   assert(recv_timeout >= -1);
 
+  char buffer[_message_size];
+
   ssize_t rc;
   if (recv_timeout == -1) {
-    rc = mq_receive(fd(), reinterpret_cast<char*>(message_data), message_size, message_priority);
+    rc = mq_receive(fd(), buffer, _message_size, message_priority);
   }
   else {
     const struct timespec timeout = {
       .tv_sec  = std::time(nullptr) + (recv_timeout / 1000),
       .tv_nsec = (recv_timeout % 1000) * 1000000,
     };
-    rc = mq_timedreceive(fd(), reinterpret_cast<char*>(message_data), message_size, message_priority, &timeout);
+    rc = mq_timedreceive(fd(), buffer, _message_size, message_priority, &timeout);
   }
 
   if (rc == -1) {
     throw_error();
   }
+
+  std::memcpy(message_data, buffer, std::min(message_size, _message_size));
 
   return static_cast<std::size_t>(rc);
 }

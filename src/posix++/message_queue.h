@@ -34,6 +34,8 @@ struct posix::message_queue_attr {
  * @see  http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap03.html#tag_03_224
  */
 class posix::message_queue : public posix::descriptor {
+  const std::size_t _message_size = 8192; // FIXME
+
 public:
   static message_queue open(const std::string& queue_name,
     int flags, mode mode = 0);
