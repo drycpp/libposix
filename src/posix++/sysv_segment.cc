@@ -44,6 +44,12 @@ sysv_segment::for_each(std::function<void (sysv_segment segment)> callback) {
 #endif /* __linux__ */
 }
 
+sysv_segment
+sysv_segment::create_unique(const std::size_t size,
+                            const int flags) {
+  return create(IPC_PRIVATE, size, IPC_EXCL | flags);
+}
+
 /**
  * @see http://pubs.opengroup.org/onlinepubs/9699919799/functions/shmget.html
  * @see http://man7.org/linux/man-pages/man2/shmget.2.html

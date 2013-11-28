@@ -30,6 +30,13 @@ public:
   static void for_each(std::function<void (sysv_segment segment)> callback);
 
   /**
+   * Creates a new segment with a system-assigned, unique IPC key.
+   *
+   * @throws posix::error on failure
+   */
+  static sysv_segment create_unique(std::size_t size, int flags = 0);
+
+  /**
    * Creates a new segment.
    *
    * @throws posix::error on failure
