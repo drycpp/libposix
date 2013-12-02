@@ -115,6 +115,11 @@ sysv_segment::~sysv_segment() noexcept {
   }
 }
 
+std::size_t
+sysv_segment::size() const {
+  return stat().shm_segsz;
+}
+
 shmid_ds
 sysv_segment::stat() const {
   shmid_ds ds;

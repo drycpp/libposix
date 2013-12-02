@@ -150,6 +150,14 @@ public:
   }
 
   /**
+   * Returns the byte size of this segment.
+   *
+   * @return the segment size, in bytes
+   * @throws posix::error on failure
+   */
+  std::size_t size() const;
+
+  /**
    * Returns information from the associated kernel data structure.
    *
    * @throws posix::error on failure
