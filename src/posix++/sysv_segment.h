@@ -34,14 +34,14 @@ public:
    *
    * @throws posix::error on failure
    */
-  static sysv_segment create_unique(std::size_t size, int flags = 0);
+  static sysv_segment create_unique(std::size_t size, int flags = 0600);
 
   /**
    * Creates a new segment.
    *
    * @throws posix::error on failure
    */
-  static sysv_segment create(key_t key, std::size_t size, int flags = 0);
+  static sysv_segment create(key_t key, std::size_t size, int flags = 0600);
 
   /**
    * Opens an existing segment.
