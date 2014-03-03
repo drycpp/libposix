@@ -1,7 +1,8 @@
-AM_CPPFLAGS = -I$(top_srcdir)/lib -I$(top_srcdir)/src -iquote $(srcdir) $(BOOST_CPPFLAGS) -DBOOST_TEST_DYN_LINK
-AM_CXXFLAGS = -Wall -Wextra -pipe
-AM_LDFLAGS  = $(BOOST_LDFLAGS) $(BOOST_UNIT_TEST_FRAMEWORK_LIB)
-LDADD       = $(top_srcdir)/src/posix++/libposix++.la
+AM_CPPFLAGS += $(TEST_CPPFLAGS)
+AM_CXXFLAGS += $(TEST_CXXFLAGS)
+AM_LDFLAGS  += $(TEST_LDFLAGS)
+
+LDADD = $(top_srcdir)/src/posix++/libposix++.la
 
 check_PROGRAMS =       \
   check_descriptor     \

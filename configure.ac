@@ -91,9 +91,6 @@ AS_IF([test "x$enable_sysv" == "xno"], [
 AM_CONDITIONAL([DISABLE_SYSV], [test "x$enable_sysv" == "xno"])
 
 dnl Check for libraries:
-# libboost (libboost-dev on Ubuntu, boost on Mac OS X + MacPorts)
-AX_BOOST_BASE([1.50])
-AX_BOOST_UNIT_TEST_FRAMEWORK
 
 dnl Check for header files:
 AC_LANG_PUSH([C])
@@ -108,9 +105,18 @@ dnl Check for structures:
 
 dnl Check for compiler characteristics:
 AC_CANONICAL_HOST
-AC_C_BIGENDIAN
-AC_C_INLINE
-AC_C_RESTRICT
+AM_CPPFLAGS="$AM_CPPFLAGS -I\$(top_srcdir)/src -iquote \$(srcdir)"
+AM_CXXFLAGS="$AM_CXXFLAGS -Wall -Wextra -pipe"
+AM_LDFLAGS="$AM_LDFLAGS"
+TEST_CPPFLAGS="$AM_CPPFLAGS -DCATCH_CONFIG_MAIN"
+TEST_CXXFLAGS="$AM_CXXFLAGS"
+TEST_LDFLAGS="$AM_LDFLAGS"
+AC_SUBST([AM_CPPFLAGS])
+AC_SUBST([AM_CXXFLAGS])
+AC_SUBST([AM_LDFLAGS])
+AC_SUBST([TEST_CPPFLAGS])
+AC_SUBST([TEST_CXXFLAGS])
+AC_SUBST([TEST_LDFLAGS])
 
 dnl Check for library functions:
 dnl AC_FUNC_ALLOCA

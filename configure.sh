@@ -1,8 +1,10 @@
 #/bin/sh
-export CC='ccache gcc -std=c11'
-export CXX='ccache g++ -std=c++11'
+#export CC='gcc'
+#export CXX='g++'
+export CC='clang'
+export CXX='clang++ --stdlib=libc++'
+export CPPFLAGS=''
 export CFLAGS='-g -Os'
 export CXXFLAGS='-g -Os'
-export CPPFLAGS=''
 export LDFLAGS=''
-./configure $*
+./configure --disable-mqueue $*
