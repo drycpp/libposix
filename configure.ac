@@ -18,7 +18,7 @@ m4_define([VERSION_STRING],
 dnl Define package information:
 AC_INIT([libposix++], [VERSION_STRING],
   [arto@bendiken.net], [libposix++],
-  [https://github.com/bendiken/libposix++])
+  [https://github.com/dryproject/libposixxx])
 
 dnl Configure Autoconf:
 AC_CONFIG_HEADERS([src/config.h])

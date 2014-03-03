@@ -4,10 +4,10 @@
          xmlns:foaf="http://xmlns.com/foaf/0.1/"
          xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
          xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
-  <doap:Project rdf:about="https://github.com/bendiken/libposixxx">
+  <doap:Project rdf:about="https://github.com/dryproject/libposixxx">
     <dc:creator rdf:resource="http://ar.to/#self"/>
     <doap:blog rdf:resource="http://ar.to/"/>
-    <doap:bug-database rdf:resource="https://github.com/bendiken/libposixxx/issues"/>
+    <doap:bug-database rdf:resource="https://github.com/dryproject/libposixxx/issues"/>
     <doap:created>2013-04-01</doap:created>
     <doap:description xml:lang="en">
       ...
@@ -15,7 +15,7 @@
     <doap:developer rdf:resource="http://ar.to/#self"/>
     <doap:documenter rdf:resource="http://ar.to/#self"/>
     <doap:download-page rdf:resource="http://sourceforge.net/projects/libposixxx/files/"/>
-    <doap:homepage rdf:resource="https://github.com/bendiken/libposixxx"/>
+    <doap:homepage rdf:resource="https://github.com/dryproject/libposixxx"/>
     <doap:license rdf:resource="http://creativecommons.org/licenses/publicdomain/"/>
     <doap:maintainer rdf:resource="http://ar.to/#self"/>
     <doap:name>libposix++</doap:name>
@@ -24,7 +24,7 @@
     <foaf:maker rdf:resource="http://ar.to/#self"/>
   </doap:Project>
   <foaf:Person rdf:about="http://ar.to/#self">
-    <foaf:made rdf:resource="https://github.com/bendiken/libposixxx"/>
+    <foaf:made rdf:resource="https://github.com/dryproject/libposixxx"/>
     <foaf:mbox rdf:resource="mailto:arto@bendiken.net"/>
     <foaf:mbox_sha1sum>a033f652c84a4d73b8c26d318c2395699dd2bdfb</foaf:mbox_sha1sum>
     <foaf:name>Arto Bendiken</foaf:name>
