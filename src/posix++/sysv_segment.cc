@@ -40,6 +40,7 @@ sysv_segment::for_each(std::function<void (sysv_segment segment)> callback) {
     callback(sysv_segment(shmid));
   }
 #else
+  (void)callback; /* not used */
   throw_error(ENOSYS); /* Function not implemented */
 #endif /* __linux__ */
 }
