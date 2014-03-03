@@ -169,6 +169,7 @@ retry:
 
 void
 local_socket::send_descriptor(const descriptor& descriptor) {
+#ifdef __linux__
   /* The control buffer must be large enough to hold a single frame of
    * cmsghdr ancillary data: */
   std::array<std::uint8_t, CMSG_SPACE(sizeof(int))> cmsg_buffer;
@@ -214,10 +215,15 @@ retry:
         throw posix::runtime_error(errno);
     }
   }
+#else /* __linux__ */
+  (void)descriptor; /* not used */
+  throw_error(ENOSYS); /* Function not implemented */
+#endif /* __linux__ */
 }
 
 descriptor
 local_socket::recv_descriptor() {
+#ifdef __linux__
   descriptor result;
 
   /* The control buffer must be large enough to hold a single frame of
@@ -281,4 +287,7 @@ retry:
 #endif
 
   return result;
+#else /* __linux__ */
+  throw_error(ENOSYS); /* Function not implemented */
+#endif /* __linux__ */
 }
