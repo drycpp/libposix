@@ -119,9 +119,8 @@ AC_SUBST([TEST_CXXFLAGS])
 AC_SUBST([TEST_LDFLAGS])
 
 dnl Check for library functions:
-dnl AC_FUNC_ALLOCA
 AC_CHECK_FUNCS_ONCE([accept4])
-AC_REPLACE_FUNCS([fdopendir openat readlinkat unlinkat])
+AC_REPLACE_FUNCS([fdopendir fstatat linkat mkdirat mkfifoat openat readlinkat renameat symlinkat unlinkat])
 
 dnl Check for system services:
 
