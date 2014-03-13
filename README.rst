@@ -1,6 +1,11 @@
 libposix++: C++11 wrapper for POSIX
 ===================================
 
+.. image:: https://travis-ci.org/dryproject/libposix.png?branch=master
+   :target: https://travis-ci.org/dryproject/libposix
+   :align: right
+   :alt: Travis CI build status
+
 Features
 --------
 
@@ -85,7 +90,7 @@ The following example demonstrates error handling with ``libposix++``::
 Build Prerequisites
 -------------------
 
-* Clang_ (>= 3.2) or GCC_ (>= 4.8)
+* Clang_ (>= 3.3) or GCC_ (>= 4.8)
 * Autoconf_ (>= 2.68)
 * Automake_ (>= 1.11)
 * Libtool_ (>= 2.2)
