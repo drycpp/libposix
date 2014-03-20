@@ -32,7 +32,7 @@ directory::open(const int dirfd, const char* const pathname) {
   flags |= O_DIRECTORY; /* Linux-specific */
 #endif
 #ifdef O_NOATIME
-  flags |= O_NOATIME;   /* Linux-specific */
+  //flags |= O_NOATIME;   /* Linux-specific */ // FIXME
 #endif
 
   int fd;
