@@ -20,7 +20,7 @@ Features
 Design Principles
 -----------------
 
-* Provides zero-cost abstractions for wrapping file descriptors.
+* Provides zero-cost abstractions wrapping file descriptors.
 * Ensures that file descriptors are opened with ``O_CLOEXEC``.
 * Mitigates various race conditions entailed by the POSIX interfaces.
 * Encapsulates ``EINTR`` and ``EAGAIN`` error handling.
@@ -31,12 +31,12 @@ Error Handling
 --------------
 
 This library makes a careful distinction between three different classes of
-error conditions:
+error conditions, all deriving from the ``posix::error`` base class:
 
 * **Logic errors**, represented by ``posix::logic_error``. Errors of this
-  class are thrown due to programming errors where the POSIX interfaces are
-  being used in violation of documented preconditions. A common strategy for
-  handling this class of error conditions is to abort the program with a
+  class are thrown due to programming mistakes where the POSIX interfaces
+  are being used in violation of documented preconditions. A common strategy
+  for handling this class of error conditions is to abort the program with a
   core dump, facilitating introspection to locate and remedy the bug.
 * **Fatal errors**, represented by ``posix::fatal_error``. Errors of this
   class are thrown due to the exhaustion of critical system resources, such
@@ -45,9 +45,9 @@ error conditions:
   number of open file descriptors (``EMFILE`` and ``ENFILE``). A typical
   strategy for handling this class of error conditions is to terminate the
   program with a descriptive error message. More robust programs and shared
-  libraries may wish to implement another strategy, such as retrying the
-  operation after first letting most of the call stack unwind in order to
-  free up scarce resources.
+  libraries may implement more complicated strategies, such as retrying the
+  top-level operation after first letting most of the call stack unwind in
+  order to free up scarce resources.
 * **Runtime errors**, represented by ``posix::runtime_error``. Errors of
   this class are thrown as a matter of course to indicate various
   exceptional conditions such as missing files (``ENOENT``) or insufficient
@@ -76,7 +76,7 @@ The following example demonstrates error handling with ``libposix++``::
      std::exit(EX_OSERR);
    }
    catch (const posix::runtime_error& error) {
-     /* Handle any runtime errors that can be recovered from: */
+     /* Handle any runtime errors that were expected at this point: */
      switch (error.number()) {
        case EPERM:  /* Permission denied */
        case EACCES: /* No such file or directory */
