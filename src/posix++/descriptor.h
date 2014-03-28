@@ -199,6 +199,11 @@ public:
   void chmod(const mode mode);
 
   /**
+   * @see http://pubs.opengroup.org/onlinepubs/9699919799/functions/poll.html
+   */
+  bool poll(short events, short* revents = nullptr, int timeout = -1);
+
+  /**
    * Writes a line to this descriptor.
    */
   inline void write_line(const std::string& string) {

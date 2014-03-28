@@ -17,6 +17,7 @@
 #include <cstdint>    /* for std::uint8_t */
 #include <cstring>    /* for std::strlen() */
 #include <fcntl.h>    /* for F_*, fcntl() */
+#include <poll.h>     /* for struct pollfd, poll() */
 #include <stdexcept>  /* for std::invalid_argument */
 #include <string>     /* for std::string */
 #include <sys/stat.h> /* for fchmod() */
@@ -173,6 +174,26 @@ descriptor::chmod(const mode mode) {
         throw posix::runtime_error(errno);
     }
   }
+}
+
+bool
+descriptor::poll(const short events,
+                 short* const revents,
+                 const int timeout) {
+  struct pollfd fds = {fd(), events, 0};
+retry:
+  const int rc = ::poll(&fds, 1, timeout);
+  if (rc == -1) {
+    switch (errno) {
+      case EINTR: /* Interrupted system call */
+        goto retry; /* try again */
+      default:
+        assert(errno != EFAULT);
+        throw_error();
+    }
+  }
+  if (revents) *revents = fds.revents;
+  return rc > 0;
 }
 
 void
