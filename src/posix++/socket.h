@@ -90,7 +90,7 @@ public:
   /**
    * Receives data from the peer, into the given raw buffer.
    */
-  std::size_t recv(void* buffer, std::size_t buffer_size);
+  std::size_t recv(void* buffer, std::size_t buffer_size, int flags = 0);
 
   /**
    * Closes this socket for writing.

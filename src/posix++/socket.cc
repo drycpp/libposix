@@ -191,7 +191,8 @@ exit:
 
 std::size_t
 socket::recv(void* const buffer,
-             const std::size_t buffer_size) {
+             const std::size_t buffer_size,
+             const int flags) {
   assert(buffer != nullptr);
 
   std::size_t byte_count = 0;
@@ -199,7 +200,7 @@ socket::recv(void* const buffer,
   while (byte_count < buffer_size) {
     const ssize_t rc = ::recv(fd(),
       reinterpret_cast<std::uint8_t*>(buffer) + byte_count,
-      buffer_size - byte_count, 0);
+      buffer_size - byte_count, flags);
     switch (rc) {
       case -1:
         switch (errno) {
