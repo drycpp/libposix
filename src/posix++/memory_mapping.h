@@ -17,6 +17,12 @@ namespace posix {
  * @see http://en.wikipedia.org/wiki/Memory-mapped_file
  */
 class posix::memory_mapping {
+protected:
+  std::size_t _size;
+  std::uint8_t* _data;
+
+  std::uint8_t* map(int fd, std::size_t size, std::size_t offset);
+
 public:
   /**
    * Default constructor.
@@ -35,9 +41,7 @@ public:
    *
    * @throws posix::error on failure
    */
-  memory_mapping(const descriptor& descriptor,
-                 const std::size_t size,
-                 const std::size_t offset = 0);
+  memory_mapping(const descriptor& descriptor, std::size_t size, std::size_t offset = 0);
 
   /**
    * Constructor.
@@ -150,12 +154,6 @@ public:
    * Checks whether this memory mapping is writable.
    */
   bool executable() const noexcept;
-
-protected:
-  std::uint8_t* _data{nullptr};
-  std::size_t _size{0};
-
-  std::uint8_t* map(int fd, std::size_t size, std::size_t offset);
 };
 
 #endif /* POSIXXX_MEMORY_MAPPING_H */

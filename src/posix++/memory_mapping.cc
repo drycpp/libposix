@@ -20,73 +20,54 @@ std::uint8_t*
 memory_mapping::map(const int fd,
                     const std::size_t size,
                     const std::size_t offset) {
+  assert(fd >= 0);
+  assert(size > 0);
 
-  const int prot = PROT_READ;
+  const int prot = PROT_READ; // FIXME
 
   const int flags = MAP_SHARED;
 
-  void* const addr = ::mmap(nullptr, size, prot, flags, fd, offset);
-  if (addr == MAP_FAILED) {
-    switch (errno) {
-      case ENOMEM:  /* Cannot allocate memory in kernel */
-      case ENFILE:  /* Too many open files in system */
-        throw posix::fatal_error(errno);
-      case EBADF:   /* Bad file descriptor */
-        throw posix::bad_descriptor();
-      case EINVAL:  /* Invalid argument */
-        throw posix::invalid_argument();
-      default:
-        throw posix::runtime_error(errno);
+  if (size == static_cast<std::size_t>(-1)) {
+    struct stat st;
+    if (fstat(fd, &st) == -1) {
+      throw_error();
     }
+    _size = static_cast<std::size_t>(st.st_size) - offset;
+  }
+  else {
+    _size = size;
+  }
+
+  void* const addr = ::mmap(nullptr, _size, prot, flags, fd, offset);
+  if (addr == MAP_FAILED) {
+    throw_error();
   }
 
   return reinterpret_cast<std::uint8_t*>(addr);
 }
 
 memory_mapping::memory_mapping(const descriptor& descriptor)
-  : memory_mapping(descriptor.fd()) {}
+  : memory_mapping{descriptor.fd()} {}
 
 memory_mapping::memory_mapping(const descriptor& descriptor,
                                const std::size_t size,
                                const std::size_t offset)
-  : memory_mapping(descriptor.fd(), size, offset) {}
+  : memory_mapping{descriptor.fd(), size, offset} {}
 
-memory_mapping::memory_mapping(const int fd) {
-  assert(fd >= 0);
-
-  struct stat st;
-
-  if (fstat(fd, &st) == -1) {
-    switch (errno) {
-      case ENOMEM: /* Cannot allocate memory in kernel */
-        throw posix::fatal_error(errno);
-      case EBADF:  /* Bad file descriptor */
-        throw posix::bad_descriptor();
-      default:
-        assert(errno != EFAULT);
-        throw posix::runtime_error(errno);
-    }
-  }
-
-  _size = static_cast<std::size_t>(st.st_size);
-  _data = map(fd, _size, 0);
-}
+memory_mapping::memory_mapping(const int fd)
+  : _size{0},
+    _data{map(fd, static_cast<std::size_t>(-1), 0)} {}
 
 memory_mapping::memory_mapping(const int fd,
                                const std::size_t size,
-                               const std::size_t offset) {
-  assert(fd >= 0);
-  assert(size > 0);
-
-  _size = size;
-  _data = map(fd, size, offset);
-}
+                               const std::size_t offset)
+  : _size{size},
+    _data{map(fd, size, offset)} {}
 
 memory_mapping::memory_mapping(void* const data,
                                const std::size_t size) noexcept
-  : _data(reinterpret_cast<std::uint8_t*>(data)),
-    _size(size) {
-
+  : _size{size},
+    _data{reinterpret_cast<std::uint8_t*>(data)} {
   assert(data != nullptr);
   assert(size > 0);
 }
