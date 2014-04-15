@@ -24,6 +24,7 @@ namespace posix {}
 #include "posix++/pathname.h"
 #include "posix++/process.h"
 #include "posix++/process_group.h"
+#include "posix++/semaphore.h"
 #include "posix++/stdio.h"
 #include "posix++/socket.h"
 #include "posix++/sysv_segment.h"

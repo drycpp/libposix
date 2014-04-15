@@ -21,6 +21,7 @@ check_named_pipe
 check_pathname
 check_process
 check_process_group
+check_semaphore
 check_stdio
 check_socket
 check_sysv_segment

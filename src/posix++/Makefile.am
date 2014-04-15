@@ -37,6 +37,7 @@ base_pkginclude_HEADERS = \
   pathname.h              \
   process.h               \
   process_group.h         \
+  semaphore.h             \
   user.h                  \
   version.h
 

@@ -17,6 +17,7 @@ check_PROGRAMS =       \
   check_pathname       \
   check_process        \
   check_process_group  \
+  check_semaphore      \
   check_user           \
   check_version
 
