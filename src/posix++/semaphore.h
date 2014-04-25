@@ -119,6 +119,29 @@ public:
   }
 
   /**
+   * Attempts to lock this semaphore, without blocking.
+   *
+   * @retval true if the function succeeded in locking this semaphore
+   * @retval false otherwise
+   * @see http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_trywait.html
+   */
+  bool try_wait() {
+    for (;;) {
+      if (sem_trywait(&_state) == -1) {
+        if (errno == EAGAIN) {
+          return false;
+        }
+        if (errno != EINTR) {
+          throw_error();
+        }
+      }
+      else {
+        return true;
+      }
+    }
+  }
+
+  /**
    * Unlocks this semaphore.
    *
    * @see http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_post.html

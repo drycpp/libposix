@@ -27,6 +27,11 @@ TEST_CASE("#wait()") {
   REQUIRE_NOTHROW(unnamed_semaphore{1}.wait()); /* won't block */
 }
 
+TEST_CASE("#try_wait()") {
+  REQUIRE(unnamed_semaphore{0}.try_wait() == false);
+  REQUIRE(unnamed_semaphore{1}.try_wait() == true);
+}
+
 TEST_CASE("#notify()") {
   REQUIRE_NOTHROW(unnamed_semaphore{}.notify());
 }
