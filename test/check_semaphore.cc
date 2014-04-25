@@ -4,6 +4,29 @@
 
 #include <posix++/semaphore.h> /* for posix::semaphore */
 
-TEST_CASE("test_semaphore") {
-  // TODO
+using namespace posix;
+
+TEST_CASE("constructor") {
+  REQUIRE_NOTHROW(unnamed_semaphore{});
+  REQUIRE_NOTHROW(unnamed_semaphore{0});
+  REQUIRE_NOTHROW(unnamed_semaphore{1});
+}
+
+TEST_CASE("#value()") {
+  REQUIRE(unnamed_semaphore{}.value() == 0);
+  REQUIRE(unnamed_semaphore{0}.value() == 0);
+  REQUIRE(unnamed_semaphore{1}.value() == 1);
+}
+
+TEST_CASE("#destroy()") {
+  /* It's currently unsafe to call #destroy() explicitly, as the destructor
+   * will also call it and invoking it twice leads to undefined behavior. */
+}
+
+TEST_CASE("#wait()") {
+  REQUIRE_NOTHROW(unnamed_semaphore{1}.wait()); /* won't block */
+}
+
+TEST_CASE("#notify()") {
+  REQUIRE_NOTHROW(unnamed_semaphore{}.notify());
 }
