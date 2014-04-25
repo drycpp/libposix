@@ -80,9 +80,9 @@ public:
    *
    * @see http://pubs.opengroup.org/onlinepubs/9699919799/functions/sem_getvalue.html
    */
-  int value() {
+  int value() const {
     int sval = 0;
-    if (sem_getvalue(&_state, &sval) == -1) {
+    if (sem_getvalue(const_cast<sem_t*>(&_state), &sval) == -1) {
       throw_error();
     }
     return sval;
