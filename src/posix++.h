@@ -28,6 +28,7 @@ namespace posix {}
 #include "posix++/stdio.h"
 #include "posix++/socket.h"
 #include "posix++/sysv_segment.h"
+#include "posix++/thread.h"
 #include "posix++/user.h"
 #include "posix++/version.h"
 

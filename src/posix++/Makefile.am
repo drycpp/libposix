@@ -18,6 +18,7 @@ libposix___la_SOURCES =   \
   pathname.cc             \
   process.cc              \
   process_group.cc        \
+  thread.cc               \
   user.cc                 \
   version.cc
 
@@ -38,6 +39,7 @@ base_pkginclude_HEADERS = \
   process.h               \
   process_group.h         \
   semaphore.h             \
+  thread.h                \
   user.h                  \
   version.h
 
