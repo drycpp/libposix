@@ -16,7 +16,11 @@ using namespace posix;
 pid_t
 posix::gettid() noexcept {
 #ifdef __linux__
-  return syscall(SYS_gettid);
+  static __thread pid_t tid = 0;
+  if (!tid) {
+    tid = syscall(SYS_gettid);
+  }
+  return tid;
 #else
   return 0; /* not supported */
 #endif
