@@ -9,6 +9,7 @@
 
 #include <cassert>      /* for assert() */
 #include <cerrno>       /* for errno */
+#include <cstring>      /* for std::memset() */
 #include <sys/types.h>  /* for key_t */
 #include <sys/ipc.h>    /* for shm*() on BSD */
 #include <sys/shm.h>    /* for struct shmid_ds, shm*() */
@@ -244,4 +245,10 @@ sysv_segment::unlock() {
 #else
   throw_error(ENOSYS); /* Function not implemented */
 #endif
+}
+
+void
+sysv_segment::clear() noexcept {
+  assert(is_attached());
+  std::memset(data(), 0, size());
 }

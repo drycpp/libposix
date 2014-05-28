@@ -211,6 +211,8 @@ public:
    * @note This operation is Linux-specific.
    */
   void unlock();
+
+  void clear() noexcept;
 };
 
 #endif /* POSIXXX_SYSV_SEGMENT_H */
