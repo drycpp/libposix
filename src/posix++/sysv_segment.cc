@@ -73,7 +73,7 @@ sysv_segment::create(const key_t key,
         throw_error(errno);
     }
   }
-  return sysv_segment(shmid);
+  return sysv_segment{shmid, nullptr, size};
 }
 
 /**
@@ -118,7 +118,12 @@ sysv_segment::~sysv_segment() noexcept {
 
 std::size_t
 sysv_segment::size() const {
-  return stat().shm_segsz;
+  return _size ? _size : stat().shm_segsz;
+}
+
+std::size_t
+sysv_segment::size() {
+  return _size ? _size : (_size = stat().shm_segsz);
 }
 
 shmid_ds

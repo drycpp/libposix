@@ -20,6 +20,10 @@ namespace posix {
  * @see http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_342
  */
 class posix::sysv_segment {
+  int _id {-1};
+  void* _addr {nullptr};
+  std::size_t _size {0};
+
 public:
   /**
    * Applies a function to every existing segment in the system.
@@ -59,9 +63,11 @@ public:
    * Constructor.
    */
   sysv_segment(const int shmid,
-               void* const shmaddr = nullptr)
-    : _id(shmid),
-      _addr(shmaddr) {}
+               void* const shmaddr = nullptr,
+               std::size_t size = 0)
+    : _id{shmid},
+      _addr{shmaddr},
+      _size{size} {}
 
   /**
    * Copy constructor.
@@ -91,7 +97,7 @@ public:
   /**
    * Determines whether the segment is attached.
    */
-  inline bool is_attached() const noexcept {
+  bool is_attached() const noexcept {
     return _addr;
   }
 
@@ -100,14 +106,14 @@ public:
    *
    * @copydetails is_attached()
    */
-  inline bool is_mapped() const noexcept {
+  bool is_mapped() const noexcept {
     return is_attached();
   }
 
   /**
    * Returns the integer identifier for this segment.
    */
-  inline int id() const noexcept {
+  int id() const noexcept {
     return _id;
   }
 
@@ -117,7 +123,7 @@ public:
    * @pre `is_attached()` must be `true`.
    */
   template <typename T>
-  inline const T* data(const std::size_t offset = 0) const noexcept {
+  const T* data(const std::size_t offset = 0) const noexcept {
     return reinterpret_cast<const T*>(data(offset));
   }
 
@@ -127,7 +133,7 @@ public:
    * @pre `is_attached()` must be `true`.
    */
   template <typename T>
-  inline T* data(const std::size_t offset = 0) noexcept {
+  T* data(const std::size_t offset = 0) noexcept {
     return reinterpret_cast<T*>(data(offset));
   }
 
@@ -136,7 +142,7 @@ public:
    *
    * @pre `is_attached()` must be `true`.
    */
-  inline const std::uint8_t* data(const std::size_t offset = 0) const noexcept {
+  const std::uint8_t* data(const std::size_t offset = 0) const noexcept {
     return reinterpret_cast<const std::uint8_t*>(_addr) + offset;
   }
 
@@ -145,7 +151,7 @@ public:
    *
    * @pre `is_attached()` must be `true`.
    */
-  inline std::uint8_t* data(const std::size_t offset = 0) noexcept {
+  std::uint8_t* data(const std::size_t offset = 0) noexcept {
     return reinterpret_cast<std::uint8_t*>(_addr) + offset;
   }
 
@@ -156,6 +162,7 @@ public:
    * @throws posix::error on failure
    */
   std::size_t size() const;
+  std::size_t size();
 
   /**
    * Returns information from the associated kernel data structure.
@@ -204,10 +211,6 @@ public:
    * @note This operation is Linux-specific.
    */
   void unlock();
-
-protected:
-  int _id = -1;
-  void* _addr = nullptr;
 };
 
 #endif /* POSIXXX_SYSV_SEGMENT_H */
