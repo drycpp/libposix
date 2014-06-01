@@ -28,11 +28,23 @@ connection_refused::connection_refused() noexcept
 
 void
 posix::throw_error() {
-  throw_error(errno);
+  throw_error(errno, nullptr);
+}
+
+void
+posix::throw_error(const char* const origin) {
+  throw_error(errno, origin);
 }
 
 void
 posix::throw_error(const int code) {
+  throw_error(code, nullptr);
+}
+
+void
+posix::throw_error(const int code,
+                   const char* const origin) {
+  static_cast<void>(origin); // TODO
   switch (code) {
     case EBADF:        /* Bad file descriptor */
       throw bad_descriptor();

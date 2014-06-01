@@ -16,7 +16,9 @@ namespace posix {
   class connection_refused;
 
   extern void throw_error[[noreturn]]();
+  extern void throw_error[[noreturn]](const char* origin);
   extern void throw_error[[noreturn]](int code);
+  extern void throw_error[[noreturn]](int code, const char* origin);
 }
 
 /**
