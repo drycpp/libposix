@@ -44,7 +44,7 @@ public:
   unnamed_semaphore(unsigned int value,
                     bool is_shared = false) {
     if (sem_init(&_state, is_shared ? 1 : 0, value) == -1) {
-      throw_error();
+      throw_error("sem_init");
     }
   }
 
@@ -83,7 +83,7 @@ public:
   int value() const {
     int sval = 0;
     if (sem_getvalue(const_cast<sem_t*>(&_state), &sval) == -1) {
-      throw_error();
+      throw_error("sem_getvalue");
     }
     return sval;
   }
@@ -96,7 +96,7 @@ public:
    */
   void destroy() {
     if (sem_destroy(&_state) == -1) {
-      throw_error();
+      throw_error("sem_destroy");
     }
   }
 
@@ -109,7 +109,7 @@ public:
     for (;;) {
       if (sem_wait(&_state) == -1) {
         if (errno != EINTR) {
-          throw_error();
+          throw_error("sem_wait");
         }
       }
       else {
@@ -132,7 +132,7 @@ public:
           return false;
         }
         if (errno != EINTR) {
-          throw_error();
+          throw_error("sem_trywait");
         }
       }
       else {
@@ -148,7 +148,7 @@ public:
    */
   void notify() {
     if (sem_post(&_state) == -1) {
-      throw_error();
+      throw_error("sem_post");
     }
   }
 };

@@ -30,7 +30,7 @@ memory_mapping::map(const int fd,
   if (size == static_cast<std::size_t>(-1)) {
     struct stat st;
     if (fstat(fd, &st) == -1) {
-      throw_error();
+      throw_error("fstat");
     }
     _size = static_cast<std::size_t>(st.st_size) - offset;
   }
@@ -40,7 +40,7 @@ memory_mapping::map(const int fd,
 
   void* const addr = ::mmap(nullptr, _size, prot, flags, fd, offset);
   if (addr == MAP_FAILED) {
-    throw_error();
+    throw_error("mmap");
   }
 
   return reinterpret_cast<std::uint8_t*>(addr);

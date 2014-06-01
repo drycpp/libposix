@@ -22,7 +22,7 @@ sysv_segment::for_each(std::function<void (sysv_segment segment)> callback) {
   struct shm_info shminfo;
   const int max_shmidx = shmctl(0, SHM_INFO, reinterpret_cast<struct shmid_ds*>(&shminfo));
   if (max_shmidx == -1) {
-    throw_error(errno);
+    throw_error("shmctl");
   }
 
   for (int shmidx = 0; shmidx <= max_shmidx; shmidx++) {
@@ -71,7 +71,7 @@ sysv_segment::create(const key_t key,
       case ENOSPC: /* No space left on device */
         throw posix::fatal_error(errno);
       default:
-        throw_error(errno);
+        throw_error("shmget");
     }
   }
   return sysv_segment{shmid, nullptr, size};
@@ -94,7 +94,7 @@ sysv_segment::open(const key_t key) {
         throw posix::fatal_error(errno);
       default:
         assert(errno != ENOSPC);
-        throw_error(errno);
+        throw_error("shmget");
     }
   }
   return sysv_segment(shmid);
@@ -136,7 +136,7 @@ sysv_segment::stat() const {
         throw posix::invalid_argument();
       default:
         assert(errno != EFAULT);
-        throw_error(errno);
+        throw_error("shmctl");
     }
   }
   return ds;
@@ -159,7 +159,7 @@ sysv_segment::attach(const int flags) {
         case ENOMEM: /* Cannot allocate memory in kernel */
           throw posix::fatal_error(errno);
         default:
-          throw_error(errno);
+          throw_error("shmat");
       }
     }
     assert(_addr != nullptr);
@@ -181,7 +181,7 @@ sysv_segment::detach() {
         case EINVAL: /* Invalid argument */
           throw posix::invalid_argument();
         default:
-          throw_error(errno);
+          throw_error("shmdt");
       }
     }
     _addr = nullptr;
@@ -203,7 +203,7 @@ sysv_segment::remove() {
           throw posix::invalid_argument();
         default:
           assert(errno != EFAULT);
-          throw_error(errno);
+          throw_error("shmctl");
       }
     }
     _id = -1;
@@ -221,7 +221,7 @@ sysv_segment::lock() {
         throw posix::fatal_error(errno);
       default:
         assert(errno != EFAULT);
-        throw_error(errno);
+        throw_error("shmctl");
     }
   }
 #else
@@ -239,7 +239,7 @@ sysv_segment::unlock() {
       default:
         assert(errno != ENOMEM);
         assert(errno != EFAULT);
-        throw_error(errno);
+        throw_error("shmctl");
     }
   }
 #else

@@ -189,7 +189,7 @@ retry:
         goto retry; /* try again */
       default:
         assert(errno != EFAULT);
-        throw_error();
+        throw_error("poll");
     }
   }
   if (revents) *revents = fds.revents;

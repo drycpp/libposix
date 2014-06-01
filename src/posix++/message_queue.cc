@@ -58,7 +58,7 @@ message_queue::open(const char* const name,
 
   mqd_t mqd;
   if ((mqd = mq_open(name, flags, mode, attributes ? &attr : nullptr)) == -1) {
-    throw_error();
+    throw_error("mq_open");
   }
 
   return message_queue(mqd);
@@ -72,7 +72,7 @@ message_queue::unlink(const char* const queue_name) {
   assert(queue_name);
 
   if (mq_unlink(queue_name) == -1) {
-    throw_error();
+    throw_error("mq_unlink");
   }
 }
 
@@ -119,7 +119,7 @@ message_queue::recv(void* message_data,
   }
 
   if (rc == -1) {
-    throw_error();
+    throw_error((recv_timeout == -1) ? "mq_receive" : "mq_timedreceive");
   }
 
   std::memcpy(message_data, buffer, std::min(message_size, _message_size));
@@ -151,6 +151,6 @@ message_queue::send(const void* const message_data,
   }
 
   if (rc == -1) {
-    throw_error();
+    throw_error((send_timeout == -1) ? "mq_send" : "mq_timedsend");
   }
 }
