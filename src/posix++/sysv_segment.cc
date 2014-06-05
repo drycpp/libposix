@@ -196,17 +196,9 @@ sysv_segment::detach() {
  */
 void
 sysv_segment::remove() {
-  if (_id != -1) {
-    if (shmctl(_id, IPC_RMID, nullptr) == -1) {
-      switch (errno) {
-        case EINVAL: /* Invalid argument */
-          throw posix::invalid_argument();
-        default:
-          assert(errno != EFAULT);
-          throw_error("shmctl");
-      }
-    }
-    _id = -1;
+  if (shmctl(_id, IPC_RMID, nullptr) == -1) {
+    assert(errno != EFAULT);
+    throw_error("shmctl");
   }
 }
 
