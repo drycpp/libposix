@@ -72,7 +72,7 @@ public:
   /**
    * Returns the error number.
    */
-  inline int number() const noexcept {
+  int number() const noexcept {
     return code().value();
   }
 };
@@ -118,6 +118,11 @@ public:
    * Default constructor.
    */
   bad_descriptor() noexcept;
+
+  /**
+   * Constructor.
+   */
+  bad_descriptor(const char* origin) noexcept;
 };
 
 /**
@@ -131,6 +136,11 @@ public:
    * Default constructor.
    */
   bad_address() noexcept;
+
+  /**
+   * Constructor.
+   */
+  bad_address(const char* origin) noexcept;
 };
 
 /**
@@ -144,6 +154,11 @@ public:
    * Default constructor.
    */
   invalid_argument() noexcept;
+
+  /**
+   * Constructor.
+   */
+  invalid_argument(const char* origin) noexcept;
 };
 
 /**
@@ -157,6 +172,11 @@ public:
    * Default constructor.
    */
   connection_refused() noexcept;
+
+  /**
+   * Constructor.
+   */
+  connection_refused(const char* origin) noexcept;
 };
 
 #endif /* POSIXXX_ERROR_H */
