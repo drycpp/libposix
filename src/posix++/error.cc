@@ -97,6 +97,12 @@ posix::throw_error(const int code,
       throw posix::logic_error(code, std::generic_category(), buffer.data());
     case ENOTDIR:      /* Not a directory */
       throw posix::logic_error(code, std::generic_category(), buffer.data());
+    case EACCES:       /* Permission denied */
+    case ELOOP:        /* Too many levels of symbolic links */
+    case ENOENT:       /* No such file or directory */
+    case ENOPROTOOPT:  /* Protocol not available */
+    case ENOTCONN:     /* Transport endpoint is not connected */
+    case ENOTSOCK:     /* Socket operation on non-socket */
     default:
       throw runtime_error(code, std::generic_category(), buffer.data());
   }

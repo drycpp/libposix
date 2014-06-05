@@ -34,16 +34,7 @@ file::open(const int dirfd,
 
   int fd;
   if ((fd = openat(dirfd, pathname, flags, mode)) == -1) {
-    switch (errno) {
-      case EMFILE: /* Too many open files */
-      case ENFILE: /* Too many open files in system */
-      case ENOMEM: /* Cannot allocate memory in kernel */
-        throw posix::fatal_error(errno);
-      case EBADF:  /* Bad file descriptor */
-        throw posix::bad_descriptor();
-      default:
-        throw posix::runtime_error(errno);
-    }
+    throw_error("openat");
   }
 
   return file(fd);
@@ -84,15 +75,8 @@ file::size() const {
   struct stat st;
 
   if (fstat(fd(), &st) == -1) {
-    switch (errno) {
-      case ENOMEM: /* Cannot allocate memory in kernel */
-        throw posix::fatal_error(errno);
-      case EBADF:  /* Bad file descriptor */
-        throw posix::bad_descriptor();
-      default:
-        assert(errno != EFAULT);
-        throw posix::runtime_error(errno);
-    }
+    assert(errno != EFAULT);
+    throw_error("fstat");
   }
 
   return static_cast<std::size_t>(st.st_size);
@@ -101,12 +85,7 @@ file::size() const {
 void
 file::rewind() const {
   if (lseek(fd(), 0, SEEK_SET) == static_cast<off_t>(-1)) {
-    switch (errno) {
-      case EBADF:  /* Bad file descriptor */
-        throw posix::bad_descriptor();
-      default:
-        assert(errno != EINVAL);
-        throw posix::runtime_error(errno);
-    }
+    assert(errno != EINVAL);
+    throw_error("lseek");
   }
 }

@@ -43,10 +43,8 @@ descriptor::descriptor(const descriptor& other) {
       switch (errno) {
         case EBADF:  /* Bad file descriptor */
           throw std::invalid_argument(invalid_in_copy_constructor);
-        case EMFILE: /* Too many open files */
-          throw posix::fatal_error(errno);
         default:
-          throw posix::runtime_error(errno);
+          throw_error("fcntl(F_DUPFD)");
       }
     }
 
@@ -104,12 +102,7 @@ int
 descriptor::fcntl(const int cmd) const {
   const int result = ::fcntl(_fd, cmd);
   if (result == -1) {
-    switch (errno) {
-      case EBADF: /* Bad file descriptor */
-        throw posix::bad_descriptor();
-      default:
-        throw posix::runtime_error(errno);
-    }
+    throw_error("fcntl");
   }
   return result;
 }
@@ -119,12 +112,7 @@ descriptor::fcntl(const int cmd,
                   const int arg) {
   const int result = ::fcntl(_fd, cmd, arg);
   if (result == -1) {
-    switch (errno) {
-      case EBADF: /* Bad file descriptor */
-        throw posix::bad_descriptor();
-      default:
-        throw posix::runtime_error(errno);
-    }
+    throw_error("fcntl");
   }
   return result;
 }
@@ -134,12 +122,7 @@ descriptor::fcntl(const int cmd,
                   void* const arg) {
   const int result = ::fcntl(_fd, cmd, arg);
   if (result == -1) {
-    switch (errno) {
-      case EBADF: /* Bad file descriptor */
-        throw posix::bad_descriptor();
-      default:
-        throw posix::runtime_error(errno);
-    }
+    throw_error("fcntl");
   }
   return result;
 }
@@ -151,28 +134,14 @@ descriptor::chown(const user& user,
   const gid_t gid = static_cast<gid_t>(group.id());
 
   if (fchown(_fd, uid, gid) == -1) {
-    switch (errno) {
-      case ENOMEM: /* Cannot allocate memory in kernel */
-        throw posix::fatal_error(errno);
-      case EBADF:  /* Bad file descriptor */
-        throw posix::bad_descriptor();
-      default:
-        throw posix::runtime_error(errno);
-    }
+    throw_error("fchown");
   }
 }
 
 void
 descriptor::chmod(const mode mode) {
   if (fchmod(_fd, static_cast<mode_t>(mode)) == -1) {
-    switch (errno) {
-      case ENOMEM: /* Cannot allocate memory in kernel */
-        throw posix::fatal_error(errno);
-      case EBADF:  /* Bad file descriptor */
-        throw posix::bad_descriptor();
-      default:
-        throw posix::runtime_error(errno);
-    }
+    throw_error("fchmod");
   }
 }
 
@@ -228,12 +197,8 @@ descriptor::write(const void* const data,
       switch (errno) {
         case EINTR:  /* Interrupted system call */
           continue;
-        case ENOMEM: /* Cannot allocate memory in kernel */
-          throw posix::fatal_error(errno);
-        case EBADF:  /* Bad file descriptor */
-          throw posix::bad_descriptor();
         default:
-          throw posix::runtime_error(errno);
+          throw_error("write");
       }
     }
     pos += rc;
@@ -284,11 +249,9 @@ retry:
       switch (errno) {
         case EINTR: /* Interrupted system call */
           goto retry; /* try again */
-        case EBADF: /* Bad file descriptor */
-          throw posix::bad_descriptor();
         default:
           assert(errno != EFAULT);
-          throw posix::runtime_error(errno);
+          throw_error("read");
       }
 
     case 0:
@@ -316,10 +279,8 @@ descriptor::read(void* const buffer,
         switch (errno) {
           case EINTR: /* Interrupted system call */
             continue; /* try again */
-          case EBADF:  /* Bad file descriptor */
-            throw posix::bad_descriptor();
           default:
-            throw posix::runtime_error(errno);
+            throw_error("read");
         }
 
       case 0:
@@ -348,11 +309,9 @@ descriptor::read() {
         switch (errno) {
           case EINTR: /* Interrupted system call */
             continue; /* try again */
-          case EBADF: /* Bad file descriptor */
-            throw posix::bad_descriptor();
           default:
             assert(errno != EFAULT);
-            throw posix::runtime_error(errno);
+            throw_error("read");
         }
 
       case 0:
@@ -368,12 +327,7 @@ descriptor::read() {
 void
 descriptor::sync() {
   if (fsync(_fd) == -1) {
-    switch (errno) {
-      case EBADF: /* Bad file descriptor */
-        throw posix::bad_descriptor();
-      default:
-        throw posix::runtime_error(errno);
-    }
+    throw_error("fsync");
   }
 }
 

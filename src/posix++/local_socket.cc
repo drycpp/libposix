@@ -30,15 +30,7 @@ local_socket::local_socket() : socket() {
 
   int sockfd;
   if ((sockfd = ::socket(AF_LOCAL, SOCK_STREAM | flags, 0)) == -1) {
-    switch (errno) {
-      case EMFILE:  /* Too many open files */
-      case ENFILE:  /* Too many open files in system */
-      case ENOBUFS: /* No buffer space available in kernel */
-      case ENOMEM:  /* Cannot allocate memory in kernel */
-        throw posix::fatal_error(errno);
-      default:
-        throw posix::runtime_error(errno);
-    }
+    throw_error("socket(AF_LOCAL, SOCK_STREAM)");
   }
 
   assign(sockfd);
@@ -57,14 +49,7 @@ local_socket::pair() {
 
   int fds[2] = {0, 0};
   if (::socketpair(AF_LOCAL, SOCK_STREAM | flags, 0, fds) == -1) {
-    switch (errno) {
-      case EMFILE: /* Too many open files */
-      case ENFILE: /* Too many open files in system */
-      case ENOMEM: /* Cannot allocate memory in kernel */
-        throw posix::fatal_error(errno);
-      default:
-        throw posix::runtime_error(errno);
-    }
+    throw_error("socketpair(AF_LOCAL, SOCK_STREAM)");
   }
 
   std::pair<local_socket, local_socket> pair{local_socket(fds[0]), local_socket(fds[1])};
@@ -93,12 +78,8 @@ retry:
     switch (errno) {
       case EINTR:  /* Interrupted system call */
         goto retry;
-      case ENOMEM: /* Cannot allocate memory in kernel */
-        throw posix::fatal_error(errno);
-      case EBADF:  /* Bad file descriptor */
-        throw posix::bad_descriptor();
       default:
-        throw posix::runtime_error(errno);
+        throw_error("bind");
     }
   }
 
@@ -122,12 +103,8 @@ retry:
     switch (errno) {
       case EINTR:  /* Interrupted system call */
         goto retry;
-      case EBADF:  /* Bad file descriptor */
-        throw posix::bad_descriptor();
-      case ECONNREFUSED: /* Connection refused */
-        throw posix::connection_refused();
       default:
-        throw posix::runtime_error(errno);
+        throw_error("connect");
     }
   }
 
@@ -147,15 +124,8 @@ retry:
     switch (errno) {
       case EINTR:   /* Interrupted system call */
         goto retry;
-      case EMFILE:  /* Too many open files */
-      case ENFILE:  /* Too many open files in system */
-      case ENOBUFS: /* No buffer space available in kernel */
-      case ENOMEM:  /* Cannot allocate memory in kernel */
-        throw posix::fatal_error(errno);
-      case EBADF:   /* Bad file descriptor */
-        throw posix::bad_descriptor();
       default:
-        throw posix::runtime_error(errno);
+        throw_error("accept");
     }
   }
 
@@ -207,12 +177,8 @@ retry:
     switch (errno) {
       case EINTR:  /* Interrupted system call */
         goto retry;
-      case ENOMEM: /* Cannot allocate memory in kernel */
-        throw posix::fatal_error(errno);
-      case EBADF:  /* Bad file descriptor */
-        throw posix::bad_descriptor();
       default:
-        throw posix::runtime_error(errno);
+        throw_error("sendmsg");
     }
   }
 #else /* __linux__ */
@@ -262,12 +228,8 @@ retry:
     switch (errno) {
       case EINTR:  /* Interrupted system call */
         goto retry;
-      case ENOMEM: /* Cannot allocate memory in kernel */
-        throw posix::fatal_error(errno);
-      case EBADF:  /* Bad file descriptor */
-        throw posix::bad_descriptor();
       default:
-        throw posix::runtime_error(errno);
+        throw_error("recvmsg");
     }
   }
 

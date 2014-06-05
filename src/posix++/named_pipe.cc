@@ -26,14 +26,7 @@ named_pipe::create(const int dirfd,
   assert(pathname[0] != '\0');
 
   if (mkfifoat(dirfd, pathname, mode) == -1) {
-    switch (errno) {
-      case EBADF:  /* Bad file descriptor */
-        throw posix::bad_descriptor();
-      case ENOTDIR: /* Not a directory */
-        throw posix::logic_error(errno);
-      default:
-        throw posix::runtime_error(errno);
-    }
+    throw_error("mkfifoat");
   }
 }
 
@@ -51,16 +44,7 @@ named_pipe::open(const int dirfd,
 
   int fd;
   if ((fd = openat(dirfd, pathname, flags)) == -1) {
-    switch (errno) {
-      case EMFILE: /* Too many open files */
-      case ENFILE: /* Too many open files in system */
-      case ENOMEM: /* Cannot allocate memory in kernel */
-        throw posix::fatal_error(errno);
-      case EBADF:  /* Bad file descriptor */
-        throw posix::bad_descriptor();
-      default:
-        throw posix::runtime_error(errno);
-    }
+    throw_error("openat");
   }
 
   return named_pipe(fd);

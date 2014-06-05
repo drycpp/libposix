@@ -40,20 +40,6 @@ pathname::basename() const {
 void
 pathname::unlink() const {
   if (::unlink(c_str()) == -1) {
-    switch (errno) {
-      case ENOMEM:  /* Cannot allocate memory in kernel */
-        throw posix::fatal_error(errno);
-      case EBADF:   /* Bad file descriptor */
-        throw posix::bad_descriptor();
-      case EFAULT:  /* Bad address */
-        throw posix::bad_address();
-      case EINVAL:  /* Invalid argument */
-        throw posix::invalid_argument();
-      case ENAMETOOLONG: /* File name too long */
-      case ENOTDIR: /* Not a directory */
-        throw posix::logic_error(errno);
-      default:
-        throw posix::runtime_error(errno);
-    }
+    throw_error("unlink");
   }
 }

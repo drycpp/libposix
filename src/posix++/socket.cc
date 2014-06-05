@@ -64,30 +64,14 @@ socket::getsockopt(const int level,
                    int* const optlen) const {
   static_assert(sizeof(socklen_t) == sizeof(int), "sizeof(socklen_t) != sizeof(int)");
   if (::getsockopt(fd(), level, optname, optval, reinterpret_cast<socklen_t*>(optlen)) == -1) {
-    switch (errno) {
-      case EBADF:       /* Bad file descriptor */
-        throw posix::bad_descriptor();
-      case EFAULT:      /* Bad address */
-        throw posix::bad_address();
-      case EINVAL:      /* Invalid argument */
-        throw posix::invalid_argument();
-      case ENOPROTOOPT: /* Protocol not available */
-      case ENOTSOCK:    /* Socket operation on non-socket */
-      default:
-        throw posix::runtime_error(errno);
-    }
+    throw_error("getsockopt");
   }
 }
 
 void
 socket::listen(const unsigned int backlog) {
   if (::listen(fd(), static_cast<int>(backlog)) == -1) {
-    switch (errno) {
-      case EBADF: /* Bad file descriptor */
-        throw posix::bad_descriptor();
-      default:
-        throw posix::runtime_error(errno);
-    }
+    throw_error("listen");
   }
 }
 
@@ -115,12 +99,8 @@ socket::send(const void* const data,
       switch (errno) {
         case EINTR:  /* Interrupted system call */
           continue;
-        case ENOMEM: /* Cannot allocate memory in kernel */
-          throw posix::fatal_error(errno);
-        case EBADF:  /* Bad file descriptor */
-          throw posix::bad_descriptor();
         default:
-          throw posix::runtime_error(errno);
+          throw_error("send");
       }
     }
     pos += rc;
@@ -166,10 +146,8 @@ socket::recv(std::function<bool (const void* chunk_data, std::size_t chunk_size)
         switch (errno) {
           case EINTR: /* Interrupted system call */
             continue; /* try again */
-          case EBADF:  /* Bad file descriptor */
-            throw posix::bad_descriptor();
           default:
-            throw posix::runtime_error(errno);
+            throw_error("recv");
         }
 
       case 0:
@@ -206,10 +184,8 @@ socket::recv(void* const buffer,
         switch (errno) {
           case EINTR: /* Interrupted system call */
             continue; /* try again */
-          case EBADF:  /* Bad file descriptor */
-            throw posix::bad_descriptor();
           default:
-            throw posix::runtime_error(errno);
+            throw_error("recv");
         }
 
       case 0:
@@ -239,15 +215,6 @@ socket::close_read() {
 void
 socket::shutdown(const int how) {
   if (::shutdown(fd(), how) == -1) {
-    switch (errno) {
-      case EBADF:    /* Bad file descriptor */
-        throw posix::bad_descriptor();
-      case EINVAL:   /* Invalid argument */
-        throw posix::invalid_argument();
-      case ENOTCONN: /* Transport endpoint is not connected */
-      case ENOTSOCK: /* Socket operation on non-socket */
-      default:
-        throw posix::runtime_error(errno);
-    }
+    throw_error("shutdown");
   }
 }

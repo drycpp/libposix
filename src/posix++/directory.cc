@@ -37,16 +37,7 @@ directory::open(const int dirfd, const char* const pathname) {
 
   int fd;
   if ((fd = openat(dirfd, pathname, flags)) == -1) {
-    switch (errno) {
-      case EMFILE: /* Too many open files */
-      case ENFILE: /* Too many open files in system */
-      case ENOMEM: /* Cannot allocate memory in kernel */
-        throw posix::fatal_error(errno);
-      case EBADF:  /* Bad file descriptor */
-        throw posix::bad_descriptor();
-      default:
-        throw posix::runtime_error(errno);
-    }
+    throw_error("openat");
   }
 
   return directory(fd);
@@ -85,21 +76,8 @@ directory::count(const char* const pathname) const {
     switch (errno) {
       case ENOENT:  /* No such file or directory */
         return 0;
-      case ENOMEM:  /* Cannot allocate memory in kernel */
-        throw posix::fatal_error(errno);
-      case EBADF:   /* Bad file descriptor */
-        throw posix::bad_descriptor();
-      case EFAULT:  /* Bad address */
-        throw posix::bad_address();
-      case EINVAL:  /* Invalid argument */
-        throw posix::invalid_argument();
-      case ENAMETOOLONG: /* File name too long */
-      case ENOTDIR: /* Not a directory */
-        throw posix::logic_error(errno);
-      case EACCES:  /* Permission denied */
-      case ELOOP:   /* Too many levels of symbolic links */
       default:
-        throw posix::runtime_error(errno);
+        throw_error("fstatat");
     }
   }
 
@@ -115,21 +93,7 @@ directory::link(const char* const old_pathname,
   assert(*new_pathname != '\0');
 
   if (linkat(fd(), old_pathname, fd(), new_pathname, 0) == -1) {
-    switch (errno) {
-      case ENOMEM:  /* Cannot allocate memory in kernel */
-        throw posix::fatal_error(errno);
-      case EBADF:   /* Bad file descriptor */
-        throw posix::bad_descriptor();
-      case EFAULT:  /* Bad address */
-        throw posix::bad_address();
-      case EINVAL:  /* Invalid argument */
-        throw posix::invalid_argument();
-      case ENAMETOOLONG: /* File name too long */
-      case ENOTDIR: /* Not a directory */
-        throw posix::logic_error(errno);
-      default:
-        throw posix::runtime_error(errno);
-    }
+    throw_error("linkat");
   }
 }
 
@@ -142,21 +106,7 @@ directory::symlink(const char* const old_pathname,
   assert(*new_pathname != '\0');
 
   if (symlinkat(old_pathname, fd(), new_pathname) == -1) {
-    switch (errno) {
-      case ENOMEM:  /* Cannot allocate memory in kernel */
-        throw posix::fatal_error(errno);
-      case EBADF:   /* Bad file descriptor */
-        throw posix::bad_descriptor();
-      case EFAULT:  /* Bad address */
-        throw posix::bad_address();
-      case EINVAL:  /* Invalid argument */
-        throw posix::invalid_argument();
-      case ENAMETOOLONG: /* File name too long */
-      case ENOTDIR: /* Not a directory */
-        throw posix::logic_error(errno);
-      default:
-        throw posix::runtime_error(errno);
-    }
+    throw_error("symlinkat");
   }
 }
 
@@ -167,21 +117,7 @@ directory::mkdir(const char* const pathname,
   assert(*pathname != '\0');
 
   if (mkdirat(fd(), pathname, static_cast<mode_t>(mode)) == -1) {
-    switch (errno) {
-      case ENOMEM:  /* Cannot allocate memory in kernel */
-        throw posix::fatal_error(errno);
-      case EBADF:   /* Bad file descriptor */
-        throw posix::bad_descriptor();
-      case EFAULT:  /* Bad address */
-        throw posix::bad_address();
-      case EINVAL:  /* Invalid argument */
-        throw posix::invalid_argument();
-      case ENAMETOOLONG: /* File name too long */
-      case ENOTDIR: /* Not a directory */
-        throw posix::logic_error(errno);
-      default:
-        throw posix::runtime_error(errno);
-    }
+    throw_error("mkdirat");
   }
 }
 
@@ -202,21 +138,7 @@ directory::unlink(const char* const pathname,
   assert(*pathname != '\0');
 
   if (unlinkat(fd(), pathname, flags) == -1) {
-    switch (errno) {
-      case ENOMEM:  /* Cannot allocate memory in kernel */
-        throw posix::fatal_error(errno);
-      case EBADF:   /* Bad file descriptor */
-        throw posix::bad_descriptor();
-      case EFAULT:  /* Bad address */
-        throw posix::bad_address();
-      case EINVAL:  /* Invalid argument */
-        throw posix::invalid_argument();
-      case ENAMETOOLONG: /* File name too long */
-      case ENOTDIR: /* Not a directory */
-        throw posix::logic_error(errno);
-      default:
-        throw posix::runtime_error(errno);
-    }
+    throw_error("unlinkat");
   }
 }
 
@@ -236,22 +158,7 @@ directory::rename(const char* const old_pathname,
   assert(*new_pathname != '\0');
 
   if (renameat(fd(), old_pathname, new_directory.fd(), new_pathname) == -1) {
-    switch (errno) {
-      case ENOMEM:  /* Cannot allocate memory in kernel */
-      case ENOSPC:  /* No space left on device */
-        throw posix::fatal_error(errno);
-      case EBADF:   /* Bad file descriptor */
-        throw posix::bad_descriptor();
-      case EFAULT:  /* Bad address */
-        throw posix::bad_address();
-      case EINVAL:  /* Invalid argument */
-        throw posix::invalid_argument();
-      case ENAMETOOLONG: /* File name too long */
-      case ENOTDIR: /* Not a directory */
-        throw posix::logic_error(errno);
-      default:
-        throw posix::runtime_error(errno);
-    }
+    throw_error("renameat");
   }
 }
 
@@ -261,16 +168,7 @@ directory::readlink(const char* const pathname) const {
 
   const int rc = readlinkat(fd(), pathname, buffer, sizeof(buffer) - 1);
   if (rc == -1) {
-    switch (errno) {
-      case ENOMEM: /* Cannot allocate memory in kernel */
-        throw posix::fatal_error(errno);
-      case EBADF:  /* Bad file descriptor */
-        throw posix::bad_descriptor();
-      case EINVAL: /* Invalid argument */
-        throw posix::invalid_argument();
-      default:
-        throw posix::runtime_error(errno);
-    }
+    throw_error("readlinkat");
   }
 
   assert(rc < sizeof(buffer));
@@ -303,18 +201,7 @@ directory::iterator::iterator(const directory& dir) {
   const int dirfd = dir.dup(/*true*/).release();
 
   if (!(_dirp = fdopendir(dirfd))) {
-    switch (errno) {
-      case EMFILE: /* Too many open files */
-      case ENOMEM: /* Cannot allocate memory in kernel */
-        throw posix::fatal_error(errno);
-      case EBADF:  /* Bad file descriptor */
-        throw posix::bad_descriptor();
-      case EACCES:
-      case ENOENT:
-      case ENOTDIR:
-      default:
-        throw posix::runtime_error(errno);
-    }
+    throw_error("fdopendir");
   }
 }
 
