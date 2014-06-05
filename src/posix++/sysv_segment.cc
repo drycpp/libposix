@@ -22,7 +22,7 @@ sysv_segment::for_each(std::function<void (sysv_segment segment)> callback) {
   struct shm_info shminfo;
   const int max_shmidx = shmctl(0, SHM_INFO, reinterpret_cast<struct shmid_ds*>(&shminfo));
   if (max_shmidx == -1) {
-    throw_error("shmctl");
+    throw_error("shmctl(SHM_INFO)");
   }
 
   for (int shmidx = 0; shmidx <= max_shmidx; shmidx++) {
@@ -35,7 +35,7 @@ sysv_segment::for_each(std::function<void (sysv_segment segment)> callback) {
           continue;
         default:
           assert(errno != EFAULT);
-          throw posix::runtime_error(errno);
+          throw_error("shmctl(SHM_STAT)");
       }
     }
     callback(sysv_segment(shmid));
@@ -64,15 +64,7 @@ sysv_segment::create(const key_t key,
                      const int flags) {
   int shmid;
   if ((shmid = shmget(key, size, IPC_CREAT | flags)) == -1) {
-    switch (errno) {
-      case EINVAL: /* Invalid argument */
-        throw posix::invalid_argument();
-      case ENOMEM: /* Cannot allocate memory in kernel */
-      case ENOSPC: /* No space left on device */
-        throw posix::fatal_error(errno);
-      default:
-        throw_error("shmget");
-    }
+    throw_error("shmget");
   }
   return sysv_segment{shmid, nullptr, size};
 }
@@ -87,15 +79,8 @@ sysv_segment
 sysv_segment::open(const key_t key) {
   int shmid;
   if ((shmid = shmget(key, 0, 0)) == -1) {
-    switch (errno) {
-      case EINVAL: /* Invalid argument */
-        throw posix::invalid_argument();
-      case ENOMEM: /* Cannot allocate memory in kernel */
-        throw posix::fatal_error(errno);
-      default:
-        assert(errno != ENOSPC);
-        throw_error("shmget");
-    }
+    assert(errno != ENOSPC);
+    throw_error("shmget");
   }
   return sysv_segment(shmid);
 }
@@ -108,11 +93,6 @@ sysv_segment::~sysv_segment() noexcept {
     _addr = nullptr;
   }
   if (_id != -1) {
-#if 0 // TODO: think this through.
-    if (shmctl(_id, IPC_RMID, nullptr) == -1) {
-      /* Ignore any errors from shmctl(). */
-    }
-#endif
     _id = -1;
   }
 }
@@ -131,13 +111,8 @@ shmid_ds
 sysv_segment::stat() const {
   shmid_ds ds;
   if (shmctl(_id, IPC_STAT, &ds) == -1) {
-    switch (errno) {
-      case EINVAL: /* Invalid argument */
-        throw posix::invalid_argument();
-      default:
-        assert(errno != EFAULT);
-        throw_error("shmctl");
-    }
+    assert(errno != EFAULT);
+    throw_error("shmctl(IPC_STAT)");
   }
   return ds;
 }
@@ -152,15 +127,7 @@ void*
 sysv_segment::attach(const int flags) {
   if (!_addr) {
     if ((_addr = shmat(_id, nullptr, flags)) == reinterpret_cast<void*>(-1)) {
-      switch (errno) {
-        case EINVAL: /* Invalid argument */
-          throw posix::invalid_argument();
-        case EMFILE: /* Too many open segments */
-        case ENOMEM: /* Cannot allocate memory in kernel */
-          throw posix::fatal_error(errno);
-        default:
-          throw_error("shmat");
-      }
+      throw_error("shmat");
     }
     assert(_addr != nullptr);
   }
@@ -177,12 +144,7 @@ void
 sysv_segment::detach() {
   if (_addr) {
     if (shmdt(_addr) == -1) {
-      switch (errno) {
-        case EINVAL: /* Invalid argument */
-          throw posix::invalid_argument();
-        default:
-          throw_error("shmdt");
-      }
+      throw_error("shmdt");
     }
     _addr = nullptr;
   }
@@ -198,7 +160,7 @@ void
 sysv_segment::remove() {
   if (shmctl(_id, IPC_RMID, nullptr) == -1) {
     assert(errno != EFAULT);
-    throw_error("shmctl");
+    throw_error("shmctl(IPC_RMID)");
   }
 }
 
@@ -206,15 +168,8 @@ void
 sysv_segment::lock() {
 #ifdef SHM_LOCK
   if (shmctl(_id, SHM_LOCK, nullptr) == -1) {
-    switch (errno) {
-      case EINVAL: /* Invalid argument */
-        throw posix::invalid_argument();
-      case ENOMEM: /* Cannot allocate memory in kernel */
-        throw posix::fatal_error(errno);
-      default:
-        assert(errno != EFAULT);
-        throw_error("shmctl");
-    }
+    assert(errno != EFAULT);
+    throw_error("shmctl(SHM_LOCK)");
   }
 #else
   throw_error(ENOSYS); /* Function not implemented */
@@ -225,14 +180,9 @@ void
 sysv_segment::unlock() {
 #ifdef SHM_UNLOCK
   if (shmctl(_id, SHM_UNLOCK, nullptr) == -1) {
-    switch (errno) {
-      case EINVAL: /* Invalid argument */
-        throw posix::invalid_argument();
-      default:
-        assert(errno != ENOMEM);
-        assert(errno != EFAULT);
-        throw_error("shmctl");
-    }
+    assert(errno != ENOMEM);
+    assert(errno != EFAULT);
+    throw_error("shmctl(SHM_UNLOCK)");
   }
 #else
   throw_error(ENOSYS); /* Function not implemented */
