@@ -73,31 +73,31 @@ posix::throw_error(const int code,
 
   switch (code) {
     case EBADF:        /* Bad file descriptor */
-      throw bad_descriptor(what);
+      throw !what ? bad_descriptor() : bad_descriptor(what);
     case ECONNREFUSED: /* Connection refused */
-      throw connection_refused(what);
+      throw !what ? connection_refused() : connection_refused(what);
     case EFAULT:       /* Bad address */
-      throw bad_address(what);
+      throw !what ? bad_address() : bad_address(what);
     case EINVAL:       /* Invalid argument */
-      throw invalid_argument(what);
+      throw !what ? invalid_argument() : invalid_argument(what);
     case EMFILE:       /* Too many open files */
-      throw posix::fatal_error(code, std::generic_category(), what);
+      throw !what ? fatal_error(code) : fatal_error(code, std::generic_category(), what);
     case EMSGSIZE:     /* Message too long */
-      throw posix::logic_error(code, std::generic_category(), what);
+      throw !what ? logic_error(code) : logic_error(code, std::generic_category(), what);
     case ENAMETOOLONG: /* File name too long */
-      throw posix::logic_error(code, std::generic_category(), what);
+      throw !what ? logic_error(code) : logic_error(code, std::generic_category(), what);
     case ENFILE:       /* Too many open files in system */
-      throw posix::fatal_error(code, std::generic_category(), what);
+      throw !what ? fatal_error(code) : fatal_error(code, std::generic_category(), what);
     case ENOBUFS:      /* No buffer space available in kernel */
-      throw posix::fatal_error(code, std::generic_category(), what);
+      throw !what ? fatal_error(code) : fatal_error(code, std::generic_category(), what);
     case ENOMEM:       /* Cannot allocate memory in kernel */
-      throw posix::fatal_error(code, std::generic_category(), what);
+      throw !what ? fatal_error(code) : fatal_error(code, std::generic_category(), what);
     case ENOSPC:       /* No space left on device */
-      throw posix::fatal_error(code, std::generic_category(), what);
+      throw !what ? fatal_error(code) : fatal_error(code, std::generic_category(), what);
     case ENOSYS:       /* Function not implemented */
-      throw posix::logic_error(code, std::generic_category(), what);
+      throw !what ? logic_error(code) : logic_error(code, std::generic_category(), what);
     case ENOTDIR:      /* Not a directory */
-      throw posix::logic_error(code, std::generic_category(), what);
+      throw !what ? logic_error(code) : logic_error(code, std::generic_category(), what);
     case EACCES:       /* Permission denied */
     case ELOOP:        /* Too many levels of symbolic links */
     case ENOENT:       /* No such file or directory */
@@ -105,6 +105,6 @@ posix::throw_error(const int code,
     case ENOTCONN:     /* Transport endpoint is not connected */
     case ENOTSOCK:     /* Socket operation on non-socket */
     default:
-      throw runtime_error(code, std::generic_category(), what);
+      throw !what ? runtime_error(code) : runtime_error(code, std::generic_category(), what);
   }
 }
