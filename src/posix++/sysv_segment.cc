@@ -9,6 +9,7 @@
 
 #include <cassert>      /* for assert() */
 #include <cerrno>       /* for errno */
+#include <cstdio>       /* for std::sprintf() */
 #include <cstring>      /* for std::memset() */
 #include <sys/types.h>  /* for key_t */
 #include <sys/ipc.h>    /* for shm*() on BSD */
@@ -158,9 +159,19 @@ sysv_segment::detach() {
  */
 void
 sysv_segment::remove() {
-  if (shmctl(_id, IPC_RMID, nullptr) == -1) {
-    assert(errno != EFAULT);
-    throw_error("shmctl(IPC_RMID)");
+  if (_id != -1) {
+    if (shmctl(_id, IPC_RMID, nullptr) == -1) {
+      assert(errno != EFAULT);
+      if (errno != EINVAL && errno != EIDRM) {
+#if 1
+        char buffer[256];
+        std::sprintf(buffer, "shmctl(%d, IPC_RMID, NULL)", _id);
+        throw_error(buffer);
+#else
+        throw_error("shmctl(IPC_RMID)");
+#endif
+      }
+    }
   }
 }
 
