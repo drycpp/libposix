@@ -16,20 +16,39 @@ namespace posix {
  * @see http://pubs.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap03.html#tag_03_266
  */
 class posix::pathname {
+  std::string _string;
+
 public:
   /**
-   * Constructor.
+   * Default constructor.
    */
-  pathname(const std::string& path) : _string(path) {}
+  pathname() = default;
 
   /**
    * Constructor.
    */
-  pathname(const char* const path) : _string(path) {
+  pathname(const std::string& path)
+    : _string{path} {}
+
+  /**
+   * Constructor.
+   */
+  pathname(const char* const path)
+    : _string{path ? path : ""} {
     if (!path) {
       throw std::invalid_argument("path cannot be nullptr");
     }
   }
+
+  /**
+   * Copy constructor.
+   */
+  pathname(const pathname& other) = default;
+
+  /**
+   * Move constructor.
+   */
+  pathname(pathname&& other) noexcept = default;
 
   /**
    * Destructor.
@@ -37,21 +56,31 @@ public:
   ~pathname() noexcept = default;
 
   /**
-   * ...
+   * Copy assignment operator.
+   */
+  pathname& operator=(const pathname& other) = default;
+
+  /**
+   * Move assignment operator.
+   */
+  pathname& operator=(pathname&& other) = default;
+
+  /**
+   * Determines whether this pathname is the empty string.
    */
   bool empty() const noexcept {
     return _string.empty();
   }
 
   /**
-   * ...
+   * Returns this pathname as a string.
    */
   const std::string& string() const noexcept {
     return _string;
   }
 
   /**
-   * ...
+   * Returns this pathname as a C string.
    */
   const char* c_str() const noexcept {
     return _string.c_str();
@@ -71,7 +100,7 @@ public:
    *
    * @see http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_320
    */
-  inline bool is_relative() const noexcept {
+  bool is_relative() const noexcept {
     return !is_absolute();
   }
 
@@ -96,9 +125,6 @@ public:
    * Removes the file designated by this pathname.
    */
   void unlink() const;
-
-protected:
-  std::string _string;
 };
 
 #endif /* POSIXXX_PATHNAME_H */
