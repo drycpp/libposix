@@ -136,6 +136,13 @@ public:
    * @throws posix::error on failure
    */
   void unlink() const;
+
+  /**
+   * Appends the given string to this pathname.
+   *
+   * @return `*this`
+   */
+  pathname& append(const char* path);
 };
 
 #endif /* POSIXXX_PATHNAME_H */

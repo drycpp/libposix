@@ -58,3 +58,10 @@ pathname::unlink() const {
     throw_error("unlink");
   }
 }
+
+pathname&
+pathname::append(const char* const path) {
+  assert(path);
+  _string.append(path);
+  return *this;
+}
