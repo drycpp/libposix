@@ -89,6 +89,7 @@ public:
   /**
    * Determines whether this is an absolute pathname.
    *
+   * @pre the pathname must not be empty.
    * @see http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_02
    */
   bool is_absolute() const noexcept {
@@ -98,6 +99,7 @@ public:
   /**
    * Determines whether this is a relative pathname.
    *
+   * @pre the pathname must not be empty.
    * @see http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_320
    */
   bool is_relative() const noexcept {
@@ -122,7 +124,16 @@ public:
   posix::pathname basename() const;
 
   /**
+   * Determines whether the file designated by this pathname exists.
+   *
+   * @throws posix::error on failure
+   */
+  bool exists() const;
+
+  /**
    * Removes the file designated by this pathname.
+   *
+   * @throws posix::error on failure
    */
   void unlink() const;
 };

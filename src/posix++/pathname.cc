@@ -7,12 +7,14 @@
 #include "error.h"
 #include "pathname.h"
 
-#include <cassert>  /* for assert() */
-#include <cstring>  /* for std::strcpy(), GNU basename() */
-#include <libgen.h> /* for basename(), dirname() */
-#include <unistd.h> /* for unlink() */
+#include <cassert>     /* for assert() */
+#include <cstring>     /* for std::strcpy(), GNU basename() */
+#include <libgen.h>    /* for basename(), dirname() */
+#include <sys/types.h> /* for lstat() */
+#include <sys/stat.h>  /* for lstat() */
+#include <unistd.h>    /* for lstat(), unlink() */
 
-#undef basename     /* get rid of the glibc macro */
+#undef basename        /* get rid of the glibc macro */
 
 using namespace posix;
 
@@ -33,6 +35,21 @@ pathname::basename() const {
   char buffer[_string.size() + 1];
   std::strcpy(buffer, _string.c_str());
   return pathname{::basename(buffer)};
+}
+
+bool
+pathname::exists() const {
+  struct stat buffer;
+  if (lstat(c_str(), &buffer) == -1) {
+    assert(errno != EFAULT);
+    switch (errno) {
+      case ENOENT:  /* No such file or directory */
+        return false;
+      default:
+        throw_error("lstat");
+    }
+  }
+  return true;
 }
 
 void
