@@ -10,7 +10,6 @@
 
 #include <cassert>      /* for assert() */
 #include <cstdio>       /* for renameat() */
-#include <cstring>      /* for std::memset() */
 #include <dirent.h>     /* for fdopendir() */
 #include <fcntl.h>      /* for AT_FDCWD, fcntl() */
 #include <unistd.h>     /* for close(), readlinkat(), unlinkat() */
@@ -187,8 +186,7 @@ directory::for_each(std::function<void (const entry&)> callback) const {
     throw_error("fdopendir");
   }
 
-  entry entry;
-  std::memset(&entry, 0, sizeof(entry));
+  entry entry {0, 0, {}};
 
   try {
     const struct dirent* dirent;
