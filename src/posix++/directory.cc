@@ -190,17 +190,24 @@ directory::for_each(std::function<void (const entry&)> callback) const {
   entry entry;
   std::memset(&entry, 0, sizeof(entry));
 
-  const struct dirent* dirent;
-  while ((dirent = readdir(dir))) {
+  try {
+    const struct dirent* dirent;
+    while ((dirent = readdir(dir))) {
 #ifdef __linux__
-    entry.type = dirent->d_type;
+      entry.type = dirent->d_type;
 #endif
-    entry.inode = dirent->d_ino;
-    entry.name = dirent->d_name;
-    callback(entry);
-  }
+      entry.inode = dirent->d_ino;
+      entry.name = dirent->d_name;
+      callback(entry);
+    }
 
-  closedir(dir);
+    closedir(dir);
+  }
+  catch (...) {
+    /* std::bad_alloc from std::string, or else of callback() origin */
+    closedir(dir);
+    throw;
+  }
 }
 
 directory::iterator
