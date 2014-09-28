@@ -6,8 +6,10 @@
 #include "descriptor.h"
 #include "mode.h"
 
-#include <string>  /* for std::string */
-#include <utility> /* for std::move() */
+#include <cstdint>    /* for std::uint8_t */
+#include <functional> /* for std::function */
+#include <string>     /* for std::string */
+#include <utility>    /* for std::move() */
 
 namespace posix {
   class directory;
@@ -22,6 +24,15 @@ namespace posix {
 class posix::directory : public posix::descriptor {
 public:
   class iterator;
+
+  /**
+   * Directory entry.
+   */
+  struct entry {
+    std::uint8_t type;
+    ino_t inode;
+    std::string name;
+  };
 
   /**
    * Opens an existing directory.
@@ -119,6 +130,8 @@ public:
    * Reads the target path of a symbolic link.
    */
   pathname readlink(const char* pathname) const;
+
+  void for_each(std::function<void (const entry&)> callback) const;
 
   iterator begin() const;
 

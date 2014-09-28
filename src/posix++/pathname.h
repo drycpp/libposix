@@ -63,7 +63,7 @@ public:
   /**
    * Move assignment operator.
    */
-  pathname& operator=(pathname&& other) = default;
+  pathname& operator=(pathname&& other) /*noexcept*/ = default;
 
   /**
    * Determines whether this pathname is the empty string.

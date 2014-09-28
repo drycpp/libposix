@@ -10,6 +10,7 @@
 
 #include <cassert>      /* for assert() */
 #include <cstdio>       /* for renameat() */
+#include <cstring>      /* for std::memset() */
 #include <dirent.h>     /* for fdopendir() */
 #include <fcntl.h>      /* for AT_FDCWD, fcntl() */
 #include <unistd.h>     /* for close(), readlinkat(), unlinkat() */
@@ -175,6 +176,31 @@ directory::readlink(const char* const pathname) const {
   buffer[rc] = '\0';
 
   return posix::pathname(buffer);
+}
+
+void
+directory::for_each(std::function<void (const entry&)> callback) const {
+  const int dirfd = dup(/*true*/).release();
+
+  DIR* dir;
+  if (!(dir = fdopendir(dirfd))) {
+    throw_error("fdopendir");
+  }
+
+  entry entry;
+  std::memset(&entry, 0, sizeof(entry));
+
+  const struct dirent* dirent;
+  while ((dirent = readdir(dir))) {
+#ifdef __linux__
+    entry.type = dirent->d_type;
+#endif
+    entry.inode = dirent->d_ino;
+    entry.name = dirent->d_name;
+    callback(entry);
+  }
+
+  closedir(dir);
 }
 
 directory::iterator
