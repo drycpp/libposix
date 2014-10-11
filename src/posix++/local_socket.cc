@@ -73,7 +73,8 @@ local_socket::bind(const pathname& pathname) {
   if (pathname.size() >= sizeof(addr.sun_path)) {
     throw std::length_error{"socket pathname exceeds maximum length"};
   }
-  std::strcpy(addr.sun_path, pathname.c_str());
+  std::strncpy(addr.sun_path, pathname.c_str(), sizeof(addr.sun_path) - 1);
+  addr.sun_path[sizeof(addr.sun_path) - 1] = '\0';
 
   const socklen_t addrlen = sizeof(addr.sun_family) + std::strlen(addr.sun_path);
 
@@ -102,7 +103,8 @@ local_socket::connect(const pathname& pathname) {
   if (pathname.size() >= sizeof(addr.sun_path)) {
     throw std::length_error{"socket pathname exceeds maximum length"};
   }
-  std::strcpy(addr.sun_path, pathname.c_str());
+  std::strncpy(addr.sun_path, pathname.c_str(), sizeof(addr.sun_path) - 1);
+  addr.sun_path[sizeof(addr.sun_path) - 1] = '\0';
 
   const socklen_t addrlen = sizeof(addr.sun_family) + std::strlen(addr.sun_path);
 
