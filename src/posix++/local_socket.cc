@@ -13,9 +13,9 @@
 #include <cassert>      /* for assert() */
 #include <cerrno>       /* for errno */
 #include <cstdint>      /* for std::uint8_t */
-#include <cstring>      /* for std::memset(), std::strlen() */
+#include <cstring>      /* for std::memset(), std::strcpy(), std::strlen() */
 #include <fcntl.h>      /* for F_*, fcntl() */
-#include <stdexcept>    /* for std::logic_error */
+#include <stdexcept>    /* for std::length_error, std::logic_error */
 #include <sys/socket.h> /* for AF_LOCAL, CMSG_*, accept(), connect(), recvmsg(), sendmsg(), socket(), socketpair() */
 #include <sys/un.h>     /* for struct sockaddr_un */
 
@@ -69,7 +69,11 @@ local_socket::bind(const pathname& pathname) {
 
   struct sockaddr_un addr;
   addr.sun_family = AF_LOCAL;
-  strcpy(addr.sun_path, pathname.c_str()); // TODO: check bounds
+
+  if (pathname.size() >= sizeof(addr.sun_path)) {
+    throw std::length_error{"socket pathname exceeds maximum length"};
+  }
+  std::strcpy(addr.sun_path, pathname.c_str());
 
   const socklen_t addrlen = sizeof(addr.sun_family) + std::strlen(addr.sun_path);
 
@@ -94,7 +98,11 @@ local_socket::connect(const pathname& pathname) {
 
   struct sockaddr_un addr;
   addr.sun_family = AF_LOCAL;
-  strcpy(addr.sun_path, pathname.c_str()); // TODO: check bounds
+
+  if (pathname.size() >= sizeof(addr.sun_path)) {
+    throw std::length_error{"socket pathname exceeds maximum length"};
+  }
+  std::strcpy(addr.sun_path, pathname.c_str());
 
   const socklen_t addrlen = sizeof(addr.sun_family) + std::strlen(addr.sun_path);
 

@@ -22,8 +22,14 @@ class posix::local_socket : public posix::socket {
 public:
   static std::pair<local_socket, local_socket> pair();
 
+  /**
+   * @throws std::length_error if `pathname` exceeds the maximum socket pathname length
+   */
   static local_socket bind(const pathname& pathname);
 
+  /**
+   * @throws std::length_error if `pathname` exceeds the maximum socket pathname length
+   */
   static local_socket connect(const pathname& pathname);
 
   /**
