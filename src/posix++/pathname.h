@@ -73,6 +73,13 @@ public:
   }
 
   /**
+   * Returns the length of this pathname.
+   */
+  std::size_t size() const noexcept {
+    return _string.size();
+  }
+
+  /**
    * Returns this pathname as a string.
    */
   const std::string& string() const noexcept {
