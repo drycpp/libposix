@@ -3,8 +3,11 @@ libposix++: C++11 wrapper for POSIX
 
 .. image:: https://travis-ci.org/dryproject/libposix.png?branch=master
    :target: https://travis-ci.org/dryproject/libposix
-   :align: right
    :alt: Travis CI build status
+
+.. image:: https://scan.coverity.com/projects/3229/badge.svg
+   :target: https://scan.coverity.com/projects/3229
+   :alt: Coverity Scan build status
 
 Features
 --------

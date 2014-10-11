@@ -11,7 +11,21 @@ before_install:
 before_script:
   - ./autogen.sh
 script:
-  - ./configure && make && make check
+  - if [ "$COVERITY_SCAN_BRANCH" != 1 ]; then ./configure && make && make check; fi
 branches:
   only:
     - master
+    - coverity
+
+# https://scan.coverity.com/projects/3229
+env:
+  global:
+  - secure: "AMy6elgwntjtn57FBtbZqSKcG5sDdPOsWgFrorU7xn1N4FZzv8jumcL7hAUpKv3bN9cKv4upNlh2una1bNXj3DNUoGguewo4Oln0SE20aBMXqvUMB7XuON1SMwTiY9MHqvUiJE9TLH3qj6+unRM3pxglN66pWtJKpwGmzsT5dDE="
+addons:
+  coverity_scan:
+    project:
+      name: dryproject/libposix
+    notification_email: arto@bendiken.net
+    build_command_prepend: cov-configure --comptype gcc --compiler $CC && ./configure
+    build_command: make
+    branch_pattern: coverity
