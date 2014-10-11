@@ -71,6 +71,12 @@ AC_ARG_ENABLE([mqueue],
 AS_IF([test "x$enable_mqueue" == "xno"], [
   AC_DEFINE([DISABLE_MQUEUE], 1, [Define to disable POSIX message queue support.])])
 AM_CONDITIONAL([DISABLE_MQUEUE], [test "x$enable_mqueue" == "xno"])
+# --enable-semaphore/--disable-semaphore
+AC_ARG_ENABLE([semaphore],
+  [AS_HELP_STRING([--disable-semaphore], [omit support for POSIX/SysV semaphores])])
+AS_IF([test "x$enable_semaphore" == "xno"], [
+  AC_DEFINE([DISABLE_SEMAPHORE], 1, [Define to disable POSIX/SysV semaphore support.])])
+AM_CONDITIONAL([DISABLE_SEMAPHORE], [test "x$enable_semaphore" == "xno"])
 # --enable-stdio/--disable-stdio
 AC_ARG_ENABLE([stdio],
   [AS_HELP_STRING([--disable-stdio], [omit support for POSIX standard I/O])])

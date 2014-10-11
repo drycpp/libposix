@@ -7,4 +7,4 @@ export CPPFLAGS=''
 export CFLAGS='-g -Os'
 export CXXFLAGS='-g -Os'
 export LDFLAGS=''
-./configure --disable-mqueue $*
+./configure --disable-mqueue --disable-semaphore $*

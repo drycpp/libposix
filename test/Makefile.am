@@ -17,12 +17,15 @@ check_PROGRAMS =       \
   check_pathname       \
   check_process        \
   check_process_group  \
-  check_semaphore      \
   check_user           \
   check_version
 
 if !DISABLE_MQUEUE
   check_PROGRAMS += check_message_queue
+endif
+
+if !DISABLE_SEMAPHORE
+  check_PROGRAMS += check_semaphore
 endif
 
 if !DISABLE_STDIO

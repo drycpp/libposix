@@ -38,7 +38,6 @@ base_pkginclude_HEADERS = \
   pathname.h              \
   process.h               \
   process_group.h         \
-  semaphore.h             \
   thread.h                \
   user.h                  \
   version.h
@@ -46,6 +45,10 @@ base_pkginclude_HEADERS = \
 if !DISABLE_MQUEUE
   libposix___la_SOURCES   += message_queue.cc
   base_pkginclude_HEADERS += message_queue.h
+endif
+
+if !DISABLE_SEMAPHORE
+  base_pkginclude_HEADERS += semaphore.h
 endif
 
 if !DISABLE_STDIO
