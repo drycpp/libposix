@@ -1,7 +1,8 @@
-libposix++: C++11 wrapper for POSIX
-===================================
+***********************************
+libposix++: C++14 wrapper for POSIX
+***********************************
 
-.. image:: https://travis-ci.org/dryproject/libposix.png?branch=master
+.. image:: https://api.travis-ci.org/dryproject/libposix.svg?branch=master
    :target: https://travis-ci.org/dryproject/libposix
    :alt: Travis CI build status
 
@@ -10,7 +11,7 @@ libposix++: C++11 wrapper for POSIX
    :alt: Coverity Scan build status
 
 Features
---------
+========
 
 * Provides lightweight C++11 abstractions encapsulating core POSIX interfaces.
 * Targets Linux 3.x+, FreeBSD 9.x+, and Mac OS X 10.7+ (in that order).
@@ -21,7 +22,7 @@ Features
   usable in any context and for any purpose.
 
 Design Principles
------------------
+=================
 
 * Provides zero-cost abstractions wrapping file descriptors.
 * Ensures that file descriptors are opened with ``O_CLOEXEC``.
@@ -31,7 +32,7 @@ Design Principles
 * Avoids the transitive inclusion of POSIX headers where possible.
 
 Error Handling
---------------
+==============
 
 This library makes a careful distinction between three different classes of
 error conditions, all deriving from the ``posix::error`` base class:
@@ -91,12 +92,16 @@ The following example demonstrates error handling with ``libposix++``::
    }
 
 Build Prerequisites
--------------------
+===================
 
-* Clang_ (>= 3.3) or GCC_ (>= 4.8)
+* Clang_ (>= 3.2) or GCC_ (>= 4.8)
 * Autoconf_ (>= 2.68)
 * Automake_ (>= 1.11)
 * Libtool_ (>= 2.2)
+
+.. note::
+
+   Older releases may work, but are not actively tested for.
 
 .. _Clang:    http://clang.llvm.org/
 .. _GCC:      http://gcc.gnu.org/
@@ -105,10 +110,10 @@ Build Prerequisites
 .. _Libtool:  http://www.gnu.org/software/libtool/
 
 Installation
-------------
+============
 
 Installation on Unix
-^^^^^^^^^^^^^^^^^^^^
+--------------------
 
 ::
 
@@ -119,13 +124,28 @@ Installation on Unix
    $ sudo make install
    $ sudo ldconfig                      # on Linux
 
+Elsewhere
+=========
+
 Author
-------
+======
+
+This project is part of the `DRY <http://dryproject.org/>`_ initiative.
 
 * `Arto Bendiken <https://github.com/bendiken>`_ - http://ar.to/
 
+Donations
+=========
+
+If you found this software useful and would like to encourage its
+maintenance and further development, please consider making a $5 donation
+to the author(s) via Gratipay_ or Bitcoin_.
+
+.. _Gratipay: https://gratipay.com/bendiken/
+.. _Bitcoin:  bitcoin:1LevW42qPf44ynzrPrkvQpvuchfxgHvr9w?label=libposix.dryproject.org&message=Donation
+
 License
--------
+=======
 
 This is free and unencumbered public domain software. For more information,
 see http://unlicense.org/ or the accompanying ``UNLICENSE`` file.

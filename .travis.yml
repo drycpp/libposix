@@ -1,9 +1,10 @@
+# https://travis-ci.org/dryproject/libposix
 language: cpp
 compiler:
   - clang
   - gcc
 before_install:
-  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
   - sudo apt-get update -qq
   - if [ "$CXX" = "clang++" ]; then sudo apt-get install -qq libstdc++-4.8-dev; fi
   - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
@@ -20,7 +21,7 @@ branches:
 # https://scan.coverity.com/projects/3229
 env:
   global:
-  - secure: "AMy6elgwntjtn57FBtbZqSKcG5sDdPOsWgFrorU7xn1N4FZzv8jumcL7hAUpKv3bN9cKv4upNlh2una1bNXj3DNUoGguewo4Oln0SE20aBMXqvUMB7XuON1SMwTiY9MHqvUiJE9TLH3qj6+unRM3pxglN66pWtJKpwGmzsT5dDE="
+  - secure: "AMy6elgwntjtn57FBtbZqSKcG5sDdPOsWgFrorU7xn1N4FZzv8jumcL7hAUpKv3bN9cKv4upNlh2una1bNXj3DNUoGguewo4Oln0SE20aBMXqvUMB7XuON1SMwTiY9MHqvUiJE9TLH3qj6+unRM3pxglN66pWtJKpwGmzsT5dDE=" # COVERITY_SCAN_TOKEN
 addons:
   coverity_scan:
     project:
