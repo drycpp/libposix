@@ -54,6 +54,13 @@ public:
   ~file() noexcept {}
 
   /**
+   * Checks whether this file's size is zero.
+   */
+  bool empty() const {
+    return size() == 0;
+  }
+
+  /**
    * ...
    */
   std::size_t size() const;
