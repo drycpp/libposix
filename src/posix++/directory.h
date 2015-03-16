@@ -35,6 +35,13 @@ public:
   };
 
   /**
+   * Opens the current working directory.
+   */
+  static directory current() {
+    return open(".");
+  }
+
+  /**
    * Opens an existing directory.
    */
   static directory open(const pathname& pathname);
