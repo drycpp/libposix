@@ -9,7 +9,7 @@
 #include "pathname.h"
 
 #include <cassert>      /* for assert() */
-#include <cstdio>       /* for renameat() */
+#include <cstdio>       /* for std::snprintf(), renameat() */
 #include <dirent.h>     /* for fdopendir() */
 #include <fcntl.h>      /* for AT_FDCWD, fcntl() */
 #include <unistd.h>     /* for close(), readlinkat(), unlinkat() */
@@ -37,7 +37,7 @@ directory::open(const int dirfd, const char* const pathname) {
 
   int fd;
   if ((fd = openat(dirfd, pathname, flags)) == -1) {
-    throw_error("openat");
+    throw_error("openat", pathname);
   }
 
   return directory(fd);
@@ -77,7 +77,7 @@ directory::count(const char* const pathname) const {
       case ENOENT:  /* No such file or directory */
         return 0;
       default:
-        throw_error("fstatat");
+        throw_error("fstatat", pathname);
     }
   }
 
@@ -93,7 +93,7 @@ directory::link(const char* const old_pathname,
   assert(*new_pathname != '\0');
 
   if (linkat(fd(), old_pathname, fd(), new_pathname, 0) == -1) {
-    throw_error("linkat");
+    throw_error("linkat", new_pathname);
   }
 }
 
@@ -106,7 +106,7 @@ directory::symlink(const char* const old_pathname,
   assert(*new_pathname != '\0');
 
   if (symlinkat(old_pathname, fd(), new_pathname) == -1) {
-    throw_error("symlinkat");
+    throw_error("symlinkat", new_pathname);
   }
 }
 
@@ -117,7 +117,7 @@ directory::mkdir(const char* const pathname,
   assert(*pathname != '\0');
 
   if (mkdirat(fd(), pathname, static_cast<mode_t>(mode)) == -1) {
-    throw_error("mkdirat");
+    throw_error("mkdirat", pathname);
   }
 }
 
@@ -138,7 +138,7 @@ directory::unlink(const char* const pathname,
   assert(*pathname != '\0');
 
   if (unlinkat(fd(), pathname, flags) == -1) {
-    throw_error("unlinkat");
+    throw_error("unlinkat", pathname);
   }
 }
 
@@ -158,7 +158,7 @@ directory::rename(const char* const old_pathname,
   assert(*new_pathname != '\0');
 
   if (renameat(fd(), old_pathname, new_directory.fd(), new_pathname) == -1) {
-    throw_error("renameat");
+    throw_error("renameat", new_pathname);
   }
 }
 
@@ -168,7 +168,7 @@ directory::readlink(const char* const pathname) const {
 
   const int rc = readlinkat(fd(), pathname, buffer, sizeof(buffer) - 1);
   if (rc == -1) {
-    throw_error("readlinkat");
+    throw_error("readlinkat", pathname);
   }
 
   assert(rc < sizeof(buffer));
@@ -183,7 +183,9 @@ directory::for_each(std::function<void (const entry&)> callback) const {
 
   DIR* dir;
   if (!(dir = fdopendir(dirfd))) {
-    throw_error("fdopendir");
+    char dirfd_str[16];
+    std::snprintf(dirfd_str, sizeof(dirfd_str), "%d", dirfd);
+    throw_error("fdopendir", dirfd_str);
   }
 
   entry entry {0, 0, {}};
@@ -232,7 +234,9 @@ directory::iterator::iterator(const directory& dir) {
   const int dirfd = dir.dup(/*true*/).release();
 
   if (!(_dirp = fdopendir(dirfd))) {
-    throw_error("fdopendir");
+    char dirfd_str[16];
+    std::snprintf(dirfd_str, sizeof(dirfd_str), "%d", dirfd);
+    throw_error("fdopendir", dirfd_str);
   }
 }
 
