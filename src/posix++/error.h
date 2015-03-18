@@ -16,9 +16,9 @@ namespace posix {
   class connection_refused;
 
   extern void throw_error[[noreturn]]();
-  extern void throw_error[[noreturn]](const char* origin);
+  extern void throw_error[[noreturn]](const char* origin, const char* resource = nullptr);
   extern void throw_error[[noreturn]](int code);
-  extern void throw_error[[noreturn]](int code, const char* origin);
+  extern void throw_error[[noreturn]](int code, const char* origin, const char* resource = nullptr);
 }
 
 /**
@@ -39,27 +39,27 @@ public:
    * Constructor.
    */
   error(const std::error_code code) noexcept
-    : std::system_error(code) {}
+    : std::system_error{code} {}
 
   /**
    * Constructor.
    */
   error(const std::error_code code,
         const char* const what) noexcept
-    : std::system_error(code, what) {}
+    : std::system_error{code, what} {}
 
   /**
    * Constructor.
    */
   error(const int code) noexcept
-    : std::system_error(code, std::generic_category()) {}
+    : std::system_error{code, std::generic_category()} {}
 
   /**
    * Constructor.
    */
   error(const int code,
         const std::error_category& category) noexcept
-    : std::system_error(code, category) {}
+    : std::system_error{code, category} {}
 
   /**
    * Constructor.
@@ -67,7 +67,7 @@ public:
   error(const int code,
         const std::error_category& category,
         const char* const what) noexcept
-    : std::system_error(code, category, what) {}
+    : std::system_error{code, category, what} {}
 
   /**
    * Returns the error number.
