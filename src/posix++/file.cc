@@ -12,7 +12,6 @@
 
 #include <cassert>     /* for assert() */
 #include <cerrno>      /* for errno */
-#include <cstdio>      /* for std::snprintf() */
 #include <fcntl.h>     /* for AT_FDCWD, O_CLOEXEC */
 #include <sys/stat.h>  /* for fstat() */
 #include <sys/types.h> /* for struct stat */
@@ -35,7 +34,8 @@ file::open(const int dirfd,
 
   int fd;
   if ((fd = openat(dirfd, pathname, flags, mode)) == -1) {
-    throw_error("openat", pathname);
+    throw_error("openat", "%d, \"%s\", 0x%x, 0%o", dirfd, pathname,
+      flags, static_cast<unsigned int>(mode));
   }
 
   return file(fd);
@@ -77,9 +77,7 @@ file::size() const {
 
   if (fstat(fd(), &st) == -1) {
     assert(errno != EFAULT);
-    char fd_str[16];
-    std::snprintf(fd_str, sizeof(fd_str), "%d", fd());
-    throw_error("fstat", fd_str);
+    throw_error("fstat", "%d", fd());
   }
 
   return static_cast<std::size_t>(st.st_size);
@@ -89,8 +87,6 @@ void
 file::rewind() const {
   if (lseek(fd(), 0, SEEK_SET) == static_cast<off_t>(-1)) {
     assert(errno != EINVAL);
-    char fd_str[16];
-    std::snprintf(fd_str, sizeof(fd_str), "%d", fd());
-    throw_error("lseek", fd_str);
+    throw_error("lseek", "%d, 0x%x, %s", fd(), 0U, "SEEK_SET");
   }
 }

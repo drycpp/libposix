@@ -9,6 +9,7 @@
 #include <array>   /* for std::array */
 #include <cassert> /* for assert() */
 #include <cerrno>  /* for E*, errno */
+#include <cstdarg> /* for va_*() */
 #include <cstdio>  /* for std::snprintf() */
 #include <cstring> /* for stpncpy() */
 
@@ -48,8 +49,12 @@ posix::throw_error() {
 
 void
 posix::throw_error(const char* const origin,
-                   const char* const resource) {
-  throw_error(errno, origin, resource);
+                   const char* const format,
+                   ...) {
+  va_list args;
+  va_start(args, format);
+  throw_error(errno, origin, format, args);
+  va_end(args); /* never reached */
 }
 
 void
@@ -60,22 +65,41 @@ posix::throw_error(const int code) {
 void
 posix::throw_error(const int code,
                    const char* const origin,
-                   const char* const resource) {
+                   const char* const format,
+                   ...) {
+  va_list args;
+  va_start(args, format);
+  throw_error(code, origin, format, args);
+  va_end(args); /* never reached */
+}
+
+void
+posix::throw_error(const int code,
+                   const char* const origin,
+                   const char* const format,
+                   va_list args) {
   static thread_local std::array<char, 4096> buffer;
 
   const char* what = nullptr;
-  if (origin) {
-    if (resource) {
-      std::snprintf(buffer.data(), buffer.size(), "%s(\"%s\")", origin, resource);
-    }
-    else {
-      std::snprintf(buffer.data(), buffer.size(), "%s", origin);
-    }
-    what = buffer.data();
+  if (!origin) {
+    what = nullptr;
+    buffer.data()[0] = '\0';
   }
   else {
-    buffer.data()[0] = '\0';
-    what = nullptr;
+    what = buffer.data();
+
+    auto buffer_offset = std::snprintf(buffer.data(), buffer.size(), "%s(", origin);
+    assert(buffer_offset < buffer.size());
+
+    if (format) { // FIXME: better buffer overflow handling.
+      buffer_offset += std::vsnprintf(buffer.data() + buffer_offset, buffer.size() - buffer_offset, format, args);
+      assert(buffer_offset < buffer.size());
+    }
+
+    buffer.data()[buffer_offset++] = ')';
+    assert(buffer_offset < buffer.size());
+
+    buffer.data()[buffer_offset++] = '\0';
   }
 
   switch (code) {

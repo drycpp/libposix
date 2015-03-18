@@ -3,6 +3,7 @@
 #ifndef POSIXXX_ERROR_H
 #define POSIXXX_ERROR_H
 
+#include <cstdarg>      /* for va_list */
 #include <system_error> /* for std::error_*, std::system_* */
 
 namespace posix {
@@ -16,9 +17,12 @@ namespace posix {
   class connection_refused;
 
   extern void throw_error[[noreturn]]();
-  extern void throw_error[[noreturn]](const char* origin, const char* resource = nullptr);
+
+  extern void throw_error[[noreturn]](const char* origin, const char* format = nullptr, ...);
+
   extern void throw_error[[noreturn]](int code);
-  extern void throw_error[[noreturn]](int code, const char* origin, const char* resource = nullptr);
+  extern void throw_error[[noreturn]](int code, const char* origin, const char* format = nullptr, ...);
+  extern void throw_error[[noreturn]](int code, const char* origin, const char* format, va_list args);
 }
 
 /**
