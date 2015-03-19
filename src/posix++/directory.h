@@ -42,6 +42,11 @@ public:
   }
 
   /**
+   * Returns a temporary directory.
+   */
+  static directory temporary(const char* basename = nullptr);
+
+  /**
    * Opens an existing directory.
    */
   static directory open(const pathname& pathname);

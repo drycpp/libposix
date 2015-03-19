@@ -18,6 +18,13 @@
 
 using namespace posix;
 
+////////////////////////////////////////////////////////////////////////////////
+
+directory
+directory::temporary(const char* const /*basename*/) {
+  return open("/tmp"); // TODO: improve on this
+}
+
 directory
 directory::open(const int dirfd, const char* const pathname) {
   assert(dirfd > 0 || dirfd == AT_FDCWD);
@@ -65,6 +72,8 @@ directory::open(const directory& directory,
                 const char* const pathname) {
   return open(directory.fd(), pathname);
 }
+
+////////////////////////////////////////////////////////////////////////////////
 
 std::size_t
 directory::count(const char* const pathname) const {
