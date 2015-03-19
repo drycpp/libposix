@@ -79,7 +79,8 @@ process::wait(int& status, const int options) {
           case EINTR: /* Interrupted system call */
             continue; /* try again */
           default:
-            throw_error("waitpid");
+            throw_error("waitpid", "%u, %s, 0x%x",
+              _id, "status", static_cast<unsigned int>(options));
         }
 
       case 0:  /* the process hasn't changed state */
@@ -97,6 +98,6 @@ process::signal(const int signum) {
   assert(signum >= 0);
 
   if (kill(_id, signum) == -1) {
-    throw_error("kill");
+    throw_error("kill", "%u, %d", _id, signum);
   }
 }

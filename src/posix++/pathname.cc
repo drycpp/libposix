@@ -46,7 +46,7 @@ pathname::exists() const {
       case ENOENT:  /* No such file or directory */
         return false;
       default:
-        throw_error("lstat");
+        throw_error("lstat", "\"%s\", %s", c_str(), "buffer");
     }
   }
   return true;
@@ -55,7 +55,7 @@ pathname::exists() const {
 void
 pathname::unlink() const {
   if (::unlink(c_str()) == -1) {
-    throw_error("unlink");
+    throw_error("unlink", "\"%s\"", c_str());
   }
 }
 

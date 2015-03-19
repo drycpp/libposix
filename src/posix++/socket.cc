@@ -64,14 +64,14 @@ socket::getsockopt(const int level,
                    int* const optlen) const {
   static_assert(sizeof(socklen_t) == sizeof(int), "sizeof(socklen_t) != sizeof(int)");
   if (::getsockopt(fd(), level, optname, optval, reinterpret_cast<socklen_t*>(optlen)) == -1) {
-    throw_error("getsockopt");
+    throw_error("getsockopt", "%d, %d, %d, %s, %s", fd(), level, optname, "optval", "optlen");
   }
 }
 
 void
 socket::listen(const unsigned int backlog) {
   if (::listen(fd(), static_cast<int>(backlog)) == -1) {
-    throw_error("listen");
+    throw_error("listen", "%d, %d", fd(), static_cast<int>(backlog));
   }
 }
 
@@ -100,7 +100,7 @@ socket::send(const void* const data,
         case EINTR:  /* Interrupted system call */
           continue;
         default:
-          throw_error("send");
+          throw_error("send", "%d, %s, %zu, 0x%x", fd(), "chunk", size - pos, 0U);
       }
     }
     pos += rc;
@@ -147,7 +147,7 @@ socket::recv(std::function<bool (const void* chunk_data, std::size_t chunk_size)
           case EINTR: /* Interrupted system call */
             continue; /* try again */
           default:
-            throw_error("recv");
+            throw_error("recv", "%d, %s, %zu, 0x%x", fd(), "chunk", buffer.size(), 0U);
         }
 
       case 0:
@@ -185,7 +185,8 @@ socket::recv(void* const buffer,
           case EINTR: /* Interrupted system call */
             continue; /* try again */
           default:
-            throw_error("recv");
+            throw_error("recv", "%d, %s, %zu, 0x%x",
+              fd(), "chunk", buffer_size - byte_count, static_cast<unsigned int>(flags));
         }
 
       case 0:
@@ -215,6 +216,6 @@ socket::close_read() {
 void
 socket::shutdown(const int how) {
   if (::shutdown(fd(), how) == -1) {
-    throw_error("shutdown");
+    throw_error("shutdown", "%d, %d", fd(), how);
   }
 }

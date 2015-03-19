@@ -58,7 +58,7 @@ posix::write(const int fd, const void* const buffer, const std::size_t count) {
         case EAGAIN:
           continue; /* try again */
         default:
-          throw_error("write");
+          throw_error("write", "%d, %s, %zu", fd, "chunk", count - position);
       }
     }
     position += static_cast<decltype(position)>(rc);

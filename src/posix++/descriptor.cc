@@ -44,7 +44,7 @@ descriptor::descriptor(const descriptor& other) {
         case EBADF:  /* Bad file descriptor */
           throw std::invalid_argument(invalid_in_copy_constructor);
         default:
-          throw_error("fcntl(F_DUPFD)");
+          throw_error("fcntl", "%d, %s, %d", other._fd, "F_DUPFD", 0);
       }
     }
 
@@ -102,7 +102,7 @@ int
 descriptor::fcntl(const int cmd) const {
   const int result = ::fcntl(_fd, cmd);
   if (result == -1) {
-    throw_error("fcntl");
+    throw_error("fcntl", "%d, %d", _fd, cmd);
   }
   return result;
 }
@@ -112,7 +112,7 @@ descriptor::fcntl(const int cmd,
                   const int arg) {
   const int result = ::fcntl(_fd, cmd, arg);
   if (result == -1) {
-    throw_error("fcntl");
+    throw_error("fcntl", "%d, %d, %d", _fd, cmd, arg);
   }
   return result;
 }
@@ -122,7 +122,7 @@ descriptor::fcntl(const int cmd,
                   void* const arg) {
   const int result = ::fcntl(_fd, cmd, arg);
   if (result == -1) {
-    throw_error("fcntl");
+    throw_error("fcntl", "%d, %d, %s", _fd, cmd, "arg");
   }
   return result;
 }
@@ -134,14 +134,14 @@ descriptor::chown(const user& user,
   const gid_t gid = static_cast<gid_t>(group.id());
 
   if (fchown(_fd, uid, gid) == -1) {
-    throw_error("fchown");
+    throw_error("fchown", "%d, %u, %u", _fd, uid, gid);
   }
 }
 
 void
 descriptor::chmod(const mode mode) {
   if (fchmod(_fd, static_cast<mode_t>(mode)) == -1) {
-    throw_error("fchmod");
+    throw_error("fchmod", "%d, 0%o", _fd, static_cast<unsigned int>(mode));
   }
 }
 
@@ -158,7 +158,7 @@ retry:
         goto retry; /* try again */
       default:
         assert(errno != EFAULT);
-        throw_error("poll");
+        throw_error("poll", "{%d}, %d, %d", fds.fd, 1, timeout);
     }
   }
   if (revents) *revents = fds.revents;
@@ -198,7 +198,7 @@ descriptor::write(const void* const data,
         case EINTR:  /* Interrupted system call */
           continue;
         default:
-          throw_error("write");
+          throw_error("write", "%d, %s, %zu", fd(), "chunk", size - pos);
       }
     }
     pos += rc;
@@ -251,7 +251,7 @@ retry:
           goto retry; /* try again */
         default:
           assert(errno != EFAULT);
-          throw_error("read");
+          throw_error("read", "%d, %s, %zu", fd(), "result", sizeof(result));
       }
 
     case 0:
@@ -280,7 +280,7 @@ descriptor::read(void* const buffer,
           case EINTR: /* Interrupted system call */
             continue; /* try again */
           default:
-            throw_error("read");
+            throw_error("read", "%d, %s, %zu", fd(), "chunk", buffer_size - byte_count);
         }
 
       case 0:
@@ -311,7 +311,7 @@ descriptor::read() {
             continue; /* try again */
           default:
             assert(errno != EFAULT);
-            throw_error("read");
+            throw_error("read", "%d, %s, %zu", _fd, "buffer", buffer.size());
         }
 
       case 0:
@@ -327,7 +327,7 @@ descriptor::read() {
 void
 descriptor::sync() {
   if (fsync(_fd) == -1) {
-    throw_error("fsync");
+    throw_error("fsync", "%d", _fd);
   }
 }
 

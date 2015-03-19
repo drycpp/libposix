@@ -77,7 +77,7 @@ file::size() const {
 
   if (fstat(fd(), &st) == -1) {
     assert(errno != EFAULT);
-    throw_error("fstat", "%d", fd());
+    throw_error("fstat", "%d, %s", fd(), "buffer");
   }
 
   return static_cast<std::size_t>(st.st_size);

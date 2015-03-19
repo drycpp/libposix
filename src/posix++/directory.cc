@@ -78,7 +78,7 @@ directory::count(const char* const pathname) const {
       case ENOENT:  /* No such file or directory */
         return 0;
       default:
-        throw_error("fstatat", "%d, \"%s\"", fd(), pathname);
+        throw_error("fstatat", "%d, \"%s\", %s, %s", fd(), pathname, "buffer", "AT_SYMLINK_NOFOLLOW");
     }
   }
 
@@ -174,7 +174,7 @@ directory::readlink(const char* const pathname) const {
 
   const int rc = readlinkat(fd(), pathname, buffer, sizeof(buffer) - 1);
   if (rc == -1) {
-    throw_error("readlinkat", "%d, \"%s\"", fd(), pathname);
+    throw_error("readlinkat", "%d, \"%s\", %s, %zu", fd(), pathname, "buffer", sizeof(buffer) - 1);
   }
 
   assert(rc < sizeof(buffer));
