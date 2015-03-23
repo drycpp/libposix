@@ -6,8 +6,9 @@
 #include "descriptor.h"
 #include "mode.h"
 
-#include <cstddef> /* for std::size_t */
-#include <utility> /* for std::move() */
+#include <cstddef>  /* for std::size_t */
+#include <unistd.h> /* for SEEK_*, off_t */
+#include <utility>  /* for std::move() */
 
 namespace posix {
   class directory;
@@ -69,6 +70,11 @@ public:
    * Sets the file offset to the beginning of the file.
    */
   void rewind() const;
+
+  /**
+   * ...
+   */
+  off_t seek(off_t offset, int whence = SEEK_SET) const;
 
 protected:
   static file open(int dirfd, const char* pathname, int flags, mode mode = 0);

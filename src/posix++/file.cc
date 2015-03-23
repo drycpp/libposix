@@ -85,8 +85,18 @@ file::size() const {
 
 void
 file::rewind() const {
-  if (lseek(fd(), 0, SEEK_SET) == static_cast<off_t>(-1)) {
-    assert(errno != EINVAL);
-    throw_error("lseek", "%d, 0x%x, %s", fd(), 0U, "SEEK_SET");
+  seek(0, SEEK_SET);
+}
+
+off_t
+file::seek(const off_t offset,
+           const int whence) const {
+  off_t result;
+
+  if ((result = lseek(fd(), offset, whence)) == static_cast<off_t>(-1)) {
+    throw_error("lseek", "%d, 0x%lx, %d",
+      fd(), static_cast<unsigned long>(offset), whence);
   }
+
+  return result;
 }
