@@ -76,6 +76,16 @@ public:
    */
   off_t seek(off_t offset, int whence = SEEK_SET) const;
 
+  /**
+   * ...
+   */
+  void allocate(off_t offset, off_t length) const;
+
+  /**
+   * ...
+   */
+  void truncate(off_t length = 0) const;
+
 protected:
   static file open(int dirfd, const char* pathname, int flags, mode mode = 0);
 };

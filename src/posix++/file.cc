@@ -12,10 +12,10 @@
 
 #include <cassert>     /* for assert() */
 #include <cerrno>      /* for errno */
-#include <fcntl.h>     /* for AT_FDCWD, O_CLOEXEC */
+#include <fcntl.h>     /* for AT_FDCWD, O_CLOEXEC, posix_fallocate() */
 #include <sys/stat.h>  /* for fstat() */
 #include <sys/types.h> /* for struct stat */
-#include <unistd.h>    /* for lseek() */
+#include <unistd.h>    /* for ftruncate(), lseek() */
 
 using namespace posix;
 
@@ -99,4 +99,23 @@ file::seek(const off_t offset,
   }
 
   return result;
+}
+
+void
+file::allocate(const off_t offset,
+               const off_t length) const {
+  int err;
+  if ((err = posix_fallocate(fd(), offset, length)) != 0) {
+    throw_error(err, "posix_fallocate", "%d, 0x%08lx, 0x%08lx", fd(),
+      static_cast<unsigned long>(offset),
+      static_cast<unsigned long>(length));
+  }
+}
+
+void
+file::truncate(const off_t length) const {
+  if (ftruncate(fd(), length) == -1) {
+    throw_error("ftruncate", "%d, 0x%08lx", fd(),
+      static_cast<unsigned long>(length));
+  }
 }
