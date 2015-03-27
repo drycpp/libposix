@@ -206,7 +206,7 @@ descriptor::write(const void* const data,
 }
 
 std::size_t
-descriptor::read_lines(std::set<std::string>& result) {
+descriptor::read_lines(std::set<std::string>& result) const {
   std::size_t total_byte_count = 0, byte_count = 0;
   std::string line;
   while ((byte_count = read_line(line))) {
@@ -218,13 +218,13 @@ descriptor::read_lines(std::set<std::string>& result) {
 }
 
 std::size_t
-descriptor::read_line(std::string& buffer) {
+descriptor::read_line(std::string& buffer) const {
   return read_until('\n', buffer);
 }
 
 std::size_t
 descriptor::read_until(const char separator,
-                       std::string& buffer) {
+                       std::string& buffer) const {
   std::size_t byte_count = 0;
 
   char character;
@@ -241,7 +241,7 @@ descriptor::read_until(const char separator,
 }
 
 std::size_t
-descriptor::read(char& result) {
+descriptor::read(char& result) const {
 retry:
   const ssize_t rc = ::read(fd(), &result, sizeof(result));
   switch (rc) {
@@ -265,7 +265,7 @@ retry:
 
 std::size_t
 descriptor::read(void* const buffer,
-                 const std::size_t buffer_size) {
+                 const std::size_t buffer_size) const {
   assert(buffer != nullptr);
 
   std::size_t byte_count = 0;
@@ -298,7 +298,7 @@ exit:
 }
 
 std::string
-descriptor::read() {
+descriptor::read() const {
   std::string result;
   std::array<char, 4096> buffer;
 

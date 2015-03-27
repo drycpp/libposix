@@ -245,33 +245,33 @@ public:
   /**
    * Reads lines of text from this descriptor until EOF.
    */
-  std::size_t read_lines(std::set<std::string>& result);
+  std::size_t read_lines(std::set<std::string>& result) const;
 
   /**
    * Reads a line of text from this descriptor.
    */
-  std::size_t read_line(std::string& buffer);
+  std::size_t read_line(std::string& buffer) const;
 
   /**
    * Reads data from this descriptor until the given separator character
    * is encountered.
    */
-  std::size_t read_until(char separator, std::string& buffer);
+  std::size_t read_until(char separator, std::string& buffer) const;
 
   /**
    * Reads a character from this descriptor.
    */
-  std::size_t read(char& result);
+  std::size_t read(char& result) const;
 
   /**
    * Reads data from this descriptor.
    */
-  std::size_t read(void* buffer, std::size_t buffer_size);
+  std::size_t read(void* buffer, std::size_t buffer_size) const;
 
   /**
    * Reads a string from this descriptor.
    */
-  std::string read();
+  std::string read() const;
 
   /**
    * ...
