@@ -23,18 +23,28 @@ namespace posix {
 
 class posix::mapped_file : public posix::file {
 public:
+  /**
+   * Constructor.
+   */
   using file::file;
+
+  static mapped_file open(const pathname& pathname, int flags, mode mode = 0);
+
+  static mapped_file open(const directory& directory, const pathname& pathname, int flags, mode mode = 0);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
 class posix::appendable_mapped_file : public posix::mapped_file {
 public:
+  /**
+   * Constructor.
+   */
   using mapped_file::mapped_file;
 
-  static file open(const pathname& pathname, int flags, mode mode = 0);
+  static appendable_mapped_file open(const pathname& pathname, int flags, mode mode = 0);
 
-  static file open(const directory& directory, const pathname& pathname, int flags, mode mode = 0);
+  static appendable_mapped_file open(const directory& directory, const pathname& pathname, int flags, mode mode = 0);
 
   /**
    * @throws posix::runtime_error if an error occurs
