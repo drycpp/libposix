@@ -9,9 +9,11 @@
 #include "mapped_file.h"
 #include "pathname.h"
 
-#include <cassert> /* for assert() */
-#include <cerrno>  /* for errno */
-#include <fcntl.h> /* for AT_FDCWD */
+#include <algorithm> /* for std::max() */
+#include <cassert>   /* for assert() */
+#include <cerrno>    /* for errno */
+#include <fcntl.h>   /* for AT_FDCWD */
+#include <unistd.h>  /* for _SC_PAGE_SIZE, sysconf() */
 
 using namespace posix;
 
@@ -41,7 +43,7 @@ mapped_file::mapped_file(const int dirfd,
                          int flags,
                          const mode mode)
   : file{dirfd, pathname, flags, mode},
-    _mapping{*this} {}
+    _mapping{*this, std::max(size(), static_cast<std::size_t>(::sysconf(_SC_PAGE_SIZE)))} {}
 
 ////////////////////////////////////////////////////////////////////////////////
 
