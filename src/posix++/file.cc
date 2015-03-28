@@ -19,11 +19,14 @@
 
 using namespace posix;
 
-file
-file::open(const int dirfd,
+////////////////////////////////////////////////////////////////////////////////
+
+file::file(const int dirfd,
            const char* const pathname,
            int flags,
-           const mode mode) {
+           const mode mode)
+  : descriptor{} {
+
   assert(dirfd > 0 || dirfd == AT_FDCWD);
   assert(pathname != nullptr);
   assert(pathname[0] != '\0');
@@ -32,35 +35,37 @@ file::open(const int dirfd,
   flags |= O_CLOEXEC; /* POSIX.1-2008 (Linux, FreeBSD) */
 #endif
 
-  int fd;
-  if ((fd = openat(dirfd, pathname, flags, mode)) == -1) {
+  if ((_fd = openat(dirfd, pathname, flags, mode)) == -1) {
     throw_error("openat", "%d, \"%s\", 0x%x, 0%o", dirfd, pathname,
       flags, static_cast<unsigned int>(mode));
   }
-
-  return file(fd);
 }
+
+////////////////////////////////////////////////////////////////////////////////
 
 file
 file::create(const pathname& pathname,
              const mode mode) {
+
   const int flags = O_CREAT | O_WRONLY | O_TRUNC;
-  return open(AT_FDCWD, pathname.c_str(), flags, mode);
+  return file{AT_FDCWD, pathname.c_str(), flags, mode};
 }
 
 file
 file::create(const directory& directory,
              const pathname& pathname,
              const mode mode) {
+
   const int flags = O_CREAT | O_WRONLY | O_TRUNC;
-  return open(directory.fd(), pathname.c_str(), flags, mode);
+  return file{directory.fd(), pathname.c_str(), flags, mode};
 }
 
 file
 file::open(const pathname& pathname,
            const int flags,
            const mode mode) {
-  return open(AT_FDCWD, pathname.c_str(), flags, mode);
+
+  return file{AT_FDCWD, pathname.c_str(), flags, mode};
 }
 
 file
@@ -68,8 +73,11 @@ file::open(const directory& directory,
            const pathname& pathname,
            const int flags,
            const mode mode) {
-  return open(directory.fd(), pathname.c_str(), flags, mode);
+
+  return file{directory.fd(), pathname.c_str(), flags, mode};
 }
+
+////////////////////////////////////////////////////////////////////////////////
 
 std::size_t
 file::size() const {

@@ -42,20 +42,25 @@ public:
   /**
    * Constructor.
    */
+  file(int dirfd, const char* pathname, int flags, mode mode = 0);
+
+  /**
+   * Constructor.
+   */
   file(const int fd) noexcept
-    : descriptor(fd) {}
+    : descriptor{fd} {}
 
   /**
    * Copy constructor.
    */
   file(const file& other) /* may throw */
-    : descriptor(other) {}
+    : descriptor{other} {}
 
   /**
    * Move constructor.
    */
   file(file&& other) noexcept
-    : descriptor(std::move(other)) {}
+    : descriptor{std::move(other)} {}
 
   /**
    * Destructor.
@@ -93,9 +98,6 @@ public:
    * ...
    */
   void truncate(off_t length = 0) const;
-
-protected:
-  static file open(int dirfd, const char* pathname, int flags, mode mode = 0);
 };
 
 ////////////////////////////////////////////////////////////////////////////////
