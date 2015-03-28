@@ -28,6 +28,7 @@ namespace posix {
 class posix::mapped_file : public posix::file {
 protected:
   memory_mapping _mapping;
+  std::size_t _offset;
 
 public:
   static mapped_file open(const pathname& pathname, int flags, mode mode = 0);
@@ -75,6 +76,32 @@ public:
   std::uint8_t operator[](const std::size_t offset) const noexcept {
     return _mapping[offset];
   }
+
+  /**
+   * Reads a line of text from this file.
+   */
+  std::size_t read_line(std::string& buffer) const;
+
+  /**
+   * Reads data from this file until the given separator character
+   * is encountered.
+   */
+  std::size_t read_until(char separator, std::string& buffer) const;
+
+  /**
+   * Reads a character from this file.
+   */
+  std::size_t read(char& result) const;
+
+  /**
+   * Reads data from this file.
+   */
+  std::size_t read(void* buffer, std::size_t buffer_size) const;
+
+  /**
+   * Reads a string from this file.
+   */
+  std::string read() const;
 };
 
 ////////////////////////////////////////////////////////////////////////////////

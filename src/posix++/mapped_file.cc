@@ -43,7 +43,8 @@ mapped_file::mapped_file(const int dirfd,
                          int flags,
                          const mode mode)
   : file{dirfd, pathname, flags, mode},
-    _mapping{*this, std::max(size(), static_cast<std::size_t>(::sysconf(_SC_PAGE_SIZE)))} {}
+    _mapping{*this, std::max(size(), static_cast<std::size_t>(::sysconf(_SC_PAGE_SIZE)))},
+    _offset{seek(0, SEEK_CUR)} {}
 
 ////////////////////////////////////////////////////////////////////////////////
 
