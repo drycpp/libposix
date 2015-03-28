@@ -3,6 +3,12 @@
 #ifndef POSIXXX_THREAD_H
 #define POSIXXX_THREAD_H
 
+#ifndef __cplusplus
+#error "<posix++/thread.h> requires a C++ compiler"
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+
 #include <sys/types.h> /* for pid_t */
 
 namespace posix {
@@ -11,5 +17,7 @@ namespace posix {
    */
   pid_t gettid() noexcept;
 }
+
+////////////////////////////////////////////////////////////////////////////////
 
 #endif /* POSIXXX_THREAD_H */

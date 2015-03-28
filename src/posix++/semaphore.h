@@ -3,6 +3,12 @@
 #ifndef POSIXXX_SEMAPHORE_H
 #define POSIXXX_SEMAPHORE_H
 
+#ifndef __cplusplus
+#error "<posix++/semaphore.h> requires a C++ compiler"
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+
 /**
  * @file
  *
@@ -16,6 +22,8 @@
 namespace posix {
   class unnamed_semaphore;
 }
+
+////////////////////////////////////////////////////////////////////////////////
 
 /**
  * An unnamed POSIX semaphore.
@@ -152,5 +160,7 @@ public:
     }
   }
 };
+
+////////////////////////////////////////////////////////////////////////////////
 
 #endif /* POSIXXX_SEMAPHORE_H */

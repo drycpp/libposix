@@ -3,6 +3,12 @@
 #ifndef POSIXXX_LOCAL_SOCKET_H
 #define POSIXXX_LOCAL_SOCKET_H
 
+#ifndef __cplusplus
+#error "<posix++/local_socket.h> requires a C++ compiler"
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+
 #include "descriptor.h"
 #include "socket.h"
 
@@ -12,6 +18,9 @@ namespace posix {
   class local_socket;
   class pathname;
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Represents a POSIX local socket (aka Unix domain socket).
@@ -76,5 +85,8 @@ protected:
    */
   local_socket();
 };
+
+
+////////////////////////////////////////////////////////////////////////////////
 
 #endif /* POSIXXX_LOCAL_SOCKET_H */

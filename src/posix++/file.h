@@ -3,6 +3,12 @@
 #ifndef POSIXXX_FILE_H
 #define POSIXXX_FILE_H
 
+#ifndef __cplusplus
+#error "<posix++/file.h> requires a C++ compiler"
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+
 #include "descriptor.h"
 #include "mode.h"
 
@@ -15,6 +21,8 @@ namespace posix {
   class file;
   class pathname;
 }
+
+////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Represents a POSIX file.
@@ -89,5 +97,7 @@ public:
 protected:
   static file open(int dirfd, const char* pathname, int flags, mode mode = 0);
 };
+
+////////////////////////////////////////////////////////////////////////////////
 
 #endif /* POSIXXX_FILE_H */

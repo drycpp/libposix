@@ -3,6 +3,12 @@
 #ifndef POSIXXX_PROCESS_GROUP_H
 #define POSIXXX_PROCESS_GROUP_H
 
+#ifndef __cplusplus
+#error "<posix++/process_group.h> requires a C++ compiler"
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+
 namespace posix {
   using process_group_id = unsigned int;
   class process_group;

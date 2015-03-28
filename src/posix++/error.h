@@ -3,6 +3,12 @@
 #ifndef POSIXXX_ERROR_H
 #define POSIXXX_ERROR_H
 
+#ifndef __cplusplus
+#error "<posix++/error.h> requires a C++ compiler"
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+
 #include <cstdarg>      /* for va_list */
 #include <system_error> /* for std::error_*, std::system_* */
 
@@ -24,6 +30,8 @@ namespace posix {
   extern void throw_error[[noreturn]](int code, const char* origin, const char* format = nullptr, ...);
   extern void throw_error[[noreturn]](int code, const char* origin, const char* format, va_list args);
 }
+
+////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Represents a POSIX runtime error.
@@ -81,6 +89,8 @@ public:
   }
 };
 
+////////////////////////////////////////////////////////////////////////////////
+
 /**
  * Represents a POSIX logic error.
  *
@@ -90,6 +100,8 @@ class posix::logic_error : public posix::error {
 public:
   using posix::error::error; /* inherit constructors */
 };
+
+////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Represents a POSIX runtime error.
@@ -101,6 +113,8 @@ public:
   using posix::error::error; /* inherit constructors */
 };
 
+////////////////////////////////////////////////////////////////////////////////
+
 /**
  * Represents a POSIX runtime error that cannot be recovered from.
  *
@@ -110,6 +124,8 @@ class posix::fatal_error : public posix::error {
 public:
   using posix::error::error; /* inherit constructors */
 };
+
+////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Represents a POSIX `EBADF` (Bad file descriptor) error.
@@ -129,6 +145,8 @@ public:
   bad_descriptor(const char* origin) noexcept;
 };
 
+////////////////////////////////////////////////////////////////////////////////
+
 /**
  * Represents a POSIX `EFAULT` (Bad address) error.
  *
@@ -146,6 +164,8 @@ public:
    */
   bad_address(const char* origin) noexcept;
 };
+
+////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Represents a POSIX `EINVAL` (Invalid argument) error.
@@ -165,6 +185,8 @@ public:
   invalid_argument(const char* origin) noexcept;
 };
 
+////////////////////////////////////////////////////////////////////////////////
+
 /**
  * Represents a POSIX `ECONNREFUSED` (Connection refused) error.
  *
@@ -182,5 +204,7 @@ public:
    */
   connection_refused(const char* origin) noexcept;
 };
+
+////////////////////////////////////////////////////////////////////////////////
 
 #endif /* POSIXXX_ERROR_H */

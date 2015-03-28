@@ -3,6 +3,12 @@
 #ifndef POSIXXX_STDIO_H
 #define POSIXXX_STDIO_H
 
+#ifndef __cplusplus
+#error "<posix++/stdio.h> requires a C++ compiler"
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+
 #include <cstddef> /* for std::size_t */
 #include <string>  /* for std::string */
 
@@ -40,5 +46,7 @@ namespace posix {
     write(fd, string.data(), string.size());
   }
 }
+
+////////////////////////////////////////////////////////////////////////////////
 
 #endif /* POSIXXX_STDIO_H */

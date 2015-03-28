@@ -3,6 +3,12 @@
 #ifndef POSIXXX_SYSV_SEGMENT_H
 #define POSIXXX_SYSV_SEGMENT_H
 
+#ifndef __cplusplus
+#error "<posix++/sysv_segment.h> requires a C++ compiler"
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+
 #include <cstddef>    /* for std::size_t */
 #include <cstdint>    /* for std::uint8_t */
 #include <functional> /* for std::function */
@@ -12,6 +18,9 @@
 namespace posix {
   class sysv_segment;
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Represents a System V shared memory segment.
@@ -214,5 +223,7 @@ public:
 
   void clear() noexcept;
 };
+
+////////////////////////////////////////////////////////////////////////////////
 
 #endif /* POSIXXX_SYSV_SEGMENT_H */

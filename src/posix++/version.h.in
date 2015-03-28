@@ -3,6 +3,12 @@
 #ifndef POSIXXX_VERSION_H
 #define POSIXXX_VERSION_H
 
+#ifndef __cplusplus
+#error "<posix++/version.h> requires a C++ compiler"
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+
 #include <string> /* for std::string */
 
 namespace posix {
@@ -13,5 +19,7 @@ namespace posix {
     const short patch = @PACKAGE_VERSION_PATCH@;
   };
 }
+
+////////////////////////////////////////////////////////////////////////////////
 
 #endif /* POSIXXX_VERSION_H */

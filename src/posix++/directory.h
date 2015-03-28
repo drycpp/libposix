@@ -3,6 +3,12 @@
 #ifndef POSIXXX_DIRECTORY_H
 #define POSIXXX_DIRECTORY_H
 
+#ifndef __cplusplus
+#error "<posix++/directory.h> requires a C++ compiler"
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+
 #include "descriptor.h"
 #include "mode.h"
 
@@ -15,6 +21,8 @@ namespace posix {
   class directory;
   class pathname;
 }
+
+////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Represents a POSIX directory.
@@ -159,6 +167,8 @@ protected:
   void unlink(const char* pathname, int flags) const;
 };
 
+////////////////////////////////////////////////////////////////////////////////
+
 /**
  * POSIX directory iterator.
  */
@@ -192,5 +202,7 @@ public:
 protected:
   void* _dirp = nullptr;
 };
+
+////////////////////////////////////////////////////////////////////////////////
 
 #endif /* POSIXXX_DIRECTORY_H */

@@ -3,6 +3,12 @@
 #ifndef POSIXXX_MEMORY_MAPPING_H
 #define POSIXXX_MEMORY_MAPPING_H
 
+#ifndef __cplusplus
+#error "<posix++/memory_mapping.h> requires a C++ compiler"
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+
 #include <cstddef> /* for std::size_t */
 #include <cstdint> /* for std::uint8_t */
 
@@ -10,6 +16,9 @@ namespace posix {
   struct descriptor;
   class memory_mapping;
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Represents a POSIX memory mapping.
@@ -155,5 +164,8 @@ public:
    */
   bool executable() const noexcept;
 };
+
+
+////////////////////////////////////////////////////////////////////////////////
 
 #endif /* POSIXXX_MEMORY_MAPPING_H */

@@ -3,6 +3,12 @@
 #ifndef POSIXXX_H
 #define POSIXXX_H
 
+#ifndef __cplusplus
+#error "<posix++.h> requires a C++ compiler"
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+
 /**
  * libposix++
  */
@@ -32,5 +38,7 @@ namespace posix {}
 #include "posix++/thread.h"
 #include "posix++/user.h"
 #include "posix++/version.h"
+
+////////////////////////////////////////////////////////////////////////////////
 
 #endif /* POSIXXX_H */

@@ -3,12 +3,20 @@
 #ifndef POSIXXX_PATHNAME_H
 #define POSIXXX_PATHNAME_H
 
+#ifndef __cplusplus
+#error "<posix++/pathname.h> requires a C++ compiler"
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+
 #include <stdexcept> /* for std::invalid_argument */
 #include <string>    /* for std::string */
 
 namespace posix {
   class pathname;
 }
+
+////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Represents a POSIX pathname.
@@ -151,5 +159,7 @@ public:
    */
   pathname& append(const char* path);
 };
+
+////////////////////////////////////////////////////////////////////////////////
 
 #endif /* POSIXXX_PATHNAME_H */

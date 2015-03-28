@@ -3,6 +3,12 @@
 #ifndef POSIXXX_NAMED_PIPE_H
 #define POSIXXX_NAMED_PIPE_H
 
+#ifndef __cplusplus
+#error "<posix++/named_pipe.h> requires a C++ compiler"
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+
 #include "descriptor.h"
 #include "mode.h"
 
@@ -13,6 +19,8 @@ namespace posix {
   class named_pipe;
   class pathname;
 }
+
+////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Represents a POSIX named pipe (aka FIFO).
@@ -59,5 +67,7 @@ protected:
   static void create(int dirfd, const char* pathname, mode mode = 0);
   static named_pipe open(int dirfd, const char* pathname, int flags);
 };
+
+////////////////////////////////////////////////////////////////////////////////
 
 #endif /* POSIXXX_NAMED_PIPE_H */

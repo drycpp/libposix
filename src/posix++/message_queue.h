@@ -3,6 +3,12 @@
 #ifndef POSIXXX_MESSAGE_QUEUE_H
 #define POSIXXX_MESSAGE_QUEUE_H
 
+#ifndef __cplusplus
+#error "<posix++/message_queue.h> requires a C++ compiler"
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+
 #include "descriptor.h"
 #include "mode.h"
 
@@ -16,6 +22,8 @@ namespace posix {
   struct message_queue_attr;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
 /**
  * @see http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/mqueue.h.html
  */
@@ -24,6 +32,8 @@ struct posix::message_queue_attr {
   long maxmsg;
   long msgsize;
 };
+
+////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Represents a POSIX message queue.
@@ -117,5 +127,7 @@ protected:
   static message_queue open(const char* name,
     int flags, mode mode, const message_queue_attr* attributes);
 };
+
+////////////////////////////////////////////////////////////////////////////////
 
 #endif /* POSIXXX_MESSAGE_QUEUE_H */

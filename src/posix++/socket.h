@@ -3,6 +3,12 @@
 #ifndef POSIXXX_SOCKET_H
 #define POSIXXX_SOCKET_H
 
+#ifndef __cplusplus
+#error "<posix++/socket.h> requires a C++ compiler"
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+
 #include "descriptor.h"
 
 #include <cstddef>    /* for std::size_t */
@@ -13,6 +19,9 @@
 namespace posix {
   class socket;
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Represents a POSIX socket.
@@ -137,5 +146,7 @@ protected:
    */
   ~socket() noexcept {}
 };
+
+////////////////////////////////////////////////////////////////////////////////
 
 #endif /* POSIXXX_SOCKET_H */

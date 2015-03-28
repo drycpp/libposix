@@ -3,6 +3,12 @@
 #ifndef POSIXXX_DESCRIPTOR_H
 #define POSIXXX_DESCRIPTOR_H
 
+#ifndef __cplusplus
+#error "<posix++/descriptor.h> requires a C++ compiler"
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+
 #include "mode.h"
 
 #include <cstddef> /* for std::size_t */
@@ -15,6 +21,8 @@ namespace posix {
   class group;
   class user;
 }
+
+////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Represents a POSIX file descriptor.
@@ -291,5 +299,7 @@ protected:
    */
   int _fd = -1;
 };
+
+////////////////////////////////////////////////////////////////////////////////
 
 #endif /* POSIXXX_DESCRIPTOR_H */

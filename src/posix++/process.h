@@ -3,6 +3,12 @@
 #ifndef POSIXXX_PROCESS_H
 #define POSIXXX_PROCESS_H
 
+#ifndef __cplusplus
+#error "<posix++/process.h> requires a C++ compiler"
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+
 #include "user.h"
 
 namespace posix {
@@ -27,6 +33,8 @@ namespace posix {
    */
   process parent_process() noexcept;
 }
+
+////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Represents a POSIX process.
@@ -129,5 +137,7 @@ protected:
    */
   process_id _id = 0;
 };
+
+////////////////////////////////////////////////////////////////////////////////
 
 #endif /* POSIXXX_PROCESS_H */

@@ -3,10 +3,18 @@
 #ifndef POSIXXX_GROUP_H
 #define POSIXXX_GROUP_H
 
+#ifndef __cplusplus
+#error "<posix++/group.h> requires a C++ compiler"
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+
 namespace posix {
   class group;
   using group_id = unsigned int;
 }
+
+////////////////////////////////////////////////////////////////////////////////
 
 /**
  * Represents a POSIX group.
@@ -36,5 +44,8 @@ protected:
    */
   group_id _id = 0;
 };
+
+
+////////////////////////////////////////////////////////////////////////////////
 
 #endif /* POSIXXX_GROUP_H */
