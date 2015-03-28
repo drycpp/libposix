@@ -40,6 +40,12 @@ public:
   static file open(const directory& directory, const pathname& pathname, int flags, mode mode = 0);
 
   /**
+   * Default constructor.
+   */
+  file() noexcept
+    : descriptor{} {}
+
+  /**
    * Constructor.
    */
   file(int dirfd, const char* pathname, int flags, mode mode = 0);
@@ -65,7 +71,7 @@ public:
   /**
    * Destructor.
    */
-  ~file() noexcept {}
+  ~file() noexcept = default;
 
   /**
    * Checks whether this file's size is zero.

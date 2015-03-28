@@ -53,14 +53,9 @@ public:
    * Move constructor.
    */
   descriptor(descriptor&& other) noexcept
-    : descriptor() {
+    : descriptor{} {
     std::swap(_fd, other._fd);
   }
-
-  /**
-   * Destructor. Invokes `close()` if the descriptor is valid.
-   */
-  ~descriptor() noexcept;
 
   /**
    * Copy assignment operator.
@@ -80,6 +75,11 @@ public:
     std::swap(_fd, other._fd);
     return *this;
   }
+
+  /**
+   * Destructor. Invokes `close()` if the descriptor is valid.
+   */
+  ~descriptor() noexcept;
 
   /**
    * Assigns a new value to this descriptor.
