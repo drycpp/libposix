@@ -87,7 +87,7 @@ public:
   /**
    * ...
    */
-  off_t seek(off_t offset, int whence = SEEK_SET) const;
+  std::size_t seek(off_t offset, int whence = SEEK_SET) const;
 
   /**
    * ...

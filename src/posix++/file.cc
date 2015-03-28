@@ -96,7 +96,7 @@ file::rewind() const {
   seek(0, SEEK_SET);
 }
 
-off_t
+std::size_t
 file::seek(const off_t offset,
            const int whence) const {
   off_t result;
@@ -106,7 +106,8 @@ file::seek(const off_t offset,
       fd(), static_cast<unsigned long>(offset), whence);
   }
 
-  return result;
+  assert(result >= 0);
+  return static_cast<std::size_t>(result);
 }
 
 void
