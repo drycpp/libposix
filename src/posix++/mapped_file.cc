@@ -46,6 +46,20 @@ mapped_file::mapped_file(const int dirfd,
     _mapping{*this, std::max(size(), static_cast<std::size_t>(::sysconf(_SC_PAGE_SIZE)))},
     _offset{seek(0, SEEK_CUR)} {}
 
+std::size_t
+mapped_file::seek(const off_t offset,
+                  const int whence) {
+
+  const auto result = file::seek(offset, whence);
+
+  _offset = result;
+  if (_offset > _mapping.size()) {
+    // TODO
+  }
+
+  return result;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 appendable_mapped_file
@@ -73,7 +87,7 @@ appendable_mapped_file::append(const char* const data,
 
   const auto offset = seek(0, SEEK_END);
 
-  write(data, size);
+  _offset += write(data, size);
 
   return offset;
 }

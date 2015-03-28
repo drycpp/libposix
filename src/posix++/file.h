@@ -85,7 +85,7 @@ public:
   void rewind() const;
 
   /**
-   * ...
+   * Returns or changes the current file offset.
    */
   std::size_t seek(off_t offset, int whence = SEEK_SET) const;
 

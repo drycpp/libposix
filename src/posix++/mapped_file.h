@@ -78,6 +78,11 @@ public:
   }
 
   /**
+   * Returns or changes the current file offset.
+   */
+  std::size_t seek(off_t offset, int whence = SEEK_SET);
+
+  /**
    * Reads a line of text from this file.
    */
   std::size_t read_line(std::string& buffer) const;
