@@ -1,0 +1,31 @@
+/* This is free and unencumbered software released into the public domain. */
+
+#ifndef POSIXXX_MAPPED_FILE_H
+#define POSIXXX_MAPPED_FILE_H
+
+#ifndef __cplusplus
+#error "<posix++/mapped_file.h> requires a C++ compiler"
+#endif
+
+////////////////////////////////////////////////////////////////////////////////
+
+namespace posix {
+  class mapped_file;
+  class appendable_mapped_file;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+class posix::mapped_file {
+public:
+};
+
+////////////////////////////////////////////////////////////////////////////////
+
+class posix::appendable_mapped_file : public posix::mapped_file {
+public:
+};
+
+////////////////////////////////////////////////////////////////////////////////
+
+#endif /* POSIXXX_MAPPED_FILE_H */
