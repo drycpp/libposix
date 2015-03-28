@@ -11,6 +11,7 @@ check_PROGRAMS =       \
   check_feature        \
   check_file           \
   check_group          \
+  check_mapped_file    \
   check_memory_mapping \
   check_module         \
   check_named_pipe     \

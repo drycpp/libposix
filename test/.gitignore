@@ -14,6 +14,7 @@ check_feature
 check_file
 check_group
 check_local_socket
+check_mapped_file
 check_memory_mapping
 check_message_queue
 check_module
