@@ -36,6 +36,15 @@ mapped_file::open(const directory& directory,
 
 ////////////////////////////////////////////////////////////////////////////////
 
+mapped_file::mapped_file(const int dirfd,
+                         const char* const pathname,
+                         int flags,
+                         const mode mode)
+  : file{dirfd, pathname, flags, mode},
+    _mapping{*this} {}
+
+////////////////////////////////////////////////////////////////////////////////
+
 appendable_mapped_file
 appendable_mapped_file::open(const pathname& pathname,
                              const int flags,

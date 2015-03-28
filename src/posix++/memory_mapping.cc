@@ -16,6 +16,8 @@
 
 using namespace posix;
 
+////////////////////////////////////////////////////////////////////////////////
+
 std::uint8_t*
 memory_mapping::map(const int fd,
                     const std::size_t size,
@@ -48,6 +50,8 @@ memory_mapping::map(const int fd,
   return reinterpret_cast<std::uint8_t*>(addr);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
 memory_mapping::memory_mapping(const descriptor& descriptor)
   : memory_mapping{descriptor.fd()} {}
 
@@ -77,24 +81,26 @@ memory_mapping::memory_mapping(void* const data,
 memory_mapping::~memory_mapping() noexcept {
   if (_data) {
     if (::munmap(reinterpret_cast<void*>(_data), _size) == -1) {
-      /* Ignore any errors from munmap(). */
+      /* Ignore any errors from munmap() here. */
     }
     _data = nullptr;
     _size = 0;
   }
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
 bool
 memory_mapping::readable() const noexcept {
-  return true; // TODO
+  return _data != nullptr; // TODO
 }
 
 bool
 memory_mapping::writable() const noexcept {
-  return true; // TODO
+  return _data != nullptr; // TODO
 }
 
 bool
 memory_mapping::executable() const noexcept {
-  return true; // TODO
+  return _data != nullptr; // TODO
 }

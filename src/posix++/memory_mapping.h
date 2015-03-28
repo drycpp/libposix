@@ -30,6 +30,7 @@ protected:
   std::size_t _size;
   std::uint8_t* _data;
 
+protected:
   std::uint8_t* map(int fd, std::size_t size, std::size_t offset);
 
 public:
@@ -84,11 +85,6 @@ public:
   memory_mapping(memory_mapping&& other) noexcept = default;
 
   /**
-   * Destructor.
-   */
-  ~memory_mapping() noexcept;
-
-  /**
    * Copy assignment operator.
    */
   memory_mapping& operator=(const memory_mapping& other) noexcept = delete;
@@ -99,9 +95,14 @@ public:
   memory_mapping& operator=(memory_mapping&& other) noexcept = default;
 
   /**
+   * Destructor.
+   */
+  ~memory_mapping() noexcept;
+
+  /**
    * Returns the byte size of the mapping.
    */
-  inline std::size_t size() const noexcept {
+  std::size_t size() const noexcept {
     return _size;
   }
 
@@ -109,30 +110,37 @@ public:
    * Returns a pointer to the mapped memory.
    */
   template <typename T>
-  inline const T* data(const std::size_t offset = 0) const noexcept {
-    return reinterpret_cast<const T*>(_data + offset);
-  }
-
-  /**
-   * Returns a pointer to the mapped memory.
-   */
-  template <typename T>
-  inline T* data(const std::size_t offset = 0) noexcept {
+  T* data(const std::size_t offset = 0) noexcept {
     return reinterpret_cast<T*>(_data + offset);
   }
 
   /**
    * Returns a pointer to the mapped memory.
    */
-  inline const std::uint8_t* data(const std::size_t offset = 0) const noexcept {
+  template <typename T>
+  const T* data(const std::size_t offset = 0) const noexcept {
+    return reinterpret_cast<const T*>(_data + offset);
+  }
+
+  /**
+   * Returns a pointer to the mapped memory.
+   */
+  std::uint8_t* data(const std::size_t offset = 0) noexcept {
     return _data + offset;
   }
 
   /**
    * Returns a pointer to the mapped memory.
    */
-  inline std::uint8_t* data(const std::size_t offset = 0) noexcept {
+  const std::uint8_t* data(const std::size_t offset = 0) const noexcept {
     return _data + offset;
+  }
+
+  /**
+   * Returns the byte at the given offset.
+   */
+  std::uint8_t operator[](const std::size_t offset) const noexcept {
+    return _data[offset];
   }
 
   /**
@@ -140,13 +148,6 @@ public:
    */
   explicit operator bool() const noexcept {
     return _data != nullptr;
-  }
-
-  /**
-   * Returns the byte at the given offset.
-   */
-  inline std::uint8_t operator[](const std::size_t offset) const noexcept {
-    return _data[offset];
   }
 
   /**
@@ -164,7 +165,6 @@ public:
    */
   bool executable() const noexcept;
 };
-
 
 ////////////////////////////////////////////////////////////////////////////////
 

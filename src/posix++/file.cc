@@ -21,28 +21,6 @@ using namespace posix;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-file::file(const int dirfd,
-           const char* const pathname,
-           int flags,
-           const mode mode)
-  : descriptor{} {
-
-  assert(dirfd > 0 || dirfd == AT_FDCWD);
-  assert(pathname != nullptr);
-  assert(pathname[0] != '\0');
-
-#ifdef O_CLOEXEC
-  flags |= O_CLOEXEC; /* POSIX.1-2008 (Linux, FreeBSD) */
-#endif
-
-  if ((_fd = openat(dirfd, pathname, flags, mode)) == -1) {
-    throw_error("openat", "%d, \"%s\", 0x%x, 0%o", dirfd, pathname,
-      flags, static_cast<unsigned int>(mode));
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
 file
 file::create(const pathname& pathname,
              const mode mode) {
@@ -75,6 +53,28 @@ file::open(const directory& directory,
            const mode mode) {
 
   return file{directory.fd(), pathname.c_str(), flags, mode};
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+file::file(const int dirfd,
+           const char* const pathname,
+           int flags,
+           const mode mode)
+  : descriptor{} {
+
+  assert(dirfd > 0 || dirfd == AT_FDCWD);
+  assert(pathname != nullptr);
+  assert(pathname[0] != '\0');
+
+#ifdef O_CLOEXEC
+  flags |= O_CLOEXEC; /* POSIX.1-2008 (Linux, FreeBSD) */
+#endif
+
+  if ((_fd = openat(dirfd, pathname, flags, mode)) == -1) {
+    throw_error("openat", "%d, \"%s\", 0x%x, 0%o", dirfd, pathname,
+      flags, static_cast<unsigned int>(mode));
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
