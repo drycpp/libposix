@@ -38,6 +38,43 @@ public:
    * Constructor.
    */
   mapped_file(int dirfd, const char* pathname, int flags, mode mode = 0);
+
+  /**
+   * Returns a pointer to the mapped memory.
+   */
+  template <typename T>
+  T* data(const std::size_t offset = 0) noexcept {
+    return _mapping.data<T>(offset);
+  }
+
+  /**
+   * Returns a pointer to the mapped memory.
+   */
+  template <typename T>
+  const T* data(const std::size_t offset = 0) const noexcept {
+    return _mapping.data<T>(offset);
+  }
+
+  /**
+   * Returns a pointer to the mapped memory.
+   */
+  std::uint8_t* data(const std::size_t offset = 0) noexcept {
+    return _mapping.data(offset);
+  }
+
+  /**
+   * Returns a pointer to the mapped memory.
+   */
+  const std::uint8_t* data(const std::size_t offset = 0) const noexcept {
+    return _mapping.data(offset);
+  }
+
+  /**
+   * Returns the byte at the given offset.
+   */
+  std::uint8_t operator[](const std::size_t offset) const noexcept {
+    return _mapping[offset];
+  }
 };
 
 ////////////////////////////////////////////////////////////////////////////////
