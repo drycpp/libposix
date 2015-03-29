@@ -53,6 +53,11 @@ public:
   mapped_file(mapped_file&& other) noexcept;
 
   /**
+   * Move assignment operator.
+   */
+  mapped_file& operator=(mapped_file&& other) noexcept;
+
+  /**
    * Checks whether this file's size is zero.
    */
   bool empty() const noexcept {
@@ -175,6 +180,11 @@ public:
    * Move constructor.
    */
   appendable_mapped_file(appendable_mapped_file&& other) noexcept;
+
+  /**
+   * Move assignment operator.
+   */
+  appendable_mapped_file& operator=(appendable_mapped_file&& other) noexcept;
 
   /**
    * @throws posix::runtime_error if an error occurs

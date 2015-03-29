@@ -67,6 +67,17 @@ mapped_file::mapped_file(mapped_file&& other) noexcept
   std::swap(_mapping, other._mapping);
 }
 
+mapped_file&
+mapped_file::operator=(mapped_file&& other) noexcept {
+  if (this != &other) {
+    std::swap(_fd, other._fd);
+    std::swap(_size, other._size);
+    std::swap(_offset, other._offset);
+    std::swap(_mapping, other._mapping);
+  }
+  return *this;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 std::size_t
@@ -167,6 +178,8 @@ appendable_mapped_file::open(const directory& directory,
   return appendable_mapped_file{directory.fd(), pathname.c_str(), flags, mode};
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
 appendable_mapped_file::appendable_mapped_file(appendable_mapped_file&& other) noexcept
   : appendable_mapped_file{} {
 
@@ -174,6 +187,17 @@ appendable_mapped_file::appendable_mapped_file(appendable_mapped_file&& other) n
   std::swap(_size, other._size);
   std::swap(_offset, other._offset);
   std::swap(_mapping, other._mapping);
+}
+
+appendable_mapped_file&
+appendable_mapped_file::operator=(appendable_mapped_file&& other) noexcept {
+  if (this != &other) {
+    std::swap(_fd, other._fd);
+    std::swap(_size, other._size);
+    std::swap(_offset, other._offset);
+    std::swap(_mapping, other._mapping);
+  }
+  return *this;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
