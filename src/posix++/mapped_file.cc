@@ -75,19 +75,23 @@ mapped_file::seek(const off_t offset,
 
   switch (whence) {
     case SEEK_CUR: {
-      return _offset + offset; // TODO: error handling
+      _offset += offset; // TODO: error handling
+      break;
     }
-    case SEEK_SET:
+    case SEEK_SET: {
+      _offset = offset;
+      break;
+    }
     case SEEK_END:
     default: {
-      const auto result = file::seek(offset, whence);
-      _offset = result;
+      _offset = file::seek(offset, whence);
       if (_offset > _mapping.size()) {
         // TODO: _mapping.extend();
       }
-      return result;
+      break;
     }
   }
+  return _offset;
 }
 
 std::size_t
