@@ -31,17 +31,16 @@ protected:
   std::size_t _offset;
   memory_mapping _mapping;
 
-protected:
+public:
+  static mapped_file open(const pathname& pathname, int flags, mode mode = 0);
+
+  static mapped_file open(const directory& directory, const pathname& pathname, int flags, mode mode = 0);
+
   /**
    * Default constructor.
    */
   mapped_file() noexcept
     : file{}, _size{0}, _offset{0}, _mapping{nullptr, 0} {}
-
-public:
-  static mapped_file open(const pathname& pathname, int flags, mode mode = 0);
-
-  static mapped_file open(const directory& directory, const pathname& pathname, int flags, mode mode = 0);
 
   /**
    * Constructor.
@@ -162,9 +161,20 @@ public:
   static appendable_mapped_file open(const directory& directory, const pathname& pathname, int flags, mode mode = 0);
 
   /**
+   * Default constructor.
+   */
+  appendable_mapped_file() noexcept
+    : mapped_file{} {}
+
+  /**
    * Constructor.
    */
   using mapped_file::mapped_file;
+
+  /**
+   * Move constructor.
+   */
+  appendable_mapped_file(appendable_mapped_file&& other) noexcept;
 
   /**
    * @throws posix::runtime_error if an error occurs

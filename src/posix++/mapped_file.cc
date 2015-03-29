@@ -167,6 +167,15 @@ appendable_mapped_file::open(const directory& directory,
   return appendable_mapped_file{directory.fd(), pathname.c_str(), flags, mode};
 }
 
+appendable_mapped_file::appendable_mapped_file(appendable_mapped_file&& other) noexcept
+  : appendable_mapped_file{} {
+
+  std::swap(_fd, other._fd);
+  std::swap(_size, other._size);
+  std::swap(_offset, other._offset);
+  std::swap(_mapping, other._mapping);
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 std::size_t
