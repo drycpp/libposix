@@ -54,6 +54,20 @@ public:
   mapped_file(mapped_file&& other) noexcept;
 
   /**
+   * Checks whether this file's size is zero.
+   */
+  bool empty() const noexcept {
+    return size() == 0;
+  }
+
+  /**
+   * Returns the file size in bytes.
+   */
+  std::size_t size() const noexcept {
+    return _size;
+  }
+
+  /**
    * Returns a pointer to the mapped memory.
    */
   template <typename T>
