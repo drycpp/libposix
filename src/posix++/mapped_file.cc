@@ -90,7 +90,7 @@ mapped_file::seek(const off_t offset,
       break;
     }
     case SEEK_SET: {
-      _offset = offset;
+      _offset = file::seek(offset, whence);
       break;
     }
     case SEEK_END:
