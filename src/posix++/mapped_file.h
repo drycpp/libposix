@@ -61,10 +61,24 @@ public:
   }
 
   /**
-   * Returns the file size in bytes.
+   * Returns the current file size in bytes.
    */
   std::size_t size() const noexcept {
     return _size;
+  }
+
+  /**
+   * Returns the current file offset.
+   */
+  std::size_t offset() const noexcept {
+    return _offset;
+  }
+
+  /**
+   * Checks whether the current file offset is at or past EOF.
+   */
+  bool is_eof() const noexcept {
+    return offset() >= size();
   }
 
   /**
@@ -103,11 +117,6 @@ public:
   std::uint8_t operator[](const std::size_t offset) const noexcept {
     return _mapping[offset];
   }
-
-  /**
-   * Checks whether the current file offset is at or past EOF.
-   */
-  bool is_eof() const noexcept;
 
   /**
    * Returns or changes the current file offset.

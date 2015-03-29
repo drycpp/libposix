@@ -69,11 +69,6 @@ mapped_file::mapped_file(mapped_file&& other) noexcept
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool
-mapped_file::is_eof() const noexcept {
-  return _offset >= _size;
-}
-
 std::size_t
 mapped_file::seek(const off_t offset,
                   const int whence) {

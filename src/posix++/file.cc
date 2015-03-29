@@ -91,6 +91,11 @@ file::size() const {
   return static_cast<std::size_t>(st.st_size);
 }
 
+std::size_t
+file::offset() const {
+  return seek(0, SEEK_CUR);
+}
+
 void
 file::rewind() const {
   seek(0, SEEK_SET);

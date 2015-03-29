@@ -81,9 +81,14 @@ public:
   }
 
   /**
-   * ...
+   * Returns the current file size in bytes.
    */
   std::size_t size() const;
+
+  /**
+   * Returns the current file offset.
+   */
+  std::size_t offset() const;
 
   /**
    * Sets the file offset to the beginning of the file.
