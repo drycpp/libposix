@@ -9,11 +9,13 @@
 #include "mapped_file.h"
 #include "pathname.h"
 
-#include <algorithm> /* for std::max() */
+#include <algorithm> /* for std::max(), std::min() */
 #include <cassert>   /* for assert() */
 #include <cerrno>    /* for errno */
+#include <cstring>   /* for std::memmove() */
 #include <fcntl.h>   /* for AT_FDCWD */
 #include <unistd.h>  /* for _SC_PAGE_SIZE, sysconf() */
+#include <utility>   /* for std::swap() */
 
 using namespace posix;
 
@@ -38,26 +40,113 @@ mapped_file::open(const directory& directory,
 
 ////////////////////////////////////////////////////////////////////////////////
 
+namespace {
+  static std::size_t system_page_size() {
+    return static_cast<std::size_t>(::sysconf(_SC_PAGE_SIZE));
+  }
+}
+
 mapped_file::mapped_file(const int dirfd,
                          const char* const pathname,
                          int flags,
                          const mode mode)
   : file{dirfd, pathname, flags, mode},
-    _mapping{*this, std::max(size(), static_cast<std::size_t>(::sysconf(_SC_PAGE_SIZE)))},
-    _offset{seek(0, SEEK_CUR)} {}
+    _size{file::size()},
+    _offset{file::seek(0, SEEK_CUR)},
+    _mapping{*this, std::max(_size, system_page_size())} {
+
+  assert(_mapping.data());
+}
+
+mapped_file::mapped_file(mapped_file&& other) noexcept
+  : mapped_file{} {
+
+  std::swap(_fd, other._fd);
+  std::swap(_size, other._size);
+  std::swap(_offset, other._offset);
+  std::swap(_mapping, other._mapping);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+bool
+mapped_file::is_eof() const noexcept {
+  return _offset >= _size;
+}
 
 std::size_t
 mapped_file::seek(const off_t offset,
                   const int whence) {
 
-  const auto result = file::seek(offset, whence);
-
-  _offset = result;
-  if (_offset > _mapping.size()) {
-    // TODO
+  switch (whence) {
+    case SEEK_CUR: {
+      return _offset + offset; // TODO: error handling
+    }
+    case SEEK_SET:
+    case SEEK_END:
+    default: {
+      const auto result = file::seek(offset, whence);
+      _offset = result;
+      if (_offset > _mapping.size()) {
+        // TODO: _mapping.extend();
+      }
+      return result;
+    }
   }
+}
 
-  return result;
+std::size_t
+mapped_file::read_line(std::string& buffer) {
+  return read_until('\n', buffer); /* read_until() updates _offset */
+}
+
+std::size_t
+mapped_file::read_until(const char separator,
+                        std::string& buffer) {
+  std::size_t byte_count = 0;
+  char byte;
+  while (read(byte)) { /* read() updates _offset */
+    byte_count++;
+    if (byte == separator)
+      break; /* all done */
+    buffer.push_back(byte);
+  }
+  return byte_count;
+}
+
+std::size_t
+mapped_file::read(char& result) {
+  if (is_eof()) {
+    return 0; /* EOF */
+  }
+  result = *_mapping.data<char>(_offset);
+  _offset++;
+  return 1;
+}
+
+std::size_t
+mapped_file::read(void* const buffer,
+                  const std::size_t buffer_size) {
+  assert(buffer != nullptr);
+  if (is_eof()) {
+    return 0; /* EOF */
+  }
+  const auto length = std::min(buffer_size, _size - _offset);
+  std::memmove(buffer, _mapping.data(_offset), length);
+  _offset += length;
+  return length;
+}
+
+std::string
+mapped_file::read() {
+  std::string buffer;
+  if (!is_eof()) {
+    const auto length = _size - _offset;
+    buffer.append(_mapping.data<char>(_offset), length);
+    _offset += length;
+    assert(is_eof());
+  }
+  return buffer;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -87,7 +176,8 @@ appendable_mapped_file::append(const char* const data,
 
   const auto offset = seek(0, SEEK_END);
 
-  _offset += write(data, size);
+  write(data, size);
+  _offset += size;
 
   return offset;
 }

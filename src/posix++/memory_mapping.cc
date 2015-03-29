@@ -73,10 +73,7 @@ memory_mapping::memory_mapping(const int fd,
 memory_mapping::memory_mapping(void* const data,
                                const std::size_t size) noexcept
   : _size{size},
-    _data{reinterpret_cast<std::uint8_t*>(data)} {
-  assert(data != nullptr);
-  assert(size > 0);
-}
+    _data{reinterpret_cast<std::uint8_t*>(data)} {}
 
 memory_mapping::~memory_mapping() noexcept {
   if (_data) {
