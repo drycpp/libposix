@@ -185,7 +185,7 @@ public:
   /**
    * @throws posix::runtime_error if an error occurs
    */
-  std::size_t append(const char* data, std::size_t size);
+  std::size_t append(const void* data, std::size_t size);
 };
 
 ////////////////////////////////////////////////////////////////////////////////

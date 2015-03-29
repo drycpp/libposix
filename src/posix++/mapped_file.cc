@@ -170,7 +170,7 @@ appendable_mapped_file::open(const directory& directory,
 ////////////////////////////////////////////////////////////////////////////////
 
 std::size_t
-appendable_mapped_file::append(const char* const data,
+appendable_mapped_file::append(const void* const data,
                                const std::size_t size) {
 
   const auto offset = seek(0, SEEK_END);
