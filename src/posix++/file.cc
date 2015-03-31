@@ -92,16 +92,6 @@ file::size() const {
 }
 
 std::size_t
-file::offset() const {
-  return seek(0, SEEK_CUR);
-}
-
-void
-file::rewind() const {
-  seek(0, SEEK_SET);
-}
-
-std::size_t
 file::seek(const off_t offset,
            const int whence) const {
   off_t result;

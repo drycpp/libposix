@@ -88,12 +88,16 @@ public:
   /**
    * Returns the current file offset.
    */
-  std::size_t offset() const;
+  std::size_t offset() const {
+    return seek(0, SEEK_CUR);
+  }
 
   /**
    * Sets the file offset to the beginning of the file.
    */
-  void rewind() const;
+  void rewind() const {
+    seek(0, SEEK_SET);
+  }
 
   /**
    * Returns or changes the current file offset.
