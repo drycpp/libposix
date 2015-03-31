@@ -72,10 +72,17 @@ public:
   }
 
   /**
-   * Returns the current file offset.
+   * @copydoc posix::file::offset()
    */
   std::size_t offset() const noexcept {
     return _offset;
+  }
+
+  /**
+   * @copydoc posix::file::rewind()
+   */
+  void rewind() {
+    seek(0, SEEK_SET);
   }
 
   /**
