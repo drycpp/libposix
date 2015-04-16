@@ -9,13 +9,17 @@
 #include "mapped_file.h"
 #include "pathname.h"
 
-#include <algorithm> /* for std::max(), std::min() */
-#include <cassert>   /* for assert() */
-#include <cerrno>    /* for errno */
-#include <cstring>   /* for std::memmove() */
-#include <fcntl.h>   /* for AT_FDCWD */
-#include <unistd.h>  /* for _SC_PAGE_SIZE, sysconf() */
-#include <utility>   /* for std::swap() */
+#include <algorithm>  /* for std::max(), std::min() */
+#include <cassert>    /* for assert() */
+#include <cerrno>     /* for errno */
+#include <cstring>    /* for std::memmove() */
+#include <fcntl.h>    /* for AT_FDCWD */
+#include <unistd.h>   /* for _SC_PAGE_SIZE, sysconf() */
+#include <utility>    /* for std::swap() */
+
+#ifdef __linux__
+#include <sys/mman.h> /* for MREMAP_MAYMOVE */
+#endif
 
 using namespace posix;
 
@@ -79,6 +83,23 @@ mapped_file::operator=(mapped_file&& other) noexcept {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+
+void
+mapped_file::sync() {
+  if (_mapping.writable()) {
+    file::sync();
+  }
+
+  std::size_t new_size = file::size();
+  if (new_size != _size) {
+    new_size = std::max(_size, system_page_size());
+#ifdef __linux__
+    _mapping.remap(new_size, MREMAP_MAYMOVE);
+#else
+    throw_error(ENOSYS); // TODO: _mapping = ...
+#endif
+  }
+}
 
 std::size_t
 mapped_file::seek(const off_t offset,

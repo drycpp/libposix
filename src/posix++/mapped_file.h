@@ -79,6 +79,13 @@ public:
   }
 
   /**
+   * Synchronizes the memory mapping with secondary storage.
+   *
+   * @post `size()` returns the current file size
+   */
+  void sync();
+
+  /**
    * @copydoc posix::file::rewind()
    */
   void rewind() {
