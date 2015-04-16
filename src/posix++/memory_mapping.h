@@ -100,6 +100,13 @@ public:
   ~memory_mapping() noexcept;
 
   /**
+   * Expands or shrinks this mapping.
+   *
+   * @note Not available on all platforms.
+   */
+  void remap(std::size_t new_size, int flags = 0);
+
+  /**
    * Returns the byte size of the mapping.
    */
   std::size_t size() const noexcept {

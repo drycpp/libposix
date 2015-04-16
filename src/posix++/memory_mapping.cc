@@ -10,7 +10,7 @@
 
 #include <cassert>     /* for assert() */
 #include <cerrno>      /* for errno */
-#include <sys/mman.h>  /* for mmap(), munmap() */
+#include <sys/mman.h>  /* for mmap(), mremap(), munmap() */
 #include <sys/stat.h>  /* for fstat() */
 #include <sys/types.h> /* for struct stat */
 
@@ -86,6 +86,22 @@ memory_mapping::~memory_mapping() noexcept {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+
+void
+memory_mapping::remap(const std::size_t new_size,
+                      const int flags) {
+#ifdef __linux__
+  void* const new_addr = ::mremap(_data, _size, new_size, flags);
+  if (new_addr == MAP_FAILED) {
+    throw_error("mremap", "%p, %zu, %zu, 0x%",
+      _data, _size, new_size, static_cast<unsigned int>(flags));
+  }
+  _data = reinterpret_cast<std::uint8_t*>(new_addr);
+  _size = new_size;
+#else
+  throw_error(ENOSYS); /* Function not implemented */
+#endif /* __linux__ */
+}
 
 bool
 memory_mapping::readable() const noexcept {
