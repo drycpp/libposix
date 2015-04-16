@@ -92,6 +92,7 @@ mapped_file::sync() {
 
   std::size_t new_size = file::size();
   if (new_size != _size) {
+    _size = new_size;
     new_size = std::max(_size, system_page_size());
 #ifdef __linux__
     _mapping.remap(new_size, MREMAP_MAYMOVE);
