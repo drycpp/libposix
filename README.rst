@@ -31,6 +31,20 @@ Design Principles
 * Differentiates logic errors, runtime errors, and fatal errors.
 * Avoids the transitive inclusion of POSIX headers where possible.
 
+Caveats
+=======
+
+**Caveat utilitor**: the project's top-level ``posix`` namespace may have to
+be changed to something else in the future, as the C++ standard now frowns
+upon using it:
+
+   C++11 §17.6.4.2.2 [namespace.posix]
+
+   The behavior of a C++ program is undefined if it adds declarations or
+   definitions to namespace posix or to a namespace within namespace posix
+   unless otherwise specified. The namespace posix is reserved for use by
+   ISO/IEC 9945 and other POSIX standards.
+
 Error Handling
 ==============
 
