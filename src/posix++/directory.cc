@@ -94,6 +94,25 @@ directory::count(const char* const pathname) const {
   return 1;
 }
 
+bool
+directory::stat(const char* const pathname,
+                struct stat& result,
+                const int flags) const {
+  assert(pathname != nullptr);
+  assert(*pathname != '\0');
+
+  if (fstatat(fd(), pathname, &result, flags) == -1) {
+    switch (errno) {
+      case ENOENT:  /* No such file or directory */
+        return false;
+      default:
+        throw_error("fstatat", "%d, \"%s\", %p, 0x%x", fd(), pathname, &result, flags);
+    }
+  }
+
+  return true;
+}
+
 void
 directory::link(const char* const old_pathname,
                 const char* const new_pathname) const {

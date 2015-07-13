@@ -9,6 +9,9 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <fcntl.h>    /* for AT_* */
+#include <sys/stat.h> /* for struct stat */
+
 #include "descriptor.h"
 #include "mode.h"
 
@@ -110,6 +113,11 @@ public:
    * Checks whether a given directory entry exists.
    */
   std::size_t count(const char* pathname) const;
+
+  /**
+   * Returns information about a given directory entry.
+   */
+  bool stat(const char* pathname, struct stat& result, int flags = 0) const;
 
   /**
    * Creates a hard link relative to this directory.
