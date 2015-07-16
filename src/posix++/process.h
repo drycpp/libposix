@@ -113,7 +113,7 @@ public:
   /**
    * Waits for this process to terminate.
    */
-  int wait() noexcept;
+  int wait();
 
   /**
    * Waits for this process to change state.

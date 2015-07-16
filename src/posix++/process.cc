@@ -51,11 +51,16 @@ process::egid() const noexcept {
 bool
 process::alive() noexcept {
   int status;
-  return _id ? !wait(status, WNOHANG) : false;
+  try {
+    return _id ? !wait(status, WNOHANG) : false;
+  }
+  catch (const posix::runtime_error&) {
+    return false; /* ECHILD */
+  }
 }
 
 int
-process::wait() noexcept {
+process::wait() {
   assert(_id > 0);
 
   int status = 0;
